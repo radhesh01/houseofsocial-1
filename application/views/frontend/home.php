@@ -1337,30 +1337,213 @@ $holes  = array_fill(0, 26, 1);
   </div>
 </section>
 
+
 <!-- ══ BRAND TICKER ══════════════════════════════════════ -->
 <section class="fc-brands-sec" aria-label="Brand partners">
   <div style="padding:0 52px;max-width:1380px;margin:0 auto">
     <div class="fc-brands-label">Trusted By India's Biggest Names</div>
   </div>
-  <?php $brands_sprite = FCPATH . 'assets/images/brands.png'; ?>
-  <?php if (file_exists($brands_sprite)): ?>
-    <div class="ticker-wrap">
-      <div class="ticker-img-track">
-        <img src="<?= base_url('assets/images/brands.png') ?>" alt="Brand partners"
-          style="height:48px;width:auto;max-width:none;padding:0 40px;flex-shrink:0">
-        <img src="<?= base_url('assets/images/brands.png') ?>" alt="" aria-hidden="true"
-          style="height:48px;width:auto;max-width:none;padding:0 40px;flex-shrink:0">
-      </div>
+  <div class="fc-ticker-outer">
+    <div class="fc-ticker-track" id="fc-ticker-track">
+      <?php
+      $logos_data = [
+        ['boAt',          '#00C6FF'],
+        ['Netflix',       '#E50914'],
+        ['Amazon Prime',  '#00A8E1'],
+        ['Disney+',       '#113CCF'],
+        ['Dharma',        '#D4AF37'],
+        ['YRF',           '#8B0000'],
+        ['Sony',          '#0070C0'],
+        ['T-Series',      '#FF0000'],
+        ['Warner Bros',   '#0057A8'],
+        ['Myntra',        '#FF3366'],
+        ['OnePlus',       '#EB0029'],
+        ['Maddock Films', '#888888'],
+        ['Zee5',          '#9B1FE8'],
+        ['Jio Cinema',    '#0B6EFD'],
+        ['Fastrack',      '#00B050'],
+        ['Philips',       '#0091D5'],
+        ['Masters Union', '#C8A96E'],
+        ['Tata Motors',   '#003D6A'],
+      ];
+      // Duplicate for seamless loop
+      $all_logos = array_merge($logos_data, $logos_data);
+      $has_logo_dir = is_dir(FCPATH . 'assets/images/brands/');
+      $logo_files   = $has_logo_dir ? glob(FCPATH . 'assets/images/brands/*.{png,svg,webp,jpg,PNG,SVG}', GLOB_BRACE) : [];
+      $has_sprite   = file_exists(FCPATH . 'assets/images/brands.png');
+
+      if ($logo_files && count($logo_files) > 0):
+        $all_files = array_merge($logo_files, $logo_files);
+        foreach ($all_files as $lf):
+          $fname = basename($lf);
+          $name  = pathinfo($fname, PATHINFO_FILENAME);
+      ?>
+          <div class="fc-tl-item">
+            <img src="<?= base_url('assets/images/brands/' . $fname) ?>" alt="<?= htmlspecialchars($name) ?>"
+              loading="lazy">
+          </div>
+        <?php endforeach;
+      elseif ($has_sprite): ?>
+        <div class="fc-tl-item fc-tl-sprite">
+          <img src="<?= base_url('assets/images/brands.png') ?>" alt="Brand partners" loading="lazy">
+        </div>
+        <div class="fc-tl-item fc-tl-sprite" aria-hidden="true">
+          <img src="<?= base_url('assets/images/brands.png') ?>" alt="" loading="lazy">
+        </div>
+        <?php else:
+        foreach ($all_logos as $lg): ?>
+          <div class="fc-tl-item fc-tl-text" style="--bc:<?= $lg[1] ?>">
+            <span><?= htmlspecialchars($lg[0]) ?></span>
+          </div>
+      <?php endforeach;
+      endif; ?>
     </div>
-  <?php else: ?>
-    <div class="ticker-wrap">
-      <div class="ticker-txt-track">
-        <?php foreach ($ticker as $b): ?><span class="b-chip"><span
-              class="b-dot"></span><?= htmlspecialchars($b) ?></span><?php endforeach; ?>
-      </div>
-    </div>
-  <?php endif; ?>
+  </div>
 </section>
+
+<style>
+  /* ── BRAND TICKER ─────────────────────────────────────── */
+  .fc-brands-sec {
+    padding: 52px 0 48px;
+    border-top: 1px solid rgba(255, 255, 255, .04);
+    border-bottom: 1px solid rgba(255, 255, 255, .04);
+    overflow: hidden;
+    position: relative;
+    z-index: 1;
+  }
+
+  .fc-brands-label {
+    text-align: center;
+    font-size: 9px;
+    font-weight: 700;
+    letter-spacing: .28em;
+    text-transform: uppercase;
+    color: rgba(107, 107, 128, .4);
+    margin-bottom: 36px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 16px;
+  }
+
+  .fc-brands-label::before,
+  .fc-brands-label::after {
+    content: '';
+    flex: 1;
+    max-width: 80px;
+    height: 1px;
+    background: rgba(107, 107, 128, .15);
+  }
+
+  .fc-ticker-outer {
+    overflow: hidden;
+    position: relative;
+    /* Fade edges */
+    -webkit-mask: linear-gradient(90deg, transparent 0%, #000 7%, #000 93%, transparent 100%);
+    mask: linear-gradient(90deg, transparent 0%, #000 7%, #000 93%, transparent 100%);
+  }
+
+  .fc-ticker-track {
+    display: flex;
+    align-items: center;
+    width: max-content;
+    animation: fc-ticker-run 36s linear infinite;
+    will-change: transform;
+    cursor: default;
+  }
+
+  /* Pause on hover of outer container */
+  .fc-ticker-outer:hover .fc-ticker-track {
+    animation-play-state: paused;
+  }
+
+  @keyframes fc-ticker-run {
+    0% {
+      transform: translateX(0);
+    }
+
+    100% {
+      transform: translateX(-50%);
+    }
+  }
+
+  /* Individual logo items */
+  .fc-tl-item {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0 52px;
+    flex-shrink: 0;
+    transition: transform .4s cubic-bezier(.16, 1, .3, 1);
+  }
+
+  /* PNG/SVG logo */
+  .fc-tl-item img {
+    height: 42px;
+    width: auto;
+    max-width: 150px;
+    object-fit: contain;
+    display: block;
+    /* White monochrome, low opacity */
+    filter: brightness(0) invert(1) opacity(.3);
+    transition: filter .4s ease, transform .4s cubic-bezier(.16, 1, .3, 1);
+  }
+
+  .fc-tl-item:hover img {
+    filter: brightness(0) invert(1) opacity(.88);
+    transform: scale(1.2) translateY(-4px);
+  }
+
+  /* Sprite (single brands.png) */
+  .fc-tl-sprite img {
+    height: 46px;
+    max-width: 560px;
+    filter: brightness(0) invert(1) opacity(.28);
+  }
+
+  .fc-tl-sprite:hover img {
+    filter: brightness(0) invert(1) opacity(.65);
+    transform: none;
+  }
+
+  /* Text fallback logos */
+  .fc-tl-text span {
+    font-size: 15px;
+    font-weight: 800;
+    letter-spacing: -.01em;
+    color: rgba(237, 232, 223, .22);
+    white-space: nowrap;
+    display: block;
+    transition: color .35s, transform .4s cubic-bezier(.16, 1, .3, 1);
+  }
+
+  .fc-tl-text:hover span {
+    color: var(--bc, var(--y));
+    transform: scale(1.12) translateY(-3px);
+  }
+
+  @media(max-width:768px) {
+    .fc-brands-label {
+      margin-bottom: 24px;
+    }
+
+    .fc-tl-item {
+      padding: 0 28px;
+    }
+
+    .fc-tl-item img {
+      height: 32px;
+    }
+
+    .fc-tl-text span {
+      font-size: 13px;
+    }
+
+    .fc-ticker-track {
+      animation-duration: 24s;
+    }
+  }
+</style>
 
 <!-- ══ ABOUT ══════════════════════════════════════════════ -->
 <section class="fcsec" aria-labelledby="fc-about-h">
@@ -1417,19 +1600,10 @@ $holes  = array_fill(0, 26, 1);
   </div>
 </section>
 
-<!-- ══ SERVICES — HORIZONTAL SNAP SCROLL ════════════════
-     Each slide = 100vw, snaps, JS drives arrows + dots.
-     Touch/trackpad naturally swipe-scrolls too.         -->
-
-<!-- ══ SERVICES — SCROLL-DRIVEN HORIZONTAL CAROUSEL ════════
-     Desktop: section sticks, scrolling drives slide advance.
-     Mobile: native horizontal swipe/snap.                  -->
+<!-- ══ SERVICES — SCROLL-DRIVEN HORIZONTAL CAROUSEL ════════ -->
 <section class="svc-section" id="fc-services" aria-labelledby="fc-svc-h">
-
   <div class="svc-pin-wrap" id="svc-pin-wrap">
     <div class="svc-pin" id="svc-pin">
-
-      <!-- Header -->
       <div class="svc-header">
         <div>
           <p class="fc-tag" style="color:var(--o);margin-bottom:12px">What We Do</p>
@@ -1446,13 +1620,9 @@ $holes  = array_fill(0, 26, 1);
           <a href="<?= base_url('contact') ?>" class="fc-btn fc-btn-g" style="flex-shrink:0">WORK WITH US</a>
         </div>
       </div>
-
-      <!-- Progress bar -->
       <div class="svc-progress-bar" aria-hidden="true">
         <div class="svc-progress-fill" id="svc-progress-fill"></div>
       </div>
-
-      <!-- Slide track (transform-driven on desktop, scroll-driven on mobile) -->
       <div class="svc-track-outer" id="svc-track-outer">
         <div class="svc-track" id="svc-track" role="region" aria-label="Services">
           <?php foreach ($svcs as $i => $sv):
@@ -1486,8 +1656,6 @@ $holes  = array_fill(0, 26, 1);
           <?php endforeach; ?>
         </div>
       </div>
-
-      <!-- Nav: dots + arrows -->
       <div class="svc-nav">
         <div class="svc-nav-left">
           <div class="svc-dots" id="svc-dots" role="tablist" aria-label="Service navigation">
@@ -1504,17 +1672,9 @@ $holes  = array_fill(0, 26, 1);
           <button class="svc-arrow" id="svc-next" aria-label="Next service">&#8594;</button>
         </div>
       </div>
-
-    </div><!-- /svc-pin -->
-
-    <!-- Scroll spacers: these extend the section height so user has scroll room.
-         JS sets the total height = slides × 100vh (desktop only).           -->
+    </div>
     <div id="svc-spacers"></div>
-
-  </div><!-- /svc-pin-wrap -->
-
-</section>
-
+  </div>
 </section>
 
 <!-- ══ CAMPAIGNS ══════════════════════════════════════════ -->
@@ -1556,24 +1716,492 @@ $holes  = array_fill(0, 26, 1);
 <?php endif; ?>
 
 <!-- ══ PROCESS ════════════════════════════════════════════ -->
-<section class="fcsec" aria-labelledby="fc-proc-h">
-  <div style="max-width:1380px;margin:0 auto">
-    <p class="fc-tag fc-rv" style="color:var(--c);margin-bottom:16px">How We Work</p>
-    <h2 id="fc-proc-h" class="fc-h2 fc-rv d1" style="margin-bottom:48px">THE<br><span class="g3">PROCESS</span></h2>
-    <div class="fc-pg">
-      <?php foreach ([['🎯', 'Strategy', 'Deep-dive into brand goals, audience, and cultural context.', '--y'], ['🌐', 'Network', 'Match with perfect influencers, meme pages, and creators.', '--o'], ['🚀', 'Execute', 'Launch precision campaigns with real-time monitoring.', '--p'], ['📈', 'Scale', 'Analyze, optimize, and scale what\'s working for max ROI.', '--c']] as $i => $ps): $dd = 'd' . ($i + 1); ?>
-        <div class="fc-pc fc-rv <?= $dd ?>" style="color:var(<?= $ps[3] ?>)">
-          <div class="fc-pn"><?= str_pad($i + 1, 2, '0', STR_PAD_LEFT) ?></div>
-          <div style="font-size:30px;margin-bottom:14px"><?= $ps[0] ?></div>
-          <h3
-            style="font-family:var(--font-d);font-weight:700;font-size:22px;letter-spacing:-.02em;margin-bottom:10px">
-            <?= $ps[1] ?></h3>
-          <p style="font-size:13px;color:var(--muted);line-height:1.65;font-weight:500"><?= $ps[2] ?></p>
+<section class="fcp-wrap" aria-labelledby="fcp-h" id="fc-process">
+  <div class="fcp-inner">
+
+    <!-- LEFT: sticky panel -->
+    <div class="fcp-left">
+      <div class="fcp-sticky-left">
+        <p class="fc-tag" style="color:var(--c)">How We Work</p>
+        <h2 id="fcp-h" class="fc-h2">OUR<br><span class="g3">PROCESS</span></h2>
+        <p class="fcp-sub">A proven 4-step framework that turns brands into cultural moments.</p>
+        <a href="<?= base_url('contact') ?>" class="fcp-cta-btn">
+          Work With Us <span class="fcp-cta-arrow">&#8594;</span>
+        </a>
+        <div class="fcp-counter" id="fcp-counter">
+          <span class="fcp-counter-cur" id="fcp-counter-cur">01</span>
+          <span class="fcp-counter-sep">/</span>
+          <span class="fcp-counter-tot">04</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- RIGHT: scrolling steps -->
+    <div class="fcp-right">
+      <?php
+      $proc_steps = [
+        ['01', '🎯', 'Strategy', 'Deep-dive into brand goals, audience, and cultural context. We study the landscape before touching a single creative piece.', '#F5C518'],
+        ['02', '🌐', 'Network',  'Match with perfect influencers, meme pages, and creators from our vetted pool of 10,000+ accounts across every niche.', '#FF6432'],
+        ['03', '🚀', 'Execute',  'Launch precision campaigns with real-time monitoring, A/B testing, and rapid creative iteration to maximise engagement.', '#C860F0'],
+        ['04', '📈', 'Scale',    'Analyze, optimize, and double down on winners. Cut what doesn\'t perform. Compound the wins until your brand is everywhere.', '#00D4FF'],
+      ];
+      $total_steps = count($proc_steps);
+      foreach ($proc_steps as $i => $ps): ?>
+        <div class="fcp-step" data-fcp-step="<?= $i ?>" data-fcp-color="<?= $ps[4] ?>">
+          <div class="fcp-icon-col">
+            <div class="fcp-icon-wrap">
+              <div class="fcp-icon-ring"></div>
+              <div class="fcp-icon-inner"><?= $ps[1] ?></div>
+            </div>
+            <?php if ($i < $total_steps - 1): ?>
+              <div class="fcp-line"></div>
+            <?php endif; ?>
+          </div>
+          <div class="fcp-body">
+            <span class="fcp-num"><?= $ps[0] ?></span>
+            <h3 class="fcp-title"><?= $ps[2] ?></h3>
+            <p class="fcp-desc"><?= $ps[3] ?></p>
+          </div>
+          <div class="fcp-ghost" aria-hidden="true"><?= $ps[0] ?></div>
         </div>
       <?php endforeach; ?>
     </div>
+
   </div>
 </section>
+
+<style>
+  /* ════════════════════════════════════════════════════
+   PROCESS SECTION
+════════════════════════════════════════════════════ */
+  .fcp-wrap {
+    position: relative;
+    z-index: 1;
+    background: var(--ink);
+    padding: 100px 52px;
+  }
+
+  .fcp-inner {
+    max-width: 1380px;
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: 360px 1fr;
+    gap: 88px;
+    align-items: start;
+  }
+
+  /* LEFT sticky */
+  .fcp-left {
+    position: relative;
+  }
+
+  .fcp-sticky-left {
+    position: sticky;
+    top: 96px;
+    display: flex;
+    flex-direction: column;
+    gap: 22px;
+  }
+
+  .fcp-sub {
+    font-size: 15px;
+    color: var(--muted);
+    line-height: 1.75;
+    font-weight: 500;
+    max-width: 300px;
+  }
+
+  .fcp-cta-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    background: linear-gradient(135deg, var(--y), var(--o));
+    color: #080810;
+    font-weight: 900;
+    font-size: 14px;
+    letter-spacing: .02em;
+    padding: 14px 28px;
+    border-radius: 100px;
+    text-decoration: none;
+    align-self: flex-start;
+    transition: transform .25s, box-shadow .25s;
+    white-space: nowrap;
+  }
+
+  .fcp-cta-btn:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 12px 32px rgba(245, 197, 24, .32);
+  }
+
+  .fcp-cta-arrow {
+    transition: transform .25s;
+    display: inline-block;
+  }
+
+  .fcp-cta-btn:hover .fcp-cta-arrow {
+    transform: translateX(5px);
+  }
+
+  .fcp-counter {
+    display: flex;
+    align-items: baseline;
+    gap: 5px;
+    margin-top: 8px;
+  }
+
+  .fcp-counter-cur {
+    font-family: var(--font-d);
+    font-size: 72px;
+    font-weight: 700;
+    line-height: 1;
+    letter-spacing: -.05em;
+    color: var(--y);
+    transition: color .45s;
+  }
+
+  .fcp-counter-sep {
+    font-size: 28px;
+    color: rgba(237, 232, 223, .18);
+    font-weight: 300;
+    align-self: center;
+  }
+
+  .fcp-counter-tot {
+    font-family: var(--font-d);
+    font-size: 36px;
+    font-weight: 700;
+    letter-spacing: -.04em;
+    color: rgba(237, 232, 223, .18);
+  }
+
+  /* RIGHT steps */
+  .fcp-right {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .fcp-step {
+    display: grid;
+    grid-template-columns: 72px 1fr 80px;
+    gap: 0 24px;
+    align-items: start;
+    cursor: default;
+  }
+
+  /* icon column */
+  .fcp-icon-col {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .fcp-icon-wrap {
+    position: relative;
+    width: 64px;
+    height: 64px;
+    flex-shrink: 0;
+  }
+
+  .fcp-icon-ring {
+    position: absolute;
+    inset: 0;
+    border-radius: 50%;
+    border: 1.5px solid rgba(255, 255, 255, .1);
+    background: var(--card);
+    transition: border-color .5s, background .5s, box-shadow .5s;
+  }
+
+  .fcp-icon-inner {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 26px;
+    transition: transform .5s cubic-bezier(.16, 1, .3, 1);
+  }
+
+  /* vertical line between steps */
+  .fcp-line {
+    width: 2px;
+    min-height: 80px;
+    flex: 1;
+    background: rgba(255, 255, 255, .07);
+    border-radius: 1px;
+    margin-top: 4px;
+    transition: background .5s;
+  }
+
+  /* body */
+  .fcp-body {
+    padding-top: 8px;
+    padding-bottom: 56px;
+    opacity: .25;
+    transition: opacity .6s cubic-bezier(.16, 1, .3, 1);
+  }
+
+  .fcp-step:last-child .fcp-body {
+    padding-bottom: 0;
+  }
+
+  .fcp-num {
+    display: block;
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: .22em;
+    color: rgba(237, 232, 223, .3);
+    margin-bottom: 8px;
+    transition: color .5s;
+  }
+
+  .fcp-title {
+    font-family: var(--font-d);
+    font-size: clamp(28px, 3.5vw, 52px);
+    font-weight: 700;
+    letter-spacing: -.03em;
+    line-height: .9;
+    color: rgba(237, 232, 223, .4);
+    margin-bottom: 14px;
+    transition: color .5s;
+  }
+
+  .fcp-desc {
+    font-size: 15px;
+    color: var(--muted);
+    line-height: 1.8;
+    font-weight: 500;
+    max-width: 460px;
+  }
+
+  /* ghost */
+  .fcp-ghost {
+    font-family: var(--font-d);
+    font-size: clamp(44px, 6vw, 72px);
+    font-weight: 700;
+    letter-spacing: -.06em;
+    line-height: 1;
+    color: rgba(255, 255, 255, .03);
+    pointer-events: none;
+    user-select: none;
+    padding-top: 8px;
+    text-align: right;
+    transition: color .5s;
+  }
+
+  /* ACTIVE */
+  .fcp-step.fcp-active .fcp-icon-ring {
+    border-color: var(--fcp-col, #F5C518);
+    background: var(--fcp-bg, rgba(245, 197, 24, .08));
+    box-shadow: 0 0 0 5px var(--fcp-ring, rgba(245, 197, 24, .1)), 0 0 28px var(--fcp-glow, rgba(245, 197, 24, .25));
+  }
+
+  .fcp-step.fcp-active .fcp-icon-inner {
+    transform: scale(1.15);
+  }
+
+  .fcp-step.fcp-active .fcp-line {
+    background: var(--fcp-col, #F5C518);
+    opacity: .35;
+  }
+
+  .fcp-step.fcp-active .fcp-body {
+    opacity: 1;
+  }
+
+  .fcp-step.fcp-active .fcp-num {
+    color: var(--fcp-col, #F5C518);
+  }
+
+  .fcp-step.fcp-active .fcp-title {
+    color: var(--fcp-col, #F5C518);
+  }
+
+  .fcp-step.fcp-active .fcp-ghost {
+    color: var(--fcp-ghost, rgba(245, 197, 24, .07));
+  }
+
+  /* RESPONSIVE */
+  @media(max-width:1200px) {
+    .fcp-inner {
+      grid-template-columns: 300px 1fr;
+      gap: 60px;
+    }
+
+    .fcp-counter-cur {
+      font-size: 56px;
+    }
+  }
+
+  @media(max-width:1024px) {
+    .fcp-wrap {
+      padding: 80px 28px;
+    }
+
+    .fcp-inner {
+      grid-template-columns: 240px 1fr;
+      gap: 44px;
+    }
+
+    .fcp-ghost {
+      display: none;
+    }
+
+    .fcp-step {
+      grid-template-columns: 64px 1fr;
+    }
+  }
+
+  @media(max-width:860px) {
+    .fcp-inner {
+      grid-template-columns: 1fr;
+      gap: 0;
+    }
+
+    .fcp-left {
+      margin-bottom: 52px;
+    }
+
+    .fcp-sticky-left {
+      position: relative;
+      top: auto;
+      gap: 18px;
+    }
+
+    .fcp-counter {
+      display: none;
+    }
+
+    .fcp-sub {
+      max-width: 100%;
+    }
+
+    .fcp-step {
+      grid-template-columns: 64px 1fr;
+    }
+  }
+
+  @media(max-width:600px) {
+    .fcp-wrap {
+      padding: 60px 18px;
+    }
+
+    .fcp-step {
+      grid-template-columns: 52px 1fr;
+      gap: 0 16px;
+    }
+
+    .fcp-icon-wrap {
+      width: 48px;
+      height: 48px;
+    }
+
+    .fcp-icon-inner {
+      font-size: 20px;
+    }
+
+    .fcp-body {
+      padding-bottom: 36px;
+    }
+
+    .fcp-title {
+      font-size: clamp(24px, 7vw, 38px);
+    }
+
+    .fcp-desc {
+      font-size: 14px;
+    }
+
+    .fcp-line {
+      min-height: 52px;
+    }
+  }
+</style>
+
+<script>
+  (function() {
+    var steps = document.querySelectorAll('.fcp-step');
+    var counterEl = document.getElementById('fcp-counter-cur');
+    if (!steps.length) return;
+
+    var colors = [{
+        col: '#F5C518',
+        bg: 'rgba(245,197,24,.09)',
+        ring: 'rgba(245,197,24,.13)',
+        glow: 'rgba(245,197,24,.28)',
+        ghost: 'rgba(245,197,24,.08)'
+      },
+      {
+        col: '#FF6432',
+        bg: 'rgba(255,100,50,.09)',
+        ring: 'rgba(255,100,50,.13)',
+        glow: 'rgba(255,100,50,.28)',
+        ghost: 'rgba(255,100,50,.08)'
+      },
+      {
+        col: '#C860F0',
+        bg: 'rgba(200,96,240,.09)',
+        ring: 'rgba(200,96,240,.13)',
+        glow: 'rgba(200,96,240,.28)',
+        ghost: 'rgba(200,96,240,.08)'
+      },
+      {
+        col: '#00D4FF',
+        bg: 'rgba(0,212,255,.09)',
+        ring: 'rgba(0,212,255,.13)',
+        glow: 'rgba(0,212,255,.28)',
+        ghost: 'rgba(0,212,255,.08)'
+      },
+    ];
+
+    var active = -1;
+
+    function activate(idx) {
+      if (idx === active) return;
+      active = idx;
+      var c = colors[idx] || colors[0];
+      steps.forEach(function(s, i) {
+        s.classList.toggle('fcp-active', i === idx);
+        if (i === idx) {
+          s.style.setProperty('--fcp-col', c.col);
+          s.style.setProperty('--fcp-bg', c.bg);
+          s.style.setProperty('--fcp-ring', c.ring);
+          s.style.setProperty('--fcp-glow', c.glow);
+          s.style.setProperty('--fcp-ghost', c.ghost);
+        }
+      });
+      if (counterEl) {
+        counterEl.textContent = String(idx + 1).padStart(2, '0');
+        counterEl.style.color = c.col;
+      }
+    }
+
+    activate(0);
+
+    var isMobile = window.innerWidth <= 860;
+    var rootM = isMobile ? '-10% 0px -10% 0px' : '-25% 0px -45% 0px';
+
+    var obs = new IntersectionObserver(function(entries) {
+      entries.forEach(function(e) {
+        if (e.isIntersecting) {
+          activate(parseInt(e.target.dataset.fcpStep, 10));
+        }
+      });
+    }, {
+      rootMargin: rootM,
+      threshold: 0
+    });
+
+    steps.forEach(function(s) {
+      obs.observe(s);
+    });
+    steps.forEach(function(s, i) {
+      s.addEventListener('click', function() {
+        activate(i);
+      });
+    });
+  })();
+</script>
+
 
 <!-- ══ CTA ════════════════════════════════════════════════ -->
 <section class="fc-cta-sec" aria-label="Call to action">
