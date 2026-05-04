@@ -37,6 +37,8 @@ $route['admin/posts/update/(:num)'] = 'admin/Posts/update/$1';
 $route['admin/posts/delete/(:num)'] = 'admin/Posts/delete/$1';
 $route['admin/posts/toggle/(:num)'] = 'admin/Posts/toggle/$1';
 
+$route['admin/posts/upload_image'] = 'admin/Posts/upload_image';
+
 // ── ADMIN SETTINGS ────────────────────────────────────────
 $route['admin/settings']           = 'admin/Settings/index';
 $route['admin/settings/update']    = 'admin/Settings/update';

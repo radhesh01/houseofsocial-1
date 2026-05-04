@@ -1,32 +1,48 @@
 <?php
-defined('BASEPATH') OR exit('No direct script access allowed');
+defined('BASEPATH') or exit('No direct script access allowed');
 
-class Posts extends CI_Controller {
+class Posts extends CI_Controller
+{
 
-    private $upload_path = 'assets/images/uploads/';
+    // ── Single source of truth for upload path ──────────────
+    // Must match what views use: base_url('assets/images/uploads/filename')
+    private $upload_path      = 'assets/images/uploads/';
+    private $upload_path_full; // set in constructor (FCPATH prepended)
 
-    public function __construct() {
+    public function __construct()
+    {
         parent::__construct();
         $this->_require_login();
         $this->load->model('Post_model');
         $this->load->library(['form_validation', 'upload']);
         $this->load->helper(['string', 'url', 'form']);
+
+        // Absolute path for filesystem ops
+        $this->upload_path_full = FCPATH . $this->upload_path;
+
+        // Create dir if missing
+        if (!is_dir($this->upload_path_full)) {
+            mkdir($this->upload_path_full, 0755, TRUE);
+        }
     }
 
-    public function index() {
+    public function index()
+    {
         $data['posts'] = $this->Post_model->get_all();
         $data['flash'] = $this->session->flashdata('msg');
         $this->_render('admin/posts/index', $data);
     }
 
-    public function create() {
+    public function create()
+    {
         $data['post']   = NULL;
         $data['action'] = 'create';
         $data['flash']  = '';
         $this->_render('admin/posts/form', $data);
     }
 
-    public function store() {
+    public function store()
+    {
         $this->_set_validation_rules();
 
         if (!$this->form_validation->run()) {
@@ -41,30 +57,33 @@ class Posts extends CI_Controller {
         $slug       = $this->_make_slug($this->input->post('title'));
 
         $this->Post_model->create([
-            'title'         => $this->input->post('title'),
+            'title'         => $this->input->post('title', TRUE),
             'slug'          => $slug,
-            'description'   => $this->input->post('description'),
-            'content'       => $this->input->post('content'),
-            'author'        => $this->input->post('author'),
-            'external_link' => $this->input->post('external_link'),
+            'description'   => $this->input->post('description', TRUE),
+            'content'       => $this->input->post('content'),   // raw HTML from TinyMCE
+            'author'        => $this->input->post('author', TRUE),
+            'external_link' => $this->input->post('external_link', TRUE),
             'image'         => $image_name,
-            'status'        => (int)$this->input->post('status'),
+            'status'        => (int) $this->input->post('status'),
         ]);
 
         $this->session->set_flashdata('msg', 'Post created successfully!');
         redirect('admin/posts');
     }
 
-    public function edit($id) {
+    public function edit($id)
+    {
         $post = $this->Post_model->get_by_id($id);
         if (!$post) show_404();
+
         $data['post']   = $post;
         $data['action'] = 'edit';
         $data['flash']  = '';
         $this->_render('admin/posts/form', $data);
     }
 
-    public function update($id) {
+    public function update($id)
+    {
         $post = $this->Post_model->get_by_id($id);
         if (!$post) show_404();
 
@@ -79,18 +98,19 @@ class Posts extends CI_Controller {
         }
 
         $update = [
-            'title'         => $this->input->post('title'),
-            'description'   => $this->input->post('description'),
-            'content'       => $this->input->post('content'),
-            'author'        => $this->input->post('author'),
-            'external_link' => $this->input->post('external_link'),
-            'status'        => (int)$this->input->post('status'),
+            'title'         => $this->input->post('title', TRUE),
+            'description'   => $this->input->post('description', TRUE),
+            'content'       => $this->input->post('content'),   // raw HTML from TinyMCE
+            'author'        => $this->input->post('author', TRUE),
+            'external_link' => $this->input->post('external_link', TRUE),
+            'status'        => (int) $this->input->post('status'),
         ];
 
         $new_image = $this->_handle_upload();
         if ($new_image) {
-            if ($post['image']) {
-                $old = FCPATH . $this->upload_path . $post['image'];
+            // Delete old image from disk
+            if (!empty($post['image'])) {
+                $old = $this->upload_path_full . $post['image'];
                 if (file_exists($old)) @unlink($old);
             }
             $update['image'] = $new_image;
@@ -101,54 +121,109 @@ class Posts extends CI_Controller {
         redirect('admin/posts');
     }
 
-    public function delete($id) {
+    public function delete($id)
+    {
+        $post = $this->Post_model->get_by_id($id);
+        if ($post && !empty($post['image'])) {
+            $img = $this->upload_path_full . $post['image'];
+            if (file_exists($img)) @unlink($img);
+        }
         $this->Post_model->delete($id);
         $this->session->set_flashdata('msg', 'Post deleted.');
         redirect('admin/posts');
     }
 
-    public function toggle($id) {
+    public function toggle($id)
+    {
         $this->Post_model->toggle_status($id);
         redirect('admin/posts');
     }
 
-    // ── Private helpers ──────────────────────────────────
+    // ── TinyMCE image upload endpoint ────────────────────────
+    // Route: POST admin/posts/upload_image
+    // Called by TinyMCE images_upload_url setting
+    public function upload_image()
+    {
+        if (!$this->session->userdata('admin_logged_in')) {
+            http_response_code(403);
+            echo json_encode(['error' => 'Forbidden']);
+            return;
+        }
 
-    private function _require_login() {
+        $config = [
+            'upload_path'   => $this->upload_path_full,
+            'allowed_types' => 'jpg|jpeg|png|gif|webp',
+            'max_size'      => 5120,
+            'encrypt_name'  => TRUE,
+        ];
+
+        // TinyMCE sends file as field name "file"
+        $this->upload->initialize($config);
+
+        if ($this->upload->do_upload('file')) {
+            $file_data = $this->upload->data();
+            $url = base_url($this->upload_path . $file_data['file_name']);
+            // TinyMCE expects: { "location": "url" }
+            header('Content-Type: application/json');
+            echo json_encode(['location' => $url]);
+        } else {
+            http_response_code(400);
+            header('Content-Type: application/json');
+            echo json_encode(['error' => $this->upload->display_errors('', '')]);
+        }
+    }
+
+    // ── Private helpers ───────────────────────────────────────
+
+    private function _require_login()
+    {
         if (!$this->session->userdata('admin_logged_in')) {
             redirect('admin/login');
         }
     }
 
-    private function _render($view, $data = []) {
+    private function _render($view, $data = [])
+    {
         $this->load->view('admin/layouts/header', $data);
         $this->load->view($view, $data);
         $this->load->view('admin/layouts/footer');
     }
 
-    private function _set_validation_rules() {
+    private function _set_validation_rules()
+    {
         $this->form_validation->set_rules('title',       'Title',       'required|trim|max_length[255]');
         $this->form_validation->set_rules('description', 'Description', 'required|trim');
-        $this->form_validation->set_rules('content',     'Content',     'required');
         $this->form_validation->set_rules('author',      'Author',      'required|trim|max_length[100]');
+        // content not required — TinyMCE may send empty string on blank posts; adjust if needed
     }
 
-    private function _handle_upload() {
-        if (!isset($_FILES['image']) || $_FILES['image']['error'] == UPLOAD_ERR_NO_FILE) return '';
+    private function _handle_upload()
+    {
+        // No file chosen — UPLOAD_ERR_NO_FILE = 4
+        if (!isset($_FILES['image']) || $_FILES['image']['error'] === UPLOAD_ERR_NO_FILE) {
+            return '';
+        }
+
         $config = [
-            'upload_path'   => FCPATH . $this->upload_path,
+            'upload_path'   => $this->upload_path_full,
             'allowed_types' => 'jpg|jpeg|png|gif|webp',
-            'max_size'      => 5120,
+            'max_size'      => 5120,     // 5 MB
             'encrypt_name'  => TRUE,
         ];
+
         $this->upload->initialize($config);
+
         if ($this->upload->do_upload('image')) {
             return $this->upload->data('file_name');
         }
+
+        // Upload attempted but failed — flash the error and return empty
+        $this->session->set_flashdata('upload_error', $this->upload->display_errors('', ''));
         return '';
     }
 
-    private function _make_slug($title) {
+    private function _make_slug($title)
+    {
         $slug     = url_title(strtolower($title), '-', TRUE);
         $original = $slug;
         $i        = 1;
