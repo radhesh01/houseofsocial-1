@@ -3,11 +3,8 @@ defined('BASEPATH') or exit('No direct script access allowed');
 
 class Posts extends CI_Controller
 {
-
-    // ── Single source of truth for upload path ──────────────
-    // Must match what views use: base_url('assets/images/uploads/filename')
     private $upload_path      = 'assets/images/uploads/';
-    private $upload_path_full; // set in constructor (FCPATH prepended)
+    private $upload_path_full;
 
     public function __construct()
     {
@@ -17,10 +14,8 @@ class Posts extends CI_Controller
         $this->load->library(['form_validation', 'upload']);
         $this->load->helper(['string', 'url', 'form']);
 
-        // Absolute path for filesystem ops
         $this->upload_path_full = FCPATH . $this->upload_path;
 
-        // Create dir if missing
         if (!is_dir($this->upload_path_full)) {
             mkdir($this->upload_path_full, 0755, TRUE);
         }
@@ -60,7 +55,7 @@ class Posts extends CI_Controller
             'title'         => $this->input->post('title', TRUE),
             'slug'          => $slug,
             'description'   => $this->input->post('description', TRUE),
-            'content'       => $this->input->post('content'),   // raw HTML from TinyMCE
+            'content'       => $this->input->post('content'),
             'author'        => $this->input->post('author', TRUE),
             'external_link' => $this->input->post('external_link', TRUE),
             'image'         => $image_name,
@@ -100,7 +95,7 @@ class Posts extends CI_Controller
         $update = [
             'title'         => $this->input->post('title', TRUE),
             'description'   => $this->input->post('description', TRUE),
-            'content'       => $this->input->post('content'),   // raw HTML from TinyMCE
+            'content'       => $this->input->post('content'),
             'author'        => $this->input->post('author', TRUE),
             'external_link' => $this->input->post('external_link', TRUE),
             'status'        => (int) $this->input->post('status'),
@@ -108,7 +103,6 @@ class Posts extends CI_Controller
 
         $new_image = $this->_handle_upload();
         if ($new_image) {
-            // Delete old image from disk
             if (!empty($post['image'])) {
                 $old = $this->upload_path_full . $post['image'];
                 if (file_exists($old)) @unlink($old);
@@ -139,37 +133,54 @@ class Posts extends CI_Controller
         redirect('admin/posts');
     }
 
-    // ── TinyMCE image upload endpoint ────────────────────────
+    // ── TinyMCE/CKEditor image upload endpoint ────────────────
     // Route: POST admin/posts/upload_image
-    // Called by TinyMCE images_upload_url setting
+    // IMPORTANT: CSRF excluded for this route in config/config.php
     public function upload_image()
     {
+        // Auth check
         if (!$this->session->userdata('admin_logged_in')) {
             http_response_code(403);
+            header('Content-Type: application/json');
             echo json_encode(['error' => 'Forbidden']);
             return;
+        }
+
+        // Ensure upload dir exists
+        if (!is_dir($this->upload_path_full)) {
+            @mkdir($this->upload_path_full, 0755, TRUE);
         }
 
         $config = [
             'upload_path'   => $this->upload_path_full,
             'allowed_types' => 'jpg|jpeg|png|gif|webp',
-            'max_size'      => 5120,
+            'max_size'      => 5120,      // 5 MB
             'encrypt_name'  => TRUE,
         ];
 
-        // TinyMCE sends file as field name "file"
+        // Re-initialize upload lib with fresh config
         $this->upload->initialize($config);
 
-        if ($this->upload->do_upload('file')) {
-            $file_data = $this->upload->data();
-            $url = base_url($this->upload_path . $file_data['file_name']);
-            // TinyMCE expects: { "location": "url" }
+        // CKEditor sends field "file"; TinyMCE also uses "file"
+        $field = 'file';
+
+        if (!isset($_FILES[$field]) || $_FILES[$field]['error'] === UPLOAD_ERR_NO_FILE) {
+            http_response_code(400);
             header('Content-Type: application/json');
+            echo json_encode(['error' => 'No file received']);
+            return;
+        }
+
+        if ($this->upload->do_upload($field)) {
+            $file_data = $this->upload->data();
+            $url       = base_url($this->upload_path . $file_data['file_name']);
+            header('Content-Type: application/json');
+            // Return "location" key — works for both TinyMCE and our CKEditor adapter
             echo json_encode(['location' => $url]);
         } else {
             http_response_code(400);
             header('Content-Type: application/json');
-            echo json_encode(['error' => $this->upload->display_errors('', '')]);
+            echo json_encode(['error' => strip_tags($this->upload->display_errors('', ''))]);
         }
     }
 
@@ -194,12 +205,10 @@ class Posts extends CI_Controller
         $this->form_validation->set_rules('title',       'Title',       'required|trim|max_length[255]');
         $this->form_validation->set_rules('description', 'Description', 'required|trim');
         $this->form_validation->set_rules('author',      'Author',      'required|trim|max_length[100]');
-        // content not required — TinyMCE may send empty string on blank posts; adjust if needed
     }
 
     private function _handle_upload()
     {
-        // No file chosen — UPLOAD_ERR_NO_FILE = 4
         if (!isset($_FILES['image']) || $_FILES['image']['error'] === UPLOAD_ERR_NO_FILE) {
             return '';
         }
@@ -207,7 +216,7 @@ class Posts extends CI_Controller
         $config = [
             'upload_path'   => $this->upload_path_full,
             'allowed_types' => 'jpg|jpeg|png|gif|webp',
-            'max_size'      => 5120,     // 5 MB
+            'max_size'      => 5120,
             'encrypt_name'  => TRUE,
         ];
 
@@ -217,8 +226,7 @@ class Posts extends CI_Controller
             return $this->upload->data('file_name');
         }
 
-        // Upload attempted but failed — flash the error and return empty
-        $this->session->set_flashdata('upload_error', $this->upload->display_errors('', ''));
+        $this->session->set_flashdata('upload_error', strip_tags($this->upload->display_errors('', '')));
         return '';
     }
 

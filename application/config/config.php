@@ -1,4 +1,4 @@
-<?php defined('BASEPATH') OR exit('No direct script access allowed');
+<?php defined('BASEPATH') or exit('No direct script access allowed');
 
 $config['base_url'] = 'http://localhost/filmycurry/';
 $config['index_page'] = '';
@@ -43,7 +43,14 @@ $config['csrf_token_name'] = 'csrf_token';
 $config['csrf_cookie_name'] = 'csrf_cookie';
 $config['csrf_expire'] = 7200;
 $config['csrf_regenerate'] = TRUE;
-$config['csrf_exclude_uris'] = array();
+
+// ── CSRF exclusions ──────────────────────────────────────
+// Exclude the CKEditor/TinyMCE image upload XHR endpoint.
+// Without this, CI3 rejects the XHR POST (no page-refresh = stale token).
+$config['csrf_exclude_uris'] = array(
+    'admin/posts/upload_image',
+);
+
 $config['compress_output'] = FALSE;
 $config['time_reference'] = 'local';
 $config['rewrite_short_tags'] = FALSE;
