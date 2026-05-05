@@ -1,6 +1,8 @@
 <?php defined('BASEPATH') or exit('No direct script access allowed');
 
+// ── Change base_url to match your server ─────────────────
 $config['base_url'] = 'http://localhost/filmycurry/';
+
 $config['index_page'] = '';
 $config['uri_protocol'] = 'AUTO';
 $config['url_suffix'] = '';
@@ -44,9 +46,11 @@ $config['csrf_cookie_name'] = 'csrf_cookie';
 $config['csrf_expire'] = 7200;
 $config['csrf_regenerate'] = TRUE;
 
-// ── CSRF exclusions ──────────────────────────────────────
-// Exclude the CKEditor/TinyMCE image upload XHR endpoint.
-// Without this, CI3 rejects the XHR POST (no page-refresh = stale token).
+/*
+ * CRITICAL: Exclude CKEditor image upload XHR from CSRF check.
+ * XHR POSTs do not carry a refreshed CSRF cookie, so CI3 blocks
+ * them with a 403. This exclusion only affects the upload endpoint.
+ */
 $config['csrf_exclude_uris'] = array(
     'admin/posts/upload_image',
 );

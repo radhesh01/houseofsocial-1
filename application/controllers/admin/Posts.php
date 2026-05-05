@@ -13,11 +13,9 @@ class Posts extends CI_Controller
         $this->load->model('Post_model');
         $this->load->library(['form_validation', 'upload']);
         $this->load->helper(['string', 'url', 'form']);
-
         $this->upload_path_full = FCPATH . $this->upload_path;
-
         if (!is_dir($this->upload_path_full)) {
-            mkdir($this->upload_path_full, 0755, TRUE);
+            @mkdir($this->upload_path_full, 0755, TRUE);
         }
     }
 
@@ -39,7 +37,6 @@ class Posts extends CI_Controller
     public function store()
     {
         $this->_set_validation_rules();
-
         if (!$this->form_validation->run()) {
             $data['post']   = NULL;
             $data['action'] = 'create';
@@ -47,10 +44,8 @@ class Posts extends CI_Controller
             $this->_render('admin/posts/form', $data);
             return;
         }
-
         $image_name = $this->_handle_upload();
         $slug       = $this->_make_slug($this->input->post('title'));
-
         $this->Post_model->create([
             'title'         => $this->input->post('title', TRUE),
             'slug'          => $slug,
@@ -61,7 +56,6 @@ class Posts extends CI_Controller
             'image'         => $image_name,
             'status'        => (int) $this->input->post('status'),
         ]);
-
         $this->session->set_flashdata('msg', 'Post created successfully!');
         redirect('admin/posts');
     }
@@ -70,7 +64,6 @@ class Posts extends CI_Controller
     {
         $post = $this->Post_model->get_by_id($id);
         if (!$post) show_404();
-
         $data['post']   = $post;
         $data['action'] = 'edit';
         $data['flash']  = '';
@@ -81,9 +74,7 @@ class Posts extends CI_Controller
     {
         $post = $this->Post_model->get_by_id($id);
         if (!$post) show_404();
-
         $this->_set_validation_rules();
-
         if (!$this->form_validation->run()) {
             $data['post']   = $post;
             $data['action'] = 'edit';
@@ -91,7 +82,6 @@ class Posts extends CI_Controller
             $this->_render('admin/posts/form', $data);
             return;
         }
-
         $update = [
             'title'         => $this->input->post('title', TRUE),
             'description'   => $this->input->post('description', TRUE),
@@ -100,7 +90,6 @@ class Posts extends CI_Controller
             'external_link' => $this->input->post('external_link', TRUE),
             'status'        => (int) $this->input->post('status'),
         ];
-
         $new_image = $this->_handle_upload();
         if ($new_image) {
             if (!empty($post['image'])) {
@@ -109,7 +98,6 @@ class Posts extends CI_Controller
             }
             $update['image'] = $new_image;
         }
-
         $this->Post_model->update($id, $update);
         $this->session->set_flashdata('msg', 'Post updated successfully!');
         redirect('admin/posts');
@@ -133,58 +121,57 @@ class Posts extends CI_Controller
         redirect('admin/posts');
     }
 
-    // ── TinyMCE/CKEditor image upload endpoint ────────────────
-    // Route: POST admin/posts/upload_image
-    // IMPORTANT: CSRF excluded for this route in config/config.php
+    /**
+     * CKEditor 5 image upload endpoint
+     * Route: POST admin/posts/upload_image
+     * MUST be in csrf_exclude_uris in config.php
+     */
     public function upload_image()
     {
-        // Auth check
+        // Prevent any CI output buffering / HTML prepend
+        if (ob_get_level()) ob_end_clean();
+
+        header('Content-Type: application/json');
+
         if (!$this->session->userdata('admin_logged_in')) {
             http_response_code(403);
-            header('Content-Type: application/json');
             echo json_encode(['error' => 'Forbidden']);
-            return;
+            exit;
         }
 
-        // Ensure upload dir exists
         if (!is_dir($this->upload_path_full)) {
-            @mkdir($this->upload_path_full, 0755, TRUE);
+            @mkdir($this->upload_path_full, 777, TRUE);
         }
 
-        $config = [
-            'upload_path'   => $this->upload_path_full,
-            'allowed_types' => 'jpg|jpeg|png|gif|webp',
-            'max_size'      => 5120,      // 5 MB
-            'encrypt_name'  => TRUE,
-        ];
-
-        // Re-initialize upload lib with fresh config
-        $this->upload->initialize($config);
-
-        // CKEditor sends field "file"; TinyMCE also uses "file"
-        $field = 'file';
+        // CKEditor sends field name "upload"; fallback "file"
+        $field = (isset($_FILES['upload']) && $_FILES['upload']['error'] !== UPLOAD_ERR_NO_FILE)
+            ? 'upload' : 'file';
 
         if (!isset($_FILES[$field]) || $_FILES[$field]['error'] === UPLOAD_ERR_NO_FILE) {
             http_response_code(400);
-            header('Content-Type: application/json');
             echo json_encode(['error' => 'No file received']);
-            return;
+            exit;
         }
+
+        $this->upload->initialize([
+            'upload_path'   => $this->upload_path_full,
+            'allowed_types' => 'jpg|jpeg|png|gif|webp',
+            'max_size'      => 5120,
+            'encrypt_name'  => TRUE,
+        ]);
 
         if ($this->upload->do_upload($field)) {
-            $file_data = $this->upload->data();
-            $url       = base_url($this->upload_path . $file_data['file_name']);
-            header('Content-Type: application/json');
-            // Return "location" key — works for both TinyMCE and our CKEditor adapter
-            echo json_encode(['location' => $url]);
+            $file = $this->upload->data();
+            $url  = base_url($this->upload_path . $file['file_name']);
+            echo json_encode(['url' => $url, 'location' => $url]);
         } else {
             http_response_code(400);
-            header('Content-Type: application/json');
             echo json_encode(['error' => strip_tags($this->upload->display_errors('', ''))]);
         }
+        exit;
     }
 
-    // ── Private helpers ───────────────────────────────────────
+    // ── PRIVATE ──────────────────────────────────────────────
 
     private function _require_login()
     {
@@ -212,20 +199,15 @@ class Posts extends CI_Controller
         if (!isset($_FILES['image']) || $_FILES['image']['error'] === UPLOAD_ERR_NO_FILE) {
             return '';
         }
-
-        $config = [
+        $this->upload->initialize([
             'upload_path'   => $this->upload_path_full,
             'allowed_types' => 'jpg|jpeg|png|gif|webp',
             'max_size'      => 5120,
             'encrypt_name'  => TRUE,
-        ];
-
-        $this->upload->initialize($config);
-
+        ]);
         if ($this->upload->do_upload('image')) {
             return $this->upload->data('file_name');
         }
-
         $this->session->set_flashdata('upload_error', strip_tags($this->upload->display_errors('', '')));
         return '';
     }
