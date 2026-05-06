@@ -6,6 +6,67 @@ $form_action = ($action === 'create')
     : base_url('admin/posts/update/' . $post['id']);
 ?>
 
+<style>
+/* ── Post form layout ────────────────────────────────────
+   Overrides the global .grid-form with tighter breakpoints
+   so the sidebar never overflows off-screen.
+──────────────────────────────────────────────────────── */
+.pf-wrap {
+    display: grid;
+    grid-template-columns: 1fr 280px;
+    gap: 18px;
+    align-items: start;
+    width: 100%;
+}
+
+/* Both columns must have min-width:0 — prevents grid blowout */
+.pf-wrap>* {
+    min-width: 0;
+}
+
+/* Sidebar gets a bit narrower on medium screens */
+@media (max-width: 1100px) {
+    .pf-wrap {
+        grid-template-columns: 1fr 240px;
+    }
+}
+
+/* Stack on tablet/mobile */
+@media (max-width: 768px) {
+    .pf-wrap {
+        grid-template-columns: 1fr;
+    }
+}
+
+/* Sidebar sticky — keeps it in view while scrolling content */
+.pf-sidebar {
+    position: sticky;
+    top: 72px;
+    /* below the fixed topbar */
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+@media (max-width: 768px) {
+    .pf-sidebar {
+        position: static;
+        /* not sticky when stacked */
+    }
+}
+
+/* CKEditor min-height */
+.ck.ck-editor__editable {
+    min-height: 340px !important;
+}
+
+@media (max-width: 640px) {
+    .ck.ck-editor__editable {
+        min-height: 220px !important;
+    }
+}
+</style>
+
 <!-- Page header -->
 <div class="page-hdr">
     <div>
@@ -13,88 +74,75 @@ $form_action = ($action === 'create')
             style="font-size:12px;color:var(--muted);display:inline-flex;align-items:center;gap:6px;margin-bottom:8px;">
             <i class="fa fa-arrow-left" style="font-size:10px;"></i> Back to Posts
         </a>
-        <div class="page-hdr-title">
-            <?= ($action === 'create') ? 'Create New Post' : 'Edit Post' ?>
-        </div>
+        <div class="page-hdr-title"><?= ($action === 'create') ? 'Create New Post' : 'Edit Post' ?></div>
         <div class="page-hdr-sub">
-            <?= ($action === 'create') ? 'Add a new campaign or blog post' : 'Update post details' ?>
-        </div>
+            <?= ($action === 'create') ? 'Add a new campaign or blog post' : 'Update post details' ?></div>
     </div>
 </div>
 
 <?php if (!empty($flash)): ?>
-<div class="flash-error"><i class="fa fa-exclamation-triangle"></i> <?= $flash ?></div>
+<div class="flash-error"><i class="fa fa-triangle-exclamation"></i> <?= $flash ?></div>
 <?php endif; ?>
 
 <?php if ($this->session->flashdata('upload_error')): ?>
 <div class="flash-error">
-    <i class="fa fa-exclamation-triangle"></i>
+    <i class="fa fa-triangle-exclamation"></i>
     Cover image upload failed: <?= htmlspecialchars($this->session->flashdata('upload_error')) ?>
 </div>
 <?php endif; ?>
 
 <?php echo form_open_multipart($form_action, ['id' => 'fc-post-form']); ?>
-<?= form_hidden($this->security->get_csrf_token_name(), $this->security->get_csrf_hash()) ?>
 
-<div class="grid-form">
+<div class="pf-wrap">
 
-    <!-- ═══ LEFT: main fields ═══════════════════════ -->
+    <!-- ══ LEFT: Main content ══════════════════════════════ -->
     <div class="space-y">
 
-        <!-- Title + Description -->
         <div class="card card-pad space-y">
-
             <div>
                 <label>Post Title <span style="color:var(--yellow)">*</span></label>
                 <input type="text" name="title" placeholder="e.g. Tiger 3 Meme Campaign"
                     value="<?= set_value('title', $post['title'] ?? '') ?>">
-                <?= form_error('title', '<p style="color:var(--danger);font-size:11px;margin-top:5px;">', '</p>') ?>
+                <?= form_error('title', '<p style="color:var(--danger);font-size:11px;margin-top:4px;">', '</p>') ?>
             </div>
 
             <div>
                 <label>Short Description <span style="color:var(--yellow)">*</span></label>
                 <textarea name="description" rows="3"
                     placeholder="Brief summary shown on homepage card..."><?= set_value('description', $post['description'] ?? '') ?></textarea>
-                <?= form_error('description', '<p style="color:var(--danger);font-size:11px;margin-top:5px;">', '</p>') ?>
+                <?= form_error('description', '<p style="color:var(--danger);font-size:11px;margin-top:4px;">', '</p>') ?>
             </div>
-
         </div>
 
-        <!-- CKEditor content -->
+        <!-- Rich editor -->
         <div class="card card-pad">
             <label style="margin-bottom:10px;">Full Content (Rich Editor)</label>
-
-            <!-- Hidden textarea — synced from CKEditor on submit -->
             <textarea name="content" id="fc-content-field"
                 style="display:none;"><?= set_value('content', $post['content'] ?? '') ?></textarea>
-
-            <!-- CKEditor mounts into this div -->
             <div id="fc-ck-editor"></div>
-
             <p style="font-size:11px;color:var(--muted);margin-top:8px;">
-                Supports headings, bold, italic, lists, links, images, tables, and more.
+                Supports headings, bold, italic, lists, links, images, and tables.
             </p>
         </div>
 
     </div><!-- /left -->
 
-    <!-- ═══ RIGHT: sidebar meta ═════════════════════ -->
-    <div class="space-y">
+    <!-- ══ RIGHT: Sidebar meta ═════════════════════════════ -->
+    <div class="pf-sidebar">
 
         <!-- Publish settings -->
         <div class="card card-pad space-y">
             <div
-                style="font-size:13px;font-weight:700;color:var(--cream);text-transform:uppercase;letter-spacing:0.06em;margin-bottom:4px;">
+                style="font-size:11px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:var(--cream);">
                 Publish Settings
             </div>
 
             <div>
                 <label>Status</label>
                 <select name="status">
-                    <option value="1" <?= (isset($post) && $post['status'] == 1) || !isset($post) ? 'selected' : '' ?>>
-                        ✅ Active (Visible)</option>
-                    <option value="0" <?= (isset($post) && $post['status'] == 0) ? 'selected' : '' ?>>
-                        🔒 Hidden</option>
+                    <option value="1" <?= (!isset($post) || $post['status'] == 1) ? 'selected' : '' ?>>✅ Active
+                        (Visible)</option>
+                    <option value="0" <?= (isset($post) && $post['status'] == 0) ? 'selected' : '' ?>>🔒 Hidden</option>
                 </select>
             </div>
 
@@ -102,17 +150,17 @@ $form_action = ($action === 'create')
                 <label>Author <span style="color:var(--yellow)">*</span></label>
                 <input type="text" name="author" placeholder="FilmyCurry Team"
                     value="<?= set_value('author', $post['author'] ?? 'FilmyCurry Team') ?>">
-                <?= form_error('author', '<p style="color:var(--danger);font-size:11px;margin-top:5px;">', '</p>') ?>
+                <?= form_error('author', '<p style="color:var(--danger);font-size:11px;margin-top:4px;">', '</p>') ?>
             </div>
 
             <div>
-                <label>External Link (Optional)</label>
+                <label>External Link <span
+                        style="color:var(--muted);font-size:10px;text-transform:none;letter-spacing:0;">(optional)</span></label>
                 <input type="url" name="external_link" placeholder="https://..."
                     value="<?= set_value('external_link', $post['external_link'] ?? '') ?>">
             </div>
 
-            <button type="submit" class="btn-primary" style="width:100%;justify-content:center;padding:12px;"
-                id="fc-submit-btn">
+            <button type="submit" class="btn-primary" style="width:100%;justify-content:center;padding:12px;">
                 <i class="fa fa-<?= ($action === 'create') ? 'plus' : 'save' ?>"></i>
                 <?= ($action === 'create') ? 'Publish Post' : 'Update Post' ?>
             </button>
@@ -121,119 +169,49 @@ $form_action = ($action === 'create')
         <!-- Cover image -->
         <div class="card card-pad space-y">
             <div
-                style="font-size:13px;font-weight:700;color:var(--cream);text-transform:uppercase;letter-spacing:0.06em;margin-bottom:4px;">
+                style="font-size:11px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:var(--cream);">
                 Cover Image
             </div>
 
             <?php if (!empty($post['image'])): ?>
             <div>
                 <img src="<?= base_url('assets/images/uploads/' . $post['image']) ?>" alt="Current cover"
-                    style="width:100%;max-height:180px;object-fit:cover;border-radius:8px;">
-                <p style="font-size:11px;color:var(--muted);margin-top:6px;">Upload new image to replace</p>
+                    style="width:100%;max-height:160px;object-fit:cover;border-radius:8px;">
+                <p style="font-size:11px;color:var(--muted);margin-top:6px;">Upload new to replace</p>
             </div>
             <?php endif; ?>
 
             <div>
-                <label>Upload Cover Image</label>
+                <label>Upload Image</label>
                 <input type="file" name="image" id="fc-img-input" accept="image/jpeg,image/png,image/gif,image/webp">
                 <p style="font-size:11px;color:var(--muted);margin-top:4px;">JPG / PNG / WebP / GIF — max 5 MB</p>
             </div>
 
             <div id="fc-img-preview" style="display:none;">
                 <img id="fc-preview-img" src="" alt="Preview"
-                    style="width:100%;max-height:180px;object-fit:cover;border-radius:8px;">
-                <p style="font-size:11px;color:var(--muted);margin-top:6px;">New image preview</p>
+                    style="width:100%;max-height:160px;object-fit:cover;border-radius:8px;">
+                <p style="font-size:11px;color:var(--muted);margin-top:6px;">Preview</p>
             </div>
         </div>
 
-    </div><!-- /right -->
+    </div><!-- /sidebar -->
 
-</div><!-- /grid-form -->
+</div><!-- /pf-wrap -->
 
 <?php echo form_close(); ?>
 
 
-<!-- ══════════════════════════════════════════════════════
-     CKEditor 5 — GPL build (no API key, fully free)
-     Uses importmap for ES module loading
-══════════════════════════════════════════════════════ -->
+<!-- ══ CKEditor 5 GPL ═════════════════════════════════════ -->
 <link rel="stylesheet" href="https://cdn.ckeditor.com/ckeditor5/43.3.1/ckeditor5.css">
 
 <script type="importmap">
     {
   "imports": {
-    "ckeditor5": "https://cdn.ckeditor.com/ckeditor5/43.3.1/ckeditor5.js",
+    "ckeditor5":  "https://cdn.ckeditor.com/ckeditor5/43.3.1/ckeditor5.js",
     "ckeditor5/": "https://cdn.ckeditor.com/ckeditor5/43.3.1/"
   }
 }
 </script>
-
-<style>
-/* ── CKEditor dark skin override ── */
-#fc-ck-editor .ck.ck-editor__main>.ck-editor__editable {
-    min-height: 380px;
-    max-height: 600px;
-    background: #0D0D0D !important;
-    color: #F9F5EE !important;
-    border-color: rgba(255, 255, 255, 0.12) !important;
-    border-radius: 0 0 8px 8px !important;
-}
-
-#fc-ck-editor .ck.ck-editor__main>.ck-editor__editable.ck-focused {
-    border-color: #F5C518 !important;
-    box-shadow: 0 0 0 3px rgba(245, 197, 24, 0.1) !important;
-}
-
-#fc-ck-editor .ck.ck-toolbar {
-    background: #1a1a1a !important;
-    border-color: rgba(255, 255, 255, 0.12) !important;
-    border-radius: 8px 8px 0 0 !important;
-}
-
-#fc-ck-editor .ck.ck-toolbar .ck-button {
-    color: rgba(249, 245, 238, 0.65) !important;
-}
-
-#fc-ck-editor .ck.ck-toolbar .ck-button:hover:not(.ck-disabled),
-#fc-ck-editor .ck.ck-toolbar .ck-button.ck-on {
-    background: rgba(245, 197, 24, 0.15) !important;
-    color: #F5C518 !important;
-}
-
-#fc-ck-editor .ck.ck-dropdown .ck-button {
-    color: rgba(249, 245, 238, 0.65) !important;
-}
-
-#fc-ck-editor .ck-content p {
-    margin-bottom: 1em;
-}
-
-#fc-ck-editor .ck-content h1,
-#fc-ck-editor .ck-content h2,
-#fc-ck-editor .ck-content h3 {
-    color: #F9F5EE;
-    margin: 1.4em 0 0.5em;
-}
-
-#fc-ck-editor .ck-content a {
-    color: #F5C518;
-}
-
-#fc-ck-editor .ck.ck-balloon-panel {
-    z-index: 9999 !important;
-}
-
-/* Mobile: compress toolbar */
-@media (max-width: 640px) {
-    #fc-ck-editor .ck.ck-toolbar {
-        flex-wrap: wrap;
-    }
-
-    #fc-ck-editor .ck.ck-editor__main>.ck-editor__editable {
-        min-height: 260px;
-    }
-}
-</style>
 
 <script type="module">
 import {
@@ -267,89 +245,73 @@ import {
     CodeBlock
 } from 'ckeditor5';
 
-/*
- * Custom upload adapter — posts to our CI3 endpoint.
- * The upload route is excluded from CSRF in config.php,
- * so no token header is needed.
- */
 const UPLOAD_URL = '<?= base_url('admin/posts/upload_image') ?>';
+const CSRF_NAME = '<?= $this->security->get_csrf_token_name() ?>';
+const CSRF_TOKEN = '<?= $this->security->get_csrf_hash() ?>';
 
 class CiUploadAdapter {
     constructor(loader) {
         this.loader = loader;
     }
-
     upload() {
         return this.loader.file.then(file => new Promise((resolve, reject) => {
             const form = new FormData();
-            form.append('upload', file); // field name "upload" (CKEditor standard)
-
+            form.append('upload', file);
+            form.append(CSRF_NAME, CSRF_TOKEN);
             const xhr = new XMLHttpRequest();
             xhr.open('POST', UPLOAD_URL, true);
-
             xhr.upload.onprogress = e => {
                 if (e.lengthComputable) {
                     this.loader.uploadTotal = e.total;
                     this.loader.uploaded = e.loaded;
                 }
             };
-
             xhr.onload = () => {
                 if (xhr.status < 200 || xhr.status >= 300) {
-                    return reject('HTTP error: ' + xhr.status);
+                    reject('HTTP ' + xhr.status);
+                    return;
                 }
                 try {
-                    const res = JSON.parse(xhr.responseText);
-                    if (res.error) return reject(res.error);
-                    if (!res.url) return reject('Server did not return image URL');
+                    const r = JSON.parse(xhr.responseText);
+                    if (r.error) {
+                        reject(r.error);
+                        return;
+                    }
                     resolve({
-                        default: res.url
+                        default: r.url || r.location
                     });
                 } catch (e) {
-                    reject('Invalid server response');
+                    reject('Invalid response');
                 }
             };
-
-            xhr.onerror = () => reject('Network error during upload');
+            xhr.onerror = () => reject('Network error');
             xhr.send(form);
         }));
     }
-
     abort() {}
 }
 
 function CiUploadPlugin(editor) {
-    editor.plugins.get('FileRepository').createUploadAdapter = loader =>
-        new CiUploadAdapter(loader);
+    editor.plugins.get('FileRepository').createUploadAdapter = l => new CiUploadAdapter(l);
 }
-
-// Read existing content for edit mode
-const existingHTML = document.getElementById('fc-content-field').value || '';
 
 ClassicEditor.create(document.getElementById('fc-ck-editor'), {
     licenseKey: 'GPL',
     plugins: [
         Essentials, Bold, Italic, Underline, Strikethrough,
-        Paragraph, Heading, Link,
-        List,
-        BlockQuote, Table, TableToolbar,
+        Paragraph, Heading, Link, List, BlockQuote,
+        Table, TableToolbar,
         Image, ImageUpload, ImageToolbar, ImageCaption, ImageStyle, ImageResize,
-        MediaEmbed, HorizontalLine,
-        Indent, IndentBlock, Alignment,
-        FontSize, FontColor,
-        Code, CodeBlock,
-        CiUploadPlugin
+        MediaEmbed, HorizontalLine, Indent, IndentBlock, Alignment,
+        FontSize, FontColor, Code, CodeBlock, CiUploadPlugin
     ],
     toolbar: {
         items: [
-            'heading', '|',
-            'bold', 'italic', 'underline', 'strikethrough', '|',
-            'fontSize', 'fontColor', '|',
-            'alignment', '|',
+            'heading', '|', 'bold', 'italic', 'underline', 'strikethrough', '|',
+            'fontSize', 'fontColor', '|', 'alignment', '|',
             'bulletedList', 'numberedList', 'outdent', 'indent', '|',
             'link', 'uploadImage', 'mediaEmbed', 'insertTable', '|',
-            'blockQuote', 'horizontalLine', 'code', 'codeBlock', '|',
-            'undo', 'redo'
+            'blockQuote', 'horizontalLine', 'code', 'codeBlock', '|', 'undo', 'redo'
         ],
         shouldNotGroupWhenFull: false
     },
@@ -383,29 +345,21 @@ ClassicEditor.create(document.getElementById('fc-ck-editor'), {
         contentToolbar: ['tableColumn', 'tableRow', 'mergeTableCells']
     },
     image: {
-        toolbar: [
-            'imageStyle:inline', 'imageStyle:block', 'imageStyle:side',
-            '|', 'imageTextAlternative', '|', 'resizeImage'
+        toolbar: ['imageStyle:inline', 'imageStyle:block', 'imageStyle:side', '|', 'imageTextAlternative', '|',
+            'resizeImage'
         ]
     },
-    initialData: existingHTML,
+    initialData: document.getElementById('fc-content-field').value || '',
     placeholder: 'Start writing your post content here...'
 
 }).then(editor => {
     window._fcEditor = editor;
-
-    // Sync editor HTML → hidden textarea before form submits
-    const form = document.getElementById('fc-post-form');
-    if (form) {
-        form.addEventListener('submit', function(e) {
-            document.getElementById('fc-content-field').value = editor.getData();
-        });
-    }
-
+    document.getElementById('fc-post-form').addEventListener('submit', () => {
+        document.getElementById('fc-content-field').value = editor.getData();
+    });
 }).catch(err => {
-    console.error('CKEditor init error:', err);
-    // Fallback: show the raw textarea if CKEditor fails to load
-    var ta = document.getElementById('fc-content-field');
+    console.error('CKEditor:', err);
+    const ta = document.getElementById('fc-content-field');
     if (ta) {
         ta.style.display = 'block';
         ta.style.width = '100%';
@@ -415,15 +369,14 @@ ClassicEditor.create(document.getElementById('fc-ck-editor'), {
 </script>
 
 <script>
-// Cover image local preview
+/* Cover image preview */
 document.getElementById('fc-img-input').addEventListener('change', function() {
-    var file = this.files[0];
-    if (!file) return;
+    if (!this.files[0]) return;
     var reader = new FileReader();
     reader.onload = function(e) {
         document.getElementById('fc-preview-img').src = e.target.result;
         document.getElementById('fc-img-preview').style.display = 'block';
     };
-    reader.readAsDataURL(file);
+    reader.readAsDataURL(this.files[0]);
 });
 </script>

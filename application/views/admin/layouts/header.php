@@ -5,11 +5,33 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title><?= isset($site_title) ? htmlspecialchars($site_title) : 'FilmyCurry' ?> — Admin</title>
+
+    <!-- Font Awesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+
+    <!-- Tailwind — required by all admin view files -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+    tailwind.config = {
+        theme: {
+            extend: {
+                colors: {
+                    fc: {
+                        yellow: '#F5C518',
+                        cream: '#F9F5EE',
+                        dark: '#0D0D0D',
+                        card: '#1A1A1A'
+                    }
+                }
+            }
+        }
+    }
+    </script>
+
     <style>
-    /* ═══════════════════════════════════════════
-       RESET & BASE
-    ═══════════════════════════════════════════ */
+    /* ───────────────────────────────────────────
+     TOKENS
+  ─────────────────────────────────────────── */
     *,
     *::before,
     *::after {
@@ -33,12 +55,13 @@
 
     html {
         font-size: 15px;
+        -webkit-text-size-adjust: 100%;
     }
 
     body {
         background: var(--bg);
         color: var(--cream);
-        font-family: 'Inter', system-ui, sans-serif;
+        font-family: 'Inter', system-ui, -apple-system, sans-serif;
         min-height: 100vh;
         overflow-x: hidden;
     }
@@ -50,11 +73,14 @@
 
     img {
         max-width: 100%;
+        height: auto;
+        display: block;
     }
 
-    /* ═══════════════════════════════════════════
-       SCROLLBAR
-    ═══════════════════════════════════════════ */
+    button {
+        font-family: inherit;
+    }
+
     ::-webkit-scrollbar {
         width: 4px;
         height: 4px;
@@ -65,9 +91,25 @@
         border-radius: 2px;
     }
 
-    /* ═══════════════════════════════════════════
-       SIDEBAR
-    ═══════════════════════════════════════════ */
+    /* ───────────────────────────────────────────
+     OVERLAY
+  ─────────────────────────────────────────── */
+    #fc-overlay {
+        display: none;
+        position: fixed;
+        inset: 0;
+        background: rgba(0, 0, 0, 0.65);
+        z-index: 99;
+        backdrop-filter: blur(2px);
+    }
+
+    #fc-overlay.show {
+        display: block;
+    }
+
+    /* ───────────────────────────────────────────
+     SIDEBAR
+  ─────────────────────────────────────────── */
     #fc-sidebar {
         position: fixed;
         top: 0;
@@ -79,16 +121,16 @@
         display: flex;
         flex-direction: column;
         z-index: 100;
-        transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
         overflow-y: auto;
         overflow-x: hidden;
+        transition: transform 0.28s cubic-bezier(0.4, 0, 0.2, 1);
+        will-change: transform;
     }
 
-    /* Mobile: hidden off-screen */
     @media (max-width: 768px) {
         #fc-sidebar {
             transform: translateX(-100%);
-            box-shadow: 4px 0 24px rgba(0, 0, 0, 0.5);
+            box-shadow: 4px 0 32px rgba(0, 0, 0, 0.6);
         }
 
         #fc-sidebar.open {
@@ -96,56 +138,63 @@
         }
     }
 
-    .sidebar-brand {
-        padding: 20px 20px 16px;
+    .sb-brand {
+        padding: 18px 18px 14px;
         border-bottom: 1px solid var(--border);
         flex-shrink: 0;
     }
 
-    .sidebar-brand-logo {
+    .sb-brand-logo {
         font-family: 'Bebas Neue', Impact, sans-serif;
-        font-size: 24px;
+        font-size: 22px;
         letter-spacing: 0.08em;
         color: var(--cream);
+        line-height: 1;
     }
 
-    .sidebar-brand-logo span {
+    .sb-brand-logo span {
         color: var(--yellow);
     }
 
-    .sidebar-brand-sub {
-        font-size: 10px;
+    .sb-brand-sub {
+        font-size: 9px;
         color: var(--muted);
-        letter-spacing: 0.18em;
+        letter-spacing: 0.2em;
         text-transform: uppercase;
-        margin-top: 3px;
+        margin-top: 4px;
     }
 
-    .sidebar-nav {
+    .sb-nav {
         flex: 1;
-        padding: 12px 10px;
+        padding: 10px 8px;
         display: flex;
         flex-direction: column;
         gap: 2px;
     }
 
+    /* sidebar-link — used directly in view files */
     .sidebar-link {
         display: flex;
         align-items: center;
-        gap: 12px;
+        gap: 11px;
         padding: 10px 12px;
         border-radius: 8px;
         font-size: 13px;
         font-weight: 500;
         color: var(--muted);
-        transition: all 0.2s;
+        transition: background 0.18s, color 0.18s;
         white-space: nowrap;
+        min-height: 42px;
+        border: none;
+        background: none;
+        cursor: pointer;
     }
 
     .sidebar-link i {
         width: 16px;
         flex-shrink: 0;
         font-size: 13px;
+        text-align: center;
     }
 
     .sidebar-link:hover {
@@ -157,6 +206,7 @@
         background: rgba(245, 197, 24, 0.1);
         color: var(--yellow);
         border-left: 3px solid var(--yellow);
+        padding-left: 9px;
     }
 
     .sidebar-link.danger {
@@ -168,24 +218,13 @@
         color: var(--danger);
     }
 
-    .sidebar-badge {
-        margin-left: auto;
-        background: var(--yellow);
-        color: #0D0D0D;
-        font-size: 10px;
-        font-weight: 700;
-        padding: 2px 7px;
-        border-radius: 20px;
-        flex-shrink: 0;
-    }
-
-    .sidebar-footer {
-        padding: 12px 10px;
+    .sb-footer {
+        padding: 10px 8px;
         border-top: 1px solid var(--border);
         flex-shrink: 0;
     }
 
-    .sidebar-user {
+    .sb-user {
         display: flex;
         align-items: center;
         gap: 10px;
@@ -193,7 +232,7 @@
         margin-bottom: 4px;
     }
 
-    .sidebar-avatar {
+    .sb-avatar {
         width: 32px;
         height: 32px;
         border-radius: 50%;
@@ -207,39 +246,25 @@
         flex-shrink: 0;
     }
 
-    .sidebar-username {
+    .sb-username {
         font-size: 13px;
         font-weight: 600;
+        line-height: 1.2;
     }
 
-    .sidebar-role {
+    .sb-role {
         font-size: 11px;
         color: var(--muted);
     }
 
-    /* Overlay for mobile */
-    #fc-overlay {
-        display: none;
-        position: fixed;
-        inset: 0;
-        background: rgba(0, 0, 0, 0.6);
-        z-index: 99;
-        backdrop-filter: blur(2px);
-    }
-
-    #fc-overlay.show {
-        display: block;
-    }
-
-    /* ═══════════════════════════════════════════
-       MAIN WRAPPER
-    ═══════════════════════════════════════════ */
+    /* ───────────────────────────────────────────
+     MAIN WRAPPER
+  ─────────────────────────────────────────── */
     #fc-main {
         margin-left: var(--sidebar-w);
         min-height: 100vh;
         display: flex;
         flex-direction: column;
-        transition: margin-left 0.3s;
     }
 
     @media (max-width: 768px) {
@@ -248,90 +273,104 @@
         }
     }
 
-    /* ═══════════════════════════════════════════
-       TOPBAR
-    ═══════════════════════════════════════════ */
+    /* ───────────────────────────────────────────
+     TOPBAR
+  ─────────────────────────────────────────── */
     #fc-topbar {
-        height: 56px;
-        background: rgba(13, 13, 13, 0.95);
-        border-bottom: 1px solid var(--border);
-        display: flex;
-        align-items: center;
-        padding: 0 24px;
-        gap: 16px;
         position: sticky;
         top: 0;
         z-index: 50;
+        height: 56px;
+        background: rgba(13, 13, 13, 0.97);
+        border-bottom: 1px solid var(--border);
+        display: flex;
+        align-items: center;
+        padding: 0 20px;
+        gap: 14px;
         backdrop-filter: blur(12px);
+        flex-shrink: 0;
     }
 
     #fc-menu-btn {
         display: none;
         background: none;
-        border: none;
+        border: 1px solid var(--border);
         cursor: pointer;
-        padding: 6px;
+        padding: 0;
+        width: 36px;
+        height: 36px;
+        border-radius: 8px;
         color: var(--cream);
-        font-size: 18px;
-        border-radius: 6px;
-        transition: background 0.2s;
+        font-size: 15px;
+        align-items: center;
+        justify-content: center;
+        flex-shrink: 0;
+        transition: background 0.18s;
     }
 
     #fc-menu-btn:hover {
-        background: rgba(255, 255, 255, 0.08);
+        background: rgba(255, 255, 255, 0.06);
     }
 
     @media (max-width: 768px) {
         #fc-menu-btn {
             display: flex;
-            align-items: center;
-            justify-content: center;
         }
     }
 
     .topbar-title {
-        font-size: 14px;
+        flex: 1;
+        font-size: 13px;
         font-weight: 600;
         color: var(--muted);
-        flex: 1;
-    }
-
-    .topbar-date {
-        font-size: 12px;
-        color: rgba(249, 245, 238, 0.25);
+        overflow: hidden;
+        text-overflow: ellipsis;
         white-space: nowrap;
     }
 
-    /* ═══════════════════════════════════════════
-       CONTENT AREA
-    ═══════════════════════════════════════════ */
+    .topbar-date {
+        font-size: 11px;
+        color: rgba(249, 245, 238, 0.22);
+        white-space: nowrap;
+        flex-shrink: 0;
+    }
+
+    @media (max-width: 480px) {
+        .topbar-date {
+            display: none;
+        }
+    }
+
+    /* ───────────────────────────────────────────
+     CONTENT
+  ─────────────────────────────────────────── */
     #fc-content {
         flex: 1;
-        padding: 28px 24px;
-        max-width: 1400px;
+        padding: 24px 20px;
         width: 100%;
+        max-width: 1400px;
     }
 
     @media (max-width: 640px) {
         #fc-content {
-            padding: 16px 14px;
+            padding: 16px 12px;
         }
     }
 
-    /* ═══════════════════════════════════════════
-       FLASH MESSAGES
-    ═══════════════════════════════════════════ */
+    /* ───────────────────────────────────────────
+     FLASH
+  ─────────────────────────────────────────── */
     .flash-msg,
     .flash-success {
-        background: rgba(34, 197, 94, 0.12);
+        background: rgba(34, 197, 94, 0.1);
         border: 1px solid rgba(34, 197, 94, 0.25);
         color: var(--green);
-        padding: 12px 16px;
+        padding: 11px 14px;
         border-radius: 8px;
-        margin-bottom: 20px;
+        margin-bottom: 18px;
         font-size: 13px;
         display: flex;
-        align-items: center;
+        align-items: flex-start;
         gap: 8px;
     }
 
@@ -339,15 +378,15 @@
         background: rgba(248, 113, 113, 0.1);
         border: 1px solid rgba(248, 113, 113, 0.25);
         color: var(--danger);
-        padding: 12px 16px;
+        padding: 11px 14px;
         border-radius: 8px;
-        margin-bottom: 20px;
+        margin-bottom: 18px;
         font-size: 13px;
     }
 
-    /* ═══════════════════════════════════════════
-       CARDS
-    ═══════════════════════════════════════════ */
+    /* ───────────────────────────────────────────
+     CARDS
+  ─────────────────────────────────────────── */
     .card {
         background: var(--card);
         border: 1px solid var(--border);
@@ -358,9 +397,15 @@
         padding: 20px;
     }
 
-    /* ═══════════════════════════════════════════
-       FORMS
-    ═══════════════════════════════════════════ */
+    @media (max-width: 480px) {
+        .card-pad {
+            padding: 14px;
+        }
+    }
+
+    /* ───────────────────────────────────────────
+     FORM ELEMENTS
+  ─────────────────────────────────────────── */
     label {
         display: block;
         font-size: 11px;
@@ -383,13 +428,14 @@
         border: 1px solid rgba(255, 255, 255, 0.12);
         color: var(--cream);
         border-radius: 8px;
-        padding: 10px 14px;
+        padding: 10px 13px;
         width: 100%;
-        font-size: 13px;
+        font-size: 14px;
         font-family: inherit;
         outline: none;
         transition: border-color 0.2s, box-shadow 0.2s;
         -webkit-appearance: none;
+        appearance: none;
     }
 
     input:focus,
@@ -411,39 +457,47 @@
     input[type="file"] {
         padding: 8px;
         cursor: pointer;
-        font-size: 12px;
+        font-size: 13px;
         color: var(--muted);
+        border-style: dashed;
     }
 
     textarea {
         resize: vertical;
-        min-height: 80px;
+        min-height: 90px;
+        line-height: 1.6;
     }
 
-    /* ═══════════════════════════════════════════
-       BUTTONS
-    ═══════════════════════════════════════════ */
+    .space-y>*+* {
+        margin-top: 16px;
+    }
+
+    /* ───────────────────────────────────────────
+     BUTTONS
+  ─────────────────────────────────────────── */
     .btn-primary {
         display: inline-flex;
         align-items: center;
         justify-content: center;
-        gap: 6px;
+        gap: 7px;
         background: var(--yellow);
         color: #0D0D0D;
         font-weight: 700;
         font-size: 13px;
-        padding: 10px 20px;
+        padding: 10px 18px;
         border: none;
         border-radius: 8px;
         cursor: pointer;
-        transition: filter 0.2s, transform 0.15s;
+        transition: filter 0.18s, transform 0.15s, box-shadow 0.18s;
         white-space: nowrap;
         text-decoration: none;
+        min-height: 40px;
     }
 
     .btn-primary:hover {
         filter: brightness(1.1);
         transform: translateY(-1px);
+        box-shadow: 0 6px 18px rgba(245, 197, 24, 0.3);
     }
 
     .btn-secondary {
@@ -451,21 +505,22 @@
         align-items: center;
         justify-content: center;
         gap: 6px;
-        background: rgba(255, 255, 255, 0.06);
+        background: rgba(255, 255, 255, 0.05);
         color: var(--cream);
         border: 1px solid rgba(255, 255, 255, 0.1);
         font-size: 12px;
         font-weight: 500;
-        padding: 7px 14px;
+        padding: 7px 13px;
         border-radius: 6px;
         cursor: pointer;
-        transition: background 0.2s;
+        transition: background 0.18s;
         text-decoration: none;
         white-space: nowrap;
+        min-height: 36px;
     }
 
     .btn-secondary:hover {
-        background: rgba(255, 255, 255, 0.12);
+        background: rgba(255, 255, 255, 0.1);
     }
 
     .btn-danger {
@@ -473,26 +528,27 @@
         align-items: center;
         justify-content: center;
         gap: 6px;
-        background: rgba(248, 113, 113, 0.1);
+        background: rgba(248, 113, 113, 0.08);
         color: var(--danger);
-        border: 1px solid rgba(248, 113, 113, 0.25);
+        border: 1px solid rgba(248, 113, 113, 0.22);
         font-size: 12px;
         font-weight: 500;
-        padding: 7px 14px;
+        padding: 7px 13px;
         border-radius: 6px;
         cursor: pointer;
-        transition: background 0.2s;
+        transition: background 0.18s;
         text-decoration: none;
         white-space: nowrap;
+        min-height: 36px;
     }
 
     .btn-danger:hover {
-        background: rgba(248, 113, 113, 0.2);
+        background: rgba(248, 113, 113, 0.18);
     }
 
-    /* ═══════════════════════════════════════════
-       BADGES
-    ═══════════════════════════════════════════ */
+    /* ───────────────────────────────────────────
+     BADGES
+  ─────────────────────────────────────────── */
     .badge-active {
         display: inline-block;
         background: rgba(34, 197, 94, 0.12);
@@ -502,6 +558,7 @@
         font-weight: 600;
         padding: 3px 10px;
         border-radius: 20px;
+        white-space: nowrap;
     }
 
     .badge-inactive {
@@ -513,12 +570,14 @@
         font-weight: 600;
         padding: 3px 10px;
         border-radius: 20px;
+        white-space: nowrap;
     }
 
-    /* ═══════════════════════════════════════════
-       RESPONSIVE TABLES
-    ═══════════════════════════════════════════ */
+    /* ───────────────────────────────────────────
+     TABLE
+  ─────────────────────────────────────────── */
     .table-wrap {
+        width: 100%;
         overflow-x: auto;
         -webkit-overflow-scrolling: touch;
     }
@@ -527,7 +586,7 @@
         width: 100%;
         border-collapse: collapse;
         font-size: 13px;
-        min-width: 600px;
+        min-width: 540px;
     }
 
     thead tr {
@@ -536,7 +595,7 @@
 
     th {
         text-align: left;
-        padding: 12px 14px;
+        padding: 11px 13px;
         font-size: 10px;
         font-weight: 700;
         text-transform: uppercase;
@@ -546,7 +605,7 @@
     }
 
     td {
-        padding: 12px 14px;
+        padding: 11px 13px;
         border-bottom: 1px solid rgba(255, 255, 255, 0.04);
         vertical-align: middle;
     }
@@ -559,9 +618,6 @@
         border-bottom: none;
     }
 
-    /* ═══════════════════════════════════════════
-       ACTION BUTTON ROW
-    ═══════════════════════════════════════════ */
     .action-row {
         display: flex;
         align-items: center;
@@ -569,22 +625,23 @@
         flex-wrap: wrap;
     }
 
-    /* ═══════════════════════════════════════════
-       PAGE HEADER
-    ═══════════════════════════════════════════ */
+    /* ───────────────────────────────────────────
+     PAGE HEADER
+  ─────────────────────────────────────────── */
     .page-hdr {
         display: flex;
         align-items: flex-start;
         justify-content: space-between;
-        gap: 16px;
-        margin-bottom: 24px;
+        gap: 12px;
+        margin-bottom: 20px;
         flex-wrap: wrap;
     }
 
     .page-hdr-title {
-        font-size: 22px;
+        font-size: 20px;
         font-weight: 700;
         color: var(--cream);
+        line-height: 1.2;
     }
 
     .page-hdr-sub {
@@ -593,50 +650,232 @@
         margin-top: 4px;
     }
 
-    /* ═══════════════════════════════════════════
-       GRID HELPERS
-    ═══════════════════════════════════════════ */
+    /* ───────────────────────────────────────────
+     GRID HELPERS
+  ─────────────────────────────────────────── */
     .grid-2 {
         display: grid;
         grid-template-columns: 1fr 1fr;
-        gap: 16px;
+        gap: 14px;
+    }
+
+    @media (max-width: 600px) {
+        .grid-2 {
+            grid-template-columns: 1fr;
+        }
     }
 
     .grid-3 {
         display: grid;
         grid-template-columns: repeat(3, 1fr);
-        gap: 16px;
+        gap: 14px;
     }
 
-    .grid-form {
-        display: grid;
-        grid-template-columns: 1fr 340px;
-        gap: 20px;
-        align-items: start;
-    }
-
-    .space-y>*+* {
-        margin-top: 16px;
-    }
-
-    @media (max-width: 1024px) {
-        .grid-form {
-            grid-template-columns: 1fr 300px;
-        }
-
+    @media (max-width: 860px) {
         .grid-3 {
             grid-template-columns: 1fr 1fr;
         }
     }
 
-    @media (max-width: 768px) {
+    @media (max-width: 480px) {
+        .grid-3 {
+            grid-template-columns: 1fr;
+        }
+    }
+
+    /* Post form: rich content + meta sidebar */
+    .grid-form {
+        display: grid;
+        grid-template-columns: 1fr 300px;
+        gap: 18px;
+        align-items: start;
+    }
+
+    @media (max-width: 960px) {
+        .grid-form {
+            grid-template-columns: 1fr 260px;
+        }
+    }
+
+    @media (max-width: 720px) {
         .grid-form {
             grid-template-columns: 1fr;
         }
+    }
 
-        .grid-2,
-        .grid-3 {
+    /* Settings cards */
+    .grid-settings {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 16px;
+    }
+
+    @media (max-width: 768px) {
+        .grid-settings {
             grid-template-columns: 1fr;
+        }
+    }
+
+    /* Small 2-col inside cards */
+    .grid-mini {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 12px;
+    }
+
+    @media (max-width: 400px) {
+        .grid-mini {
+            grid-template-columns: 1fr;
+        }
+    }
+
+    /* Enquiry detail */
+    .grid-enquiry {
+        display: grid;
+        grid-template-columns: 1fr 290px;
+        gap: 18px;
+        align-items: start;
+    }
+
+    @media (max-width: 860px) {
+        .grid-enquiry {
+            grid-template-columns: 1fr;
+        }
+    }
+
+    /* ───────────────────────────────────────────
+     CKEDITOR 5 — COMPREHENSIVE DARK FIX
+     Fixes invisible text (white bg / white text clash)
+  ─────────────────────────────────────────── */
+
+    /* Editable body */
+    .ck.ck-editor__editable,
+    .ck.ck-editor__editable_inline,
+    .ck-blurred.ck-editor__editable,
+    .ck-focused.ck-editor__editable {
+        background: #111111 !important;
+        color: #F9F5EE !important;
+        border-color: rgba(255, 255, 255, 0.14) !important;
+        min-height: 360px;
+        caret-color: #F5C518;
+    }
+
+    .ck.ck-editor__editable.ck-focused {
+        border-color: #F5C518 !important;
+        box-shadow: 0 0 0 3px rgba(245, 197, 24, 0.12) !important;
+    }
+
+    /* Toolbar background */
+    .ck.ck-toolbar {
+        background: #1a1a1a !important;
+        border-color: rgba(255, 255, 255, 0.1) !important;
+    }
+
+    .ck.ck-toolbar__separator {
+        background: rgba(255, 255, 255, 0.1) !important;
+    }
+
+    /* Toolbar buttons */
+    .ck.ck-button,
+    .ck.ck-button.ck-off {
+        color: rgba(249, 245, 238, 0.72) !important;
+        background: transparent !important;
+    }
+
+    .ck.ck-button:hover:not(.ck-disabled),
+    .ck.ck-button.ck-on {
+        background: rgba(245, 197, 24, 0.14) !important;
+        color: #F5C518 !important;
+    }
+
+    /* Dropdown panels */
+    .ck.ck-dropdown__panel,
+    .ck.ck-list,
+    .ck.ck-balloon-panel,
+    .ck.ck-dropdown__panel .ck-list {
+        background: #1e1e1e !important;
+        border-color: rgba(255, 255, 255, 0.1) !important;
+    }
+
+    .ck.ck-list__item .ck-button {
+        color: rgba(249, 245, 238, 0.75) !important;
+    }
+
+    .ck.ck-list__item .ck-button:hover,
+    .ck.ck-list__item .ck-button.ck-on {
+        background: rgba(245, 197, 24, 0.14) !important;
+        color: #F5C518 !important;
+    }
+
+    /* Inputs inside CK panels (link dialog etc.) */
+    .ck.ck-input-text,
+    .ck.ck-input {
+        background: #0D0D0D !important;
+        color: var(--cream) !important;
+        border-color: rgba(255, 255, 255, 0.15) !important;
+    }
+
+    .ck.ck-input-text:focus,
+    .ck.ck-input:focus {
+        border-color: #F5C518 !important;
+        box-shadow: 0 0 0 2px rgba(245, 197, 24, 0.12) !important;
+    }
+
+    .ck.ck-label,
+    .ck.ck-labeled-field-view__label {
+        color: rgba(249, 245, 238, 0.5) !important;
+    }
+
+    /* Content typography */
+    .ck-content,
+    .ck-content p {
+        color: #F9F5EE;
+        margin-bottom: 1em;
+    }
+
+    .ck-content h1,
+    .ck-content h2,
+    .ck-content h3 {
+        color: #F9F5EE;
+        margin: 1.4em 0 0.5em;
+    }
+
+    .ck-content a {
+        color: #F5C518;
+    }
+
+    .ck-content strong {
+        color: #fff;
+    }
+
+    .ck-content blockquote {
+        border-left: 3px solid #F5C518;
+        padding-left: 1em;
+        color: rgba(249, 245, 238, 0.55);
+        font-style: italic;
+    }
+
+    .ck-content code,
+    .ck-content pre {
+        background: #0a0a0a;
+        color: #F5C518;
+        border-radius: 4px;
+        padding: 2px 6px;
+    }
+
+    /* Balloon panel z-index */
+    .ck.ck-balloon-panel {
+        z-index: 9999 !important;
+    }
+
+    /* Mobile compress */
+    @media (max-width: 640px) {
+        .ck.ck-toolbar {
+            flex-wrap: wrap !important;
+        }
+
+        .ck.ck-editor__editable {
+            min-height: 220px;
         }
     }
     </style>
@@ -644,17 +883,17 @@
 
 <body>
 
-    <!-- Sidebar overlay (mobile) -->
     <div id="fc-overlay" onclick="fcCloseSidebar()"></div>
 
-    <!-- ══ SIDEBAR ══ -->
-    <aside id="fc-sidebar">
-        <div class="sidebar-brand">
-            <div class="sidebar-brand-logo">FILMY<span>CURRY</span></div>
-            <div class="sidebar-brand-sub">Admin Panel</div>
+    <!-- ══ SIDEBAR ════════════════════════════════════════════ -->
+    <aside id="fc-sidebar" role="navigation" aria-label="Admin navigation">
+
+        <div class="sb-brand">
+            <div class="sb-brand-logo">FILMY<span>CURRY</span></div>
+            <div class="sb-brand-sub">Admin Panel</div>
         </div>
 
-        <nav class="sidebar-nav">
+        <nav class="sb-nav">
             <?php $uri = uri_string(); ?>
 
             <a href="<?= base_url('admin/dashboard') ?>"
@@ -663,50 +902,49 @@
             </a>
 
             <a href="<?= base_url('admin/posts') ?>"
-                class="sidebar-link <?= (strpos($uri, 'posts') !== FALSE) ? 'active' : '' ?>">
+                class="sidebar-link <?= strpos($uri, 'posts') !== FALSE ? 'active' : '' ?>">
                 <i class="fa fa-film"></i> Posts / Campaigns
             </a>
 
             <a href="<?= base_url('admin/enquiries') ?>"
-                class="sidebar-link <?= (strpos($uri, 'enquiries') !== FALSE) ? 'active' : '' ?>">
+                class="sidebar-link <?= strpos($uri, 'enquiries') !== FALSE ? 'active' : '' ?>">
                 <i class="fa fa-envelope"></i> Enquiries
             </a>
 
             <a href="<?= base_url('admin/settings') ?>"
-                class="sidebar-link <?= (strpos($uri, 'settings') !== FALSE) ? 'active' : '' ?>">
+                class="sidebar-link <?= strpos($uri, 'settings') !== FALSE ? 'active' : '' ?>">
                 <i class="fa fa-cog"></i> Settings
             </a>
 
-            <a href="<?= base_url() ?>" target="_blank" class="sidebar-link">
-                <i class="fa fa-external-link"></i> View Website
+            <a href="<?= base_url() ?>" target="_blank" rel="noopener" class="sidebar-link">
+                <i class="fa fa-arrow-up-right-from-square"></i> View Site
             </a>
         </nav>
 
-        <div class="sidebar-footer">
-            <div class="sidebar-user">
-                <div class="sidebar-avatar">
+        <div class="sb-footer">
+            <div class="sb-user">
+                <div class="sb-avatar">
                     <?= strtoupper(substr($this->session->userdata('admin_username') ?? 'A', 0, 1)) ?>
                 </div>
                 <div>
-                    <div class="sidebar-username">
-                        <?= htmlspecialchars($this->session->userdata('admin_username') ?? 'Admin') ?>
-                    </div>
-                    <div class="sidebar-role">Administrator</div>
+                    <div class="sb-username">
+                        <?= htmlspecialchars($this->session->userdata('admin_username') ?? 'Admin') ?></div>
+                    <div class="sb-role">Administrator</div>
                 </div>
             </div>
             <a href="<?= base_url('admin/logout') ?>" class="sidebar-link danger">
-                <i class="fa fa-sign-out"></i> Logout
+                <i class="fa fa-right-from-bracket"></i> Logout
             </a>
         </div>
+
     </aside>
 
-    <!-- ══ MAIN ══ -->
+    <!-- ══ MAIN ══════════════════════════════════════════════ -->
     <div id="fc-main">
 
-        <!-- TOPBAR -->
         <header id="fc-topbar">
-            <button id="fc-menu-btn" onclick="fcToggleSidebar()" aria-label="Toggle menu">
-                <i class="fa fa-bars"></i>
+            <button id="fc-menu-btn" onclick="fcToggleSidebar()" aria-label="Toggle sidebar" aria-expanded="false">
+                <i class="fa fa-bars" id="fc-menu-icon"></i>
             </button>
             <span class="topbar-title">
                 <?= isset($site_title) ? htmlspecialchars($site_title) . ' — Admin' : 'FilmyCurry Admin' ?>
@@ -714,22 +952,20 @@
             <span class="topbar-date"><?= date('D, d M Y') ?></span>
         </header>
 
-        <!-- CONTENT -->
         <div id="fc-content">
 
             <?php if ($flash = $this->session->flashdata('msg')): ?>
-            <div class="flash-msg"><i class="fa fa-check-circle"></i> <?= htmlspecialchars($flash) ?></div>
+            <div class="flash-msg"><i class="fa fa-circle-check"></i> <?= htmlspecialchars($flash) ?></div>
             <?php endif; ?>
 
             <?php if ($flash = $this->session->flashdata('success')): ?>
-            <div class="flash-success"><i class="fa fa-check-circle"></i> <?= htmlspecialchars($flash) ?></div>
+            <div class="flash-success"><i class="fa fa-circle-check"></i> <?= htmlspecialchars($flash) ?></div>
             <?php endif; ?>
 
             <?php if ($flash = $this->session->flashdata('error')): ?>
-            <div class="flash-error"><i class="fa fa-exclamation-triangle"></i> <?= $flash ?></div>
+            <div class="flash-error"><?= $flash ?></div>
             <?php endif; ?>
 
             <?php if ($flash = $this->session->flashdata('upload_error')): ?>
-            <div class="flash-error"><i class="fa fa-exclamation-triangle"></i> Upload error:
-                <?= htmlspecialchars($flash) ?></div>
+            <div class="flash-error">Upload error: <?= htmlspecialchars($flash) ?></div>
             <?php endif; ?>
