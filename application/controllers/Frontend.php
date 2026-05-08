@@ -1,24 +1,27 @@
 <?php
-defined('BASEPATH') OR exit('No direct script access allowed');
-/* FILE: application/controllers/Frontend.php — replace existing */
+defined('BASEPATH') or exit('No direct script access allowed');
 
-class Frontend extends CI_Controller {
+class Frontend extends CI_Controller
+{
 
     private $settings = [];
 
-    public function __construct() {
+    public function __construct()
+    {
         parent::__construct();
         $this->load->model(['Post_model', 'Setting_model', 'Enquiry_model']);
         $this->settings = $this->Setting_model->get_flat();
     }
 
-    public function index() {
+    public function index()
+    {
         $data['settings'] = $this->settings;
         $data['posts']    = $this->Post_model->get_active();
         $this->_render('frontend/home', $data);
     }
 
-    public function post($slug) {
+    public function post($slug)
+    {
         $post = $this->Post_model->get_by_slug($slug);
         if (!$post) show_404();
         $data['settings'] = $this->settings;
@@ -26,26 +29,30 @@ class Frontend extends CI_Controller {
         $this->_render('frontend/post', $data);
     }
 
-    public function about() {
+    public function about()
+    {
         $data['settings']   = $this->settings;
         $data['page_title'] = 'About';
         $this->_render('frontend/about', $data);
     }
 
-    public function work() {
+    public function work()
+    {
         $data['settings']   = $this->settings;
         $data['posts']      = $this->Post_model->get_active();
         $data['page_title'] = 'Our Work';
         $this->_render('frontend/work', $data);
     }
 
-    public function contact() {
+    public function contact()
+    {
         $data['settings']   = $this->settings;
         $data['page_title'] = "Let's Talk";
         $this->_render('frontend/contact', $data);
     }
 
-    public function send_contact() {
+    public function send_contact()
+    {
         $this->load->library(['form_validation', 'upload']);
         $this->form_validation->set_rules('name',    'Name',    'required|trim|max_length[100]');
         $this->form_validation->set_rules('email',   'Email',   'required|valid_email|trim');
@@ -61,7 +68,7 @@ class Frontend extends CI_Controller {
         if (!empty($_FILES['attachment']['name'])) {
             $dir = FCPATH . 'assets/images/uploads/enquiries/';
             if (!is_dir($dir)) @mkdir($dir, 0755, TRUE);
-            $this->upload->initialize(['upload_path'=>$dir,'allowed_types'=>'pdf|jpg|jpeg|png|webp','max_size'=>5120,'encrypt_name'=>TRUE]);
+            $this->upload->initialize(['upload_path' => $dir, 'allowed_types' => 'pdf|jpg|jpeg|png|webp', 'max_size' => 5120, 'encrypt_name' => TRUE]);
             if ($this->upload->do_upload('attachment')) {
                 $attachment = $this->upload->data('file_name');
             }
@@ -79,24 +86,27 @@ class Frontend extends CI_Controller {
             'is_read'    => 0,
         ]);
 
-        $to   = $this->settings['site_email'] ?? 'contact@filmycurry.com';
+        $to   = $this->settings['site_email'] ?? 'contact@thecinecaffe.com';
         $from = $this->input->post('email', TRUE);
         $name = $this->input->post('name', TRUE);
-        @mail($to, '[FilmyCurry] New Enquiry from ' . $name,
-            "Name: $name\nEmail: $from\nPhone: " . $this->input->post('phone',TRUE) .
-            "\nCompany: " . $this->input->post('company',TRUE) .
-            "\nBudget: " . $this->input->post('budget',TRUE) .
-            "\nService: " . $this->input->post('service',TRUE) .
-            "\n\nMessage:\n" . $this->input->post('message',TRUE) .
-            "\n\nAdmin: " . base_url('admin/enquiries'),
-            "From: FilmyCurry <noreply@filmycurry.com>\r\nReply-To: $from"
+        @mail(
+            $to,
+            '[The Cine Caffe] New Enquiry from ' . $name,
+            "Name: $name\nEmail: $from\nPhone: " . $this->input->post('phone', TRUE) .
+                "\nCompany: " . $this->input->post('company', TRUE) .
+                "\nBudget: " . $this->input->post('budget', TRUE) .
+                "\nService: " . $this->input->post('service', TRUE) .
+                "\n\nMessage:\n" . $this->input->post('message', TRUE) .
+                "\n\nAdmin: " . base_url('admin/enquiries'),
+            "From: The Cine Caffe <noreply@thecinecaffe.com>\r\nReply-To: $from"
         );
 
-        $this->session->set_flashdata('success', "Thanks $name! We'll respond within 24-48 hours. 🚀");
+        $this->session->set_flashdata('success', "Thanks $name! We'll respond within 24-48 hours. 🎬");
         redirect('contact');
     }
 
-    private function _render($view, $data = []) {
+    private function _render($view, $data = [])
+    {
         $data['_settings'] = $this->settings;
         $data['_uri']      = uri_string();
         $this->load->view('layouts/frontend_layout_v5', [

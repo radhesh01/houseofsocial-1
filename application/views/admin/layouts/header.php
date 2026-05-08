@@ -4,26 +4,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title><?= isset($site_title) ? htmlspecialchars($site_title) : 'The Cine Cafe' ?> — Admin</title>
+    <title><?= isset($site_title) ? htmlspecialchars($site_title) : 'The Cine Caffe' ?> — Admin</title>
 
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
-    <script src="https://cdn.tailwindcss.com"></script>
-    <script>
-    tailwind.config = {
-        theme: {
-            extend: {
-                colors: {
-                    cc: {
-                        gold: '#C9A84C',
-                        ivory: '#F5F0E8',
-                        noir: '#0A0A0F',
-                        card: '#1A1A26'
-                    }
-                }
-            }
-        }
-    }
-    </script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
     <link
         href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=DM+Sans:wght@300;400;500;600&display=swap"
         rel="stylesheet">
@@ -39,15 +23,16 @@
 
     :root {
         --bg: #0A0A0F;
-        --sidebar: #12121A;
-        --card: #1A1A26;
+        --sidebar: #0E0E18;
+        --card: #14141F;
         --border: rgba(255, 255, 255, 0.06);
         --gold: #C9A84C;
+        --rose: #E8836A;
         --ivory: #F5F0E8;
         --muted: rgba(245, 240, 232, 0.38);
         --danger: #E8836A;
         --green: #6BAF8D;
-        --sidebar-w: 236px;
+        --sidebar-w: 240px;
         --font-d: 'Cormorant Garamond', Georgia, serif;
         --font-b: 'DM Sans', system-ui, sans-serif;
     }
@@ -90,6 +75,7 @@
         border-radius: 2px;
     }
 
+    /* ── OVERLAY ── */
     #cc-overlay {
         display: none;
         position: fixed;
@@ -103,7 +89,7 @@
         display: block;
     }
 
-    /* SIDEBAR */
+    /* ── SIDEBAR ── */
     #cc-sidebar {
         position: fixed;
         top: 0;
@@ -132,19 +118,35 @@
     }
 
     .sb-brand {
-        padding: 20px 18px 16px;
+        padding: 22px 20px 18px;
         border-bottom: 1px solid var(--border);
         flex-shrink: 0;
     }
 
     .sb-brand-logo {
         font-family: var(--font-d);
-        font-size: 20px;
+        font-size: 18px;
         font-weight: 300;
         font-style: italic;
-        letter-spacing: .1em;
+        letter-spacing: .08em;
         color: var(--ivory);
         line-height: 1;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+    }
+
+    .sb-brand-logo .logo-mark {
+        width: 28px;
+        height: 28px;
+        border: 1px solid rgba(201, 168, 76, .4);
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 13px;
+        color: var(--gold);
+        flex-shrink: 0;
     }
 
     .sb-brand-logo span {
@@ -156,7 +158,8 @@
         color: var(--muted);
         letter-spacing: .22em;
         text-transform: uppercase;
-        margin-top: 4px;
+        margin-top: 5px;
+        padding-left: 38px;
     }
 
     .sb-nav {
@@ -213,6 +216,15 @@
         color: var(--danger);
     }
 
+    .sb-section-label {
+        font-size: 9px;
+        font-weight: 600;
+        letter-spacing: .18em;
+        text-transform: uppercase;
+        color: rgba(245, 240, 232, .15);
+        padding: 14px 12px 6px;
+    }
+
     .sb-footer {
         padding: 10px 8px;
         border-top: 1px solid var(--border);
@@ -256,7 +268,7 @@
         letter-spacing: .08em;
     }
 
-    /* MAIN */
+    /* ── MAIN ── */
     #cc-main {
         margin-left: var(--sidebar-w);
         min-height: 100vh;
@@ -270,12 +282,12 @@
         }
     }
 
-    /* TOPBAR */
+    /* ── TOPBAR ── */
     #cc-topbar {
         position: sticky;
         top: 0;
         z-index: 50;
-        height: 54px;
+        height: 56px;
         background: rgba(10, 10, 15, .97);
         border-bottom: 1px solid var(--border);
         display: flex;
@@ -338,7 +350,7 @@
         }
     }
 
-    /* CONTENT */
+    /* ── CONTENT ── */
     #cc-content {
         flex: 1;
         padding: 24px 20px;
@@ -352,7 +364,7 @@
         }
     }
 
-    /* FLASH */
+    /* ── FLASH ── */
     .flash-msg,
     .flash-success {
         background: rgba(107, 175, 141, .1);
@@ -377,7 +389,7 @@
         font-size: 13px;
     }
 
-    /* CARDS */
+    /* ── CARDS ── */
     .card {
         background: var(--card);
         border: 1px solid var(--border);
@@ -394,7 +406,7 @@
         }
     }
 
-    /* FORMS */
+    /* ── FORMS ── */
     label {
         display: block;
         font-size: 10px;
@@ -461,7 +473,7 @@
         margin-top: 16px;
     }
 
-    /* BUTTONS */
+    /* ── BUTTONS ── */
     .btn-primary {
         display: inline-flex;
         align-items: center;
@@ -535,7 +547,7 @@
         background: rgba(232, 131, 106, .15);
     }
 
-    /* BADGES */
+    /* ── BADGES ── */
     .badge-active {
         display: inline-block;
         background: rgba(107, 175, 141, .1);
@@ -562,7 +574,7 @@
         letter-spacing: .06em;
     }
 
-    /* TABLE */
+    /* ── TABLE ── */
     .table-wrap {
         width: 100%;
         overflow-x: auto;
@@ -612,7 +624,7 @@
         flex-wrap: wrap;
     }
 
-    /* PAGE HEADER */
+    /* ── PAGE HEADER ── */
     .page-hdr {
         display: flex;
         align-items: flex-start;
@@ -637,7 +649,7 @@
         letter-spacing: .02em;
     }
 
-    /* GRIDS */
+    /* ── GRIDS ── */
     .grid-2 {
         display: grid;
         grid-template-columns: 1fr 1fr;
@@ -724,7 +736,7 @@
         }
     }
 
-    /* CKEDITOR DARK */
+    /* ── CKEDITOR DARK ── */
     .ck.ck-editor__editable,
     .ck.ck-editor__editable_inline,
     .ck-blurred.ck-editor__editable,
@@ -846,23 +858,33 @@
     <!-- SIDEBAR -->
     <aside id="cc-sidebar" role="navigation" aria-label="Admin navigation">
         <div class="sb-brand">
-            <div class="sb-brand-logo">The Cine <span>Cafe</span></div>
+            <div class="sb-brand-logo">
+                <span class="logo-mark">C</span>
+                The Cine <span>Caffe</span>
+            </div>
             <div class="sb-brand-sub">Admin Studio</div>
         </div>
+
         <nav class="sb-nav">
             <?php $uri = uri_string(); ?>
+
+            <span class="sb-section-label">Main</span>
+
             <a href="<?= base_url('admin/dashboard') ?>"
                 class="sidebar-link <?= (strpos($uri, 'dashboard') !== FALSE || $uri === 'admin') ? 'active' : '' ?>">
                 <i class="fa fa-home"></i> Dashboard
             </a>
             <a href="<?= base_url('admin/posts') ?>"
                 class="sidebar-link <?= strpos($uri, 'posts') !== FALSE ? 'active' : '' ?>">
-                <i class="fa fa-film"></i> Posts / Campaigns
+                <i class="fa fa-film"></i> Posts &amp; Campaigns
             </a>
             <a href="<?= base_url('admin/enquiries') ?>"
                 class="sidebar-link <?= strpos($uri, 'enquiries') !== FALSE ? 'active' : '' ?>">
                 <i class="fa fa-envelope"></i> Enquiries
             </a>
+
+            <span class="sb-section-label" style="margin-top:8px">System</span>
+
             <a href="<?= base_url('admin/settings') ?>"
                 class="sidebar-link <?= strpos($uri, 'settings') !== FALSE ? 'active' : '' ?>">
                 <i class="fa fa-cog"></i> Settings
@@ -871,10 +893,12 @@
                 <i class="fa fa-arrow-up-right-from-square"></i> View Site
             </a>
         </nav>
+
         <div class="sb-footer">
             <div class="sb-user">
                 <div class="sb-avatar">
-                    <?= strtoupper(substr($this->session->userdata('admin_username') ?? 'A', 0, 1)) ?></div>
+                    <?= strtoupper(substr($this->session->userdata('admin_username') ?? 'A', 0, 1)) ?>
+                </div>
                 <div>
                     <div class="sb-username">
                         <?= htmlspecialchars($this->session->userdata('admin_username') ?? 'Admin') ?></div>
@@ -894,7 +918,7 @@
                 <i class="fa fa-bars" id="cc-menu-icon"></i>
             </button>
             <span class="topbar-title">
-                <?= isset($site_title) ? htmlspecialchars($site_title) . ' — Admin' : 'The Cine Cafe Admin' ?>
+                <?= isset($site_title) ? htmlspecialchars($site_title) . ' — Admin' : 'The Cine Caffe Admin' ?>
             </span>
             <span class="topbar-date"><?= date('D, d M Y') ?></span>
         </header>

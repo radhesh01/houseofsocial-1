@@ -7,10 +7,6 @@ $form_action = ($action === 'create')
 ?>
 
 <style>
-/* ── Post form layout ────────────────────────────────────
-   Overrides the global .grid-form with tighter breakpoints
-   so the sidebar never overflows off-screen.
-──────────────────────────────────────────────────────── */
 .pf-wrap {
     display: grid;
     grid-template-columns: 1fr 280px;
@@ -19,30 +15,25 @@ $form_action = ($action === 'create')
     width: 100%;
 }
 
-/* Both columns must have min-width:0 — prevents grid blowout */
 .pf-wrap>* {
     min-width: 0;
 }
 
-/* Sidebar gets a bit narrower on medium screens */
 @media (max-width: 1100px) {
     .pf-wrap {
         grid-template-columns: 1fr 240px;
     }
 }
 
-/* Stack on tablet/mobile */
 @media (max-width: 768px) {
     .pf-wrap {
         grid-template-columns: 1fr;
     }
 }
 
-/* Sidebar sticky — keeps it in view while scrolling content */
 .pf-sidebar {
     position: sticky;
     top: 72px;
-    /* below the fixed topbar */
     display: flex;
     flex-direction: column;
     gap: 16px;
@@ -51,11 +42,9 @@ $form_action = ($action === 'create')
 @media (max-width: 768px) {
     .pf-sidebar {
         position: static;
-        /* not sticky when stacked */
     }
 }
 
-/* CKEditor min-height */
 .ck.ck-editor__editable {
     min-height: 340px !important;
 }
@@ -76,7 +65,8 @@ $form_action = ($action === 'create')
         </a>
         <div class="page-hdr-title"><?= ($action === 'create') ? 'Create New Post' : 'Edit Post' ?></div>
         <div class="page-hdr-sub">
-            <?= ($action === 'create') ? 'Add a new campaign or blog post' : 'Update post details' ?></div>
+            <?= ($action === 'create') ? 'Add a new campaign or article' : 'Update post details' ?>
+        </div>
     </div>
 </div>
 
@@ -91,25 +81,25 @@ $form_action = ($action === 'create')
 </div>
 <?php endif; ?>
 
-<?php echo form_open_multipart($form_action, ['id' => 'fc-post-form']); ?>
+<?php echo form_open_multipart($form_action, ['id' => 'cc-post-form']); ?>
 
 <div class="pf-wrap">
 
-    <!-- ══ LEFT: Main content ══════════════════════════════ -->
+    <!-- LEFT: Main content -->
     <div class="space-y">
 
         <div class="card card-pad space-y">
             <div>
-                <label>Post Title <span style="color:var(--yellow)">*</span></label>
-                <input type="text" name="title" placeholder="e.g. Tiger 3 Meme Campaign"
+                <label>Post Title <span style="color:var(--gold)">*</span></label>
+                <input type="text" name="title" placeholder="e.g. The Kerala Story — Influencer Campaign"
                     value="<?= set_value('title', $post['title'] ?? '') ?>">
                 <?= form_error('title', '<p style="color:var(--danger);font-size:11px;margin-top:4px;">', '</p>') ?>
             </div>
 
             <div>
-                <label>Short Description <span style="color:var(--yellow)">*</span></label>
+                <label>Short Description <span style="color:var(--gold)">*</span></label>
                 <textarea name="description" rows="3"
-                    placeholder="Brief summary shown on homepage card..."><?= set_value('description', $post['description'] ?? '') ?></textarea>
+                    placeholder="Brief summary shown on the homepage card..."><?= set_value('description', $post['description'] ?? '') ?></textarea>
                 <?= form_error('description', '<p style="color:var(--danger);font-size:11px;margin-top:4px;">', '</p>') ?>
             </div>
         </div>
@@ -117,9 +107,9 @@ $form_action = ($action === 'create')
         <!-- Rich editor -->
         <div class="card card-pad">
             <label style="margin-bottom:10px;">Full Content (Rich Editor)</label>
-            <textarea name="content" id="fc-content-field"
+            <textarea name="content" id="cc-content-field"
                 style="display:none;"><?= set_value('content', $post['content'] ?? '') ?></textarea>
-            <div id="fc-ck-editor"></div>
+            <div id="cc-ck-editor"></div>
             <p style="font-size:11px;color:var(--muted);margin-top:8px;">
                 Supports headings, bold, italic, lists, links, images, and tables.
             </p>
@@ -127,13 +117,13 @@ $form_action = ($action === 'create')
 
     </div><!-- /left -->
 
-    <!-- ══ RIGHT: Sidebar meta ═════════════════════════════ -->
+    <!-- RIGHT: Sidebar meta -->
     <div class="pf-sidebar">
 
         <!-- Publish settings -->
         <div class="card card-pad space-y">
             <div
-                style="font-size:11px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:var(--cream);">
+                style="font-size:11px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:var(--ivory);">
                 Publish Settings
             </div>
 
@@ -147,9 +137,9 @@ $form_action = ($action === 'create')
             </div>
 
             <div>
-                <label>Author <span style="color:var(--yellow)">*</span></label>
-                <input type="text" name="author" placeholder="FilmyCurry Team"
-                    value="<?= set_value('author', $post['author'] ?? 'FilmyCurry Team') ?>">
+                <label>Author <span style="color:var(--gold)">*</span></label>
+                <input type="text" name="author" placeholder="The Cine Caffe Team"
+                    value="<?= set_value('author', $post['author'] ?? 'The Cine Caffe Team') ?>">
                 <?= form_error('author', '<p style="color:var(--danger);font-size:11px;margin-top:4px;">', '</p>') ?>
             </div>
 
@@ -169,7 +159,7 @@ $form_action = ($action === 'create')
         <!-- Cover image -->
         <div class="card card-pad space-y">
             <div
-                style="font-size:11px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:var(--cream);">
+                style="font-size:11px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:var(--ivory);">
                 Cover Image
             </div>
 
@@ -183,12 +173,12 @@ $form_action = ($action === 'create')
 
             <div>
                 <label>Upload Image</label>
-                <input type="file" name="image" id="fc-img-input" accept="image/jpeg,image/png,image/gif,image/webp">
+                <input type="file" name="image" id="cc-img-input" accept="image/jpeg,image/png,image/gif,image/webp">
                 <p style="font-size:11px;color:var(--muted);margin-top:4px;">JPG / PNG / WebP / GIF — max 5 MB</p>
             </div>
 
-            <div id="fc-img-preview" style="display:none;">
-                <img id="fc-preview-img" src="" alt="Preview"
+            <div id="cc-img-preview" style="display:none;">
+                <img id="cc-preview-img" src="" alt="Preview"
                     style="width:100%;max-height:160px;object-fit:cover;border-radius:8px;">
                 <p style="font-size:11px;color:var(--muted);margin-top:6px;">Preview</p>
             </div>
@@ -201,7 +191,7 @@ $form_action = ($action === 'create')
 <?php echo form_close(); ?>
 
 
-<!-- ══ CKEditor 5 GPL ═════════════════════════════════════ -->
+<!-- CKEditor 5 GPL -->
 <link rel="stylesheet" href="https://cdn.ckeditor.com/ckeditor5/43.3.1/ckeditor5.css">
 
 <script type="importmap">
@@ -295,7 +285,7 @@ function CiUploadPlugin(editor) {
     editor.plugins.get('FileRepository').createUploadAdapter = l => new CiUploadAdapter(l);
 }
 
-ClassicEditor.create(document.getElementById('fc-ck-editor'), {
+ClassicEditor.create(document.getElementById('cc-ck-editor'), {
     licenseKey: 'GPL',
     plugins: [
         Essentials, Bold, Italic, Underline, Strikethrough,
@@ -349,17 +339,17 @@ ClassicEditor.create(document.getElementById('fc-ck-editor'), {
             'resizeImage'
         ]
     },
-    initialData: document.getElementById('fc-content-field').value || '',
+    initialData: document.getElementById('cc-content-field').value || '',
     placeholder: 'Start writing your post content here...'
 
 }).then(editor => {
-    window._fcEditor = editor;
-    document.getElementById('fc-post-form').addEventListener('submit', () => {
-        document.getElementById('fc-content-field').value = editor.getData();
+    window._ccEditor = editor;
+    document.getElementById('cc-post-form').addEventListener('submit', () => {
+        document.getElementById('cc-content-field').value = editor.getData();
     });
 }).catch(err => {
     console.error('CKEditor:', err);
-    const ta = document.getElementById('fc-content-field');
+    const ta = document.getElementById('cc-content-field');
     if (ta) {
         ta.style.display = 'block';
         ta.style.width = '100%';
@@ -369,13 +359,12 @@ ClassicEditor.create(document.getElementById('fc-ck-editor'), {
 </script>
 
 <script>
-/* Cover image preview */
-document.getElementById('fc-img-input').addEventListener('change', function() {
+document.getElementById('cc-img-input').addEventListener('change', function() {
     if (!this.files[0]) return;
     var reader = new FileReader();
     reader.onload = function(e) {
-        document.getElementById('fc-preview-img').src = e.target.result;
-        document.getElementById('fc-img-preview').style.display = 'block';
+        document.getElementById('cc-preview-img').src = e.target.result;
+        document.getElementById('cc-img-preview').style.display = 'block';
     };
     reader.readAsDataURL(this.files[0]);
 });

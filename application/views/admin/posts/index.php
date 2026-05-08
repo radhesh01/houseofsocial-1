@@ -3,16 +3,12 @@
 <div class="page-hdr">
     <div>
         <div class="page-hdr-title">Posts &amp; Campaigns</div>
-        <div class="page-hdr-sub">Manage all campaigns and blog posts</div>
+        <div class="page-hdr-sub">Manage all campaigns and blog posts for The Cine Caffe</div>
     </div>
     <a href="<?= base_url('admin/posts/create') ?>" class="btn-primary">
         <i class="fa fa-plus"></i> New Post
     </a>
 </div>
-
-<!-- <?php if ($flash): ?>
-<div class="flash-msg"><i class="fa fa-check-circle"></i> <?= htmlspecialchars($flash) ?></div>
-<?php endif; ?> -->
 
 <div class="card">
     <div class="table-wrap">
@@ -32,7 +28,8 @@
                 <tr>
                     <td colspan="6" style="text-align:center;padding:40px;color:var(--muted);">
                         No posts yet.
-                        <a href="<?= base_url('admin/posts/create') ?>" style="color:#F5C518;">Create first post →</a>
+                        <a href="<?= base_url('admin/posts/create') ?>" style="color:#C9A84C;">Create the first post
+                            →</a>
                     </td>
                 </tr>
                 <?php else: foreach ($posts as $p): ?>
@@ -43,13 +40,13 @@
                             style="width:48px;height:48px;object-fit:cover;border-radius:8px;display:block;">
                         <?php else: ?>
                         <div
-                            style="width:48px;height:48px;border-radius:8px;background:rgba(245,197,24,0.08);display:flex;align-items:center;justify-content:center;">
-                            <i class="fa fa-image" style="color:#F5C518;opacity:0.4;"></i>
+                            style="width:48px;height:48px;border-radius:8px;background:rgba(201,168,76,0.08);display:flex;align-items:center;justify-content:center;">
+                            <i class="fa fa-image" style="color:#C9A84C;opacity:0.4;"></i>
                         </div>
                         <?php endif; ?>
                     </td>
                     <td>
-                        <div style="color:#F9F5EE;font-weight:500;max-width:220px;"><?= htmlspecialchars($p['title']) ?>
+                        <div style="color:#F5F0E8;font-weight:500;max-width:220px;"><?= htmlspecialchars($p['title']) ?>
                         </div>
                         <div style="color:var(--muted);font-size:11px;margin-top:2px;">/post/<?= $p['slug'] ?></div>
                     </td>
@@ -62,7 +59,8 @@
                             </span>
                         </a>
                     </td>
-                    <td style="color:var(--muted);font-size:12px;"><?= date('d M Y', strtotime($p['created_at'])) ?>
+                    <td style="color:var(--muted);font-size:12px;">
+                        <?= date('d M Y', strtotime($p['created_at'])) ?>
                     </td>
                     <td>
                         <div class="action-row">
@@ -79,7 +77,7 @@
                     </td>
                 </tr>
                 <?php endforeach;
-        endif; ?>
+                endif; ?>
             </tbody>
         </table>
     </div>

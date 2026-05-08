@@ -1,7 +1,8 @@
 <?php defined('BASEPATH') or exit('No direct script access allowed');
 
 // ── Change base_url to match your server ─────────────────
-$config['base_url'] = 'http://localhost/filmycurry/';
+$config['base_url'] = 'http://localhost/thecinecaffe/';
+// https: //thecinecaffe.com/
 
 $config['index_page'] = '';
 $config['uri_protocol'] = 'AUTO';
@@ -25,15 +26,15 @@ $config['log_file_permissions'] = 0644;
 $config['log_date_format'] = 'Y-m-d H:i:s';
 $config['error_views_path'] = '';
 $config['cache_path'] = '';
-$config['encryption_key'] = 'filmycurry_enc_key_2024_change_me';
+$config['encryption_key'] = 'cinecaffe_enc_key_2025_change_me';
 $config['sess_driver'] = 'files';
-$config['sess_cookie_name'] = 'fc_session';
+$config['sess_cookie_name'] = 'cc_session';
 $config['sess_expiration'] = 7200;
 $config['sess_save_path'] = NULL;
 $config['sess_match_ip'] = FALSE;
 $config['sess_time_to_update'] = 300;
 $config['sess_regenerate_destroy'] = FALSE;
-$config['cookie_prefix'] = 'fc_';
+$config['cookie_prefix'] = 'cc_';
 $config['cookie_domain'] = '';
 $config['cookie_path'] = '/';
 $config['cookie_secure'] = FALSE;

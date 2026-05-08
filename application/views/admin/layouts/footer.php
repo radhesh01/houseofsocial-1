@@ -1,12 +1,12 @@
-</div><!-- /#fc-content -->
-</div><!-- /#fc-main -->
+</div><!-- /#cc-content -->
+</div><!-- /#cc-main -->
 
 <script>
 (function() {
-    var sidebar = document.getElementById('fc-sidebar');
-    var overlay = document.getElementById('fc-overlay');
-    var menuBtn = document.getElementById('fc-menu-btn');
-    var menuIcon = document.getElementById('fc-menu-icon');
+    var sidebar = document.getElementById('cc-sidebar');
+    var overlay = document.getElementById('cc-overlay');
+    var menuBtn = document.getElementById('cc-menu-btn');
+    var menuIcon = document.getElementById('cc-menu-icon');
     var isOpen = false;
 
     function openSidebar() {
@@ -33,13 +33,11 @@
         }
     }
 
-    /* Expose to onclick= attributes in header */
-    window.fcToggleSidebar = function() {
+    window.ccToggleSidebar = function() {
         isOpen ? closeSidebar() : openSidebar();
     };
-    window.fcCloseSidebar = closeSidebar;
+    window.ccCloseSidebar = closeSidebar;
 
-    /* Close when a nav link is clicked (mobile UX) */
     if (sidebar) {
         sidebar.querySelectorAll('.sidebar-link').forEach(function(el) {
             el.addEventListener('click', function() {
@@ -48,12 +46,10 @@
         });
     }
 
-    /* Close on Escape */
     document.addEventListener('keydown', function(e) {
         if (e.key === 'Escape' && isOpen) closeSidebar();
     });
 
-    /* Re-open if window resizes to desktop while hidden */
     window.addEventListener('resize', function() {
         if (window.innerWidth > 768) {
             sidebar.classList.remove('open');

@@ -1,7 +1,7 @@
 <div class="page-hdr">
     <div>
         <h1 class="page-hdr-title">Settings</h1>
-        <p class="page-hdr-sub">Manage website content and configuration</p>
+        <p class="page-hdr-sub">Manage The Cine Caffe website content and configuration</p>
     </div>
 </div>
 
@@ -15,14 +15,14 @@
 
     <!-- Site Identity -->
     <div class="card card-pad space-y">
-        <h2 style="font-size:11px;font-weight:700;letter-spacing:0.12em;text-transform:uppercase;color:#F5C518;">
+        <h2 style="font-size:11px;font-weight:700;letter-spacing:0.12em;text-transform:uppercase;color:#C9A84C;">
             <i class="fa fa-globe" style="margin-right:6px;"></i>Site Identity
         </h2>
 
         <div>
             <label>Website Title</label>
             <input type="text" name="site_title"
-                value="<?= htmlspecialchars($settings['site_title']['setting_value'] ?? '') ?>">
+                value="<?= htmlspecialchars($settings['site_title']['setting_value'] ?? 'The Cine Caffe') ?>">
         </div>
 
         <div>
@@ -41,14 +41,14 @@
 
     <!-- Contact Info -->
     <div class="card card-pad space-y">
-        <h2 style="font-size:11px;font-weight:700;letter-spacing:0.12em;text-transform:uppercase;color:#F5C518;">
+        <h2 style="font-size:11px;font-weight:700;letter-spacing:0.12em;text-transform:uppercase;color:#C9A84C;">
             <i class="fa fa-address-card" style="margin-right:6px;"></i>Contact Information
         </h2>
 
         <div>
             <label>Email Address</label>
             <input type="email" name="site_email"
-                value="<?= htmlspecialchars($settings['site_email']['setting_value'] ?? '') ?>">
+                value="<?= htmlspecialchars($settings['site_email']['setting_value'] ?? 'contact@thecinecaffe.com') ?>">
         </div>
 
         <div>
@@ -60,20 +60,20 @@
         <div>
             <label>Address</label>
             <textarea name="site_address"
-                rows="3"><?= htmlspecialchars($settings['site_address']['setting_value'] ?? '') ?></textarea>
+                rows="3"><?= htmlspecialchars($settings['site_address']['setting_value'] ?? 'India') ?></textarea>
         </div>
     </div>
 
     <!-- Hero Section -->
     <div class="card card-pad space-y">
-        <h2 style="font-size:11px;font-weight:700;letter-spacing:0.12em;text-transform:uppercase;color:#F5C518;">
+        <h2 style="font-size:11px;font-weight:700;letter-spacing:0.12em;text-transform:uppercase;color:#C9A84C;">
             <i class="fa fa-star" style="margin-right:6px;"></i>Hero Section
         </h2>
 
         <div>
             <label>Hero Heading</label>
             <input type="text" name="hero_heading"
-                value="<?= htmlspecialchars($settings['hero_heading']['setting_value'] ?? '') ?>">
+                value="<?= htmlspecialchars($settings['hero_heading']['setting_value'] ?? 'Where Cinema Meets Culture') ?>">
         </div>
 
         <div>
@@ -91,11 +91,10 @@
 
     <!-- Stats -->
     <div class="card card-pad space-y">
-        <h2 style="font-size:11px;font-weight:700;letter-spacing:0.12em;text-transform:uppercase;color:#F5C518;">
+        <h2 style="font-size:11px;font-weight:700;letter-spacing:0.12em;text-transform:uppercase;color:#C9A84C;">
             <i class="fa fa-chart-bar" style="margin-right:6px;"></i>Homepage Stats
         </h2>
 
-        <!-- grid-mini = responsive 2-col → 1-col on very small screens -->
         <div class="grid-mini">
             <div>
                 <label>Campaigns</label>
