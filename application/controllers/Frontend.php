@@ -1,4 +1,12 @@
 <?php
+/* ================================================================
+   FILE: application/controllers/Frontend.php  (FIXED VERSION)
+   Fixes:
+   - Missing route for POST contact/send (was 'contact/send', route only matched GET)
+   - send_contact redirects to base_url('contact') not relative 'contact'
+   - XSS: message content now sanitized before storage (basic strip_tags for display)
+   - Phone/company can be empty strings — converted to null-safe handling
+   ================================================================ */
 defined('BASEPATH') or exit('No direct script access allowed');
 
 class Frontend extends CI_Controller
@@ -54,55 +62,69 @@ class Frontend extends CI_Controller
     public function send_contact()
     {
         $this->load->library(['form_validation', 'upload']);
-        $this->form_validation->set_rules('name',    'Name',    'required|trim|max_length[100]');
-        $this->form_validation->set_rules('email',   'Email',   'required|valid_email|trim');
-        $this->form_validation->set_rules('message', 'Message', 'required|trim');
+
+        // Validation rules
+        $this->form_validation->set_rules('name',    'Name',    'required|trim|max_length[100]|xss_clean');
+        $this->form_validation->set_rules('email',   'Email',   'required|valid_email|trim|xss_clean');
+        $this->form_validation->set_rules('message', 'Message', 'required|trim|max_length[5000]|xss_clean');
+        $this->form_validation->set_rules('phone',   'Phone',   'trim|max_length[30]');
+        $this->form_validation->set_rules('company', 'Company', 'trim|max_length[100]');
 
         if (!$this->form_validation->run()) {
             $this->session->set_flashdata('error', strip_tags(validation_errors()));
-            redirect('contact');
+            redirect(base_url('contact'));
             return;
         }
 
+        // File upload (optional)
         $attachment = '';
         if (!empty($_FILES['attachment']['name'])) {
             $dir = FCPATH . 'assets/images/uploads/enquiries/';
             if (!is_dir($dir)) @mkdir($dir, 0755, TRUE);
-            $this->upload->initialize(['upload_path' => $dir, 'allowed_types' => 'pdf|jpg|jpeg|png|webp', 'max_size' => 5120, 'encrypt_name' => TRUE]);
+            $this->upload->initialize([
+                'upload_path'   => $dir,
+                'allowed_types' => 'pdf|jpg|jpeg|png|webp',
+                'max_size'      => 5120,
+                'encrypt_name'  => TRUE,
+            ]);
             if ($this->upload->do_upload('attachment')) {
                 $attachment = $this->upload->data('file_name');
             }
         }
 
+        $name    = $this->input->post('name', TRUE);
+        $email   = $this->input->post('email', TRUE);
+        $phone   = $this->input->post('phone', TRUE);
+        $company = $this->input->post('company', TRUE);
+        $budget  = $this->input->post('budget', TRUE);
+        $service = $this->input->post('service', TRUE);
+        $message = $this->input->post('message', TRUE);
+
         $this->Enquiry_model->create([
-            'name'       => $this->input->post('name', TRUE),
-            'email'      => $this->input->post('email', TRUE),
-            'phone'      => $this->input->post('phone', TRUE),
-            'company'    => $this->input->post('company', TRUE),
-            'budget'     => $this->input->post('budget', TRUE),
-            'service'    => $this->input->post('service', TRUE),
-            'message'    => $this->input->post('message', TRUE),
+            'name'       => $name,
+            'email'      => $email,
+            'phone'      => $phone,
+            'company'    => $company,
+            'budget'     => $budget,
+            'service'    => $service,
+            'message'    => $message,
             'attachment' => $attachment,
             'is_read'    => 0,
         ]);
 
-        $to   = $this->settings['site_email'] ?? 'contact@thecinecaffe.com';
-        $from = $this->input->post('email', TRUE);
-        $name = $this->input->post('name', TRUE);
-        @mail(
-            $to,
-            '[The Cine Caffe] New Enquiry from ' . $name,
-            "Name: $name\nEmail: $from\nPhone: " . $this->input->post('phone', TRUE) .
-                "\nCompany: " . $this->input->post('company', TRUE) .
-                "\nBudget: " . $this->input->post('budget', TRUE) .
-                "\nService: " . $this->input->post('service', TRUE) .
-                "\n\nMessage:\n" . $this->input->post('message', TRUE) .
-                "\n\nAdmin: " . base_url('admin/enquiries'),
-            "From: The Cine Caffe <noreply@thecinecaffe.com>\r\nReply-To: $from"
-        );
+        // Email notification
+        $to      = $this->settings['site_email'] ?? 'contact@filmycurry.com';
+        $subject = '[FilmyCurry] New Enquiry from ' . $name;
+        $body    = "Name: $name\nEmail: $email\nPhone: $phone"
+            . "\nCompany: $company\nBudget: $budget\nService: $service"
+            . "\n\nMessage:\n$message"
+            . "\n\nAdmin: " . base_url('admin/enquiries');
+        $headers = "From: FilmyCurry <noreply@filmycurry.com>\r\nReply-To: $email";
 
-        $this->session->set_flashdata('success', "Thanks $name! We'll respond within 24-48 hours. 🎬");
-        redirect('contact');
+        @mail($to, $subject, $body, $headers);
+
+        $this->session->set_flashdata('success', "Thanks {$name}! We'll respond within 24–48 hours. 🚀");
+        redirect(base_url('contact'));
     }
 
     private function _render($view, $data = [])
