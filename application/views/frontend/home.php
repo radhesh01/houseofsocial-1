@@ -1,281 +1,387 @@
 <?php defined('BASEPATH') or exit('No direct script access allowed'); ?>
 <?php
-/* ─── DATA SETUP ───────────────────────────────────── */
-$svcs = [
-    ['01', 'Influencer Marketing',  'Precision-matched creator partnerships — nano to celebrity — that feel authentic and perform powerfully.',     ['300+ campaigns', '12M+ reach', 'All platforms'],   '🤳'],
-    ['02', 'Meme Marketing',        'Culturally embedded viral content. Memes that spread because they belong, not because they were placed.',      ['Trend-first', '10× organic reach', 'Format-native'], '😂'],
-    ['03', 'Film Promotions',       'End-to-end cinematic promotion strategy. We power the buzz that fills seats and drives streams.',             ['32% of OTT releases', 'Teaser→release', 'Bollywood + Hollywood'], '🎬'],
-    ['04', 'Video Production',      'Concept, craft, deliver. Brand films to web series — OTT-grade quality at studio speed.',                    ['Concept to final cut', 'OTT-grade', 'Fast turnaround'], '🎥'],
-    ['05', 'Film Screenings',       'Curated influencer screening events that generate authentic pre-release buzz at scale.',                       ['70+ screenings', 'Tier 1 & 2 cities', 'Press + creators'], '🍿'],
-    ['06', 'On-Ground Activations', 'Real-world brand moments bridging digital reach with physical memory.',                                        ['Pan-India', 'Brand activations', 'Celebrity tie-ins'], '🎪'],
-    ['07', 'LinkedIn & X Strategy', 'Platform-native campaigns building authority for studios, OTT brands, and their executive voices.',           ['Thought leadership', 'Viral threads', 'B2B + B2C'], '💼'],
-    ['08', 'Celebrity Endorsements', 'Curated star partnerships that amplify brand credibility and unlock millions of loyal followers.',             ['Verified partnerships', 'Contract negotiation', 'ROI focused'], '⭐'],
-];
-
-$brand_dir  = FCPATH . 'assets/brand/';
-$brand_url  = base_url('assets/brand/');
-$brand_imgs = [];
-if (is_dir($brand_dir)) {
-    foreach (['png', 'jpg', 'jpeg', 'webp', 'svg', 'gif', 'PNG', 'JPG', 'JPEG', 'WEBP', 'SVG', 'GIF'] as $ext)
-        foreach (glob($brand_dir . '*.' . $ext) as $f)
-            $brand_imgs[] = $brand_url . basename($f);
-    $brand_imgs = array_unique($brand_imgs);
+/* ── Inline SVG icon helper ── */
+function svg($id, $w = 20, $h = null, $col = 'currentColor', $sw = 1.7)
+{
+    $h = $h ?? $w;
+    static $p = [
+        'film'        => '<path d="M7 2H3a1 1 0 00-1 1v3a1 1 0 001 1h4a1 1 0 001-1V3a1 1 0 00-1-1zm10 0h-4a1 1 0 00-1 1v3a1 1 0 001 1h4a1 1 0 001-1V3a1 1 0 00-1-1zM7 9H3a1 1 0 00-1 1v3a1 1 0 001 1h4a1 1 0 001-1v-3a1 1 0 00-1-1zm10 0h-4a1 1 0 00-1 1v3a1 1 0 001 1h4a1 1 0 001-1v-3a1 1 0 00-1-1zM7 16H3a1 1 0 00-1 1v3a1 1 0 001 1h4a1 1 0 001-1v-3a1 1 0 00-1-1zm10 0h-4a1 1 0 00-1 1v3a1 1 0 001 1h4a1 1 0 001-1v-3a1 1 0 00-1-1z"/><path d="M2 7h20M2 12h20M2 17h20"/>',
+        'target'      => '<circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/>',
+        'trending'    => '<polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/><polyline points="17 6 23 6 23 12"/>',
+        'award'       => '<circle cx="12" cy="8" r="7"/><polyline points="8.21 13.89 7 23 12 20 17 23 15.79 13.88"/>',
+        'video'       => '<polygon points="23 7 16 12 23 17 23 7"/><rect x="1" y="5" width="15" height="14" rx="2"/>',
+        'pin'         => '<path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/>',
+        'zap'         => '<polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/>',
+        'star'        => '<polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/>',
+        'globe'       => '<circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 014 10 15.3 15.3 0 01-4 10 15.3 15.3 0 01-4-10 15.3 15.3 0 014-10z"/>',
+        'mic'         => '<path d="M12 1a3 3 0 00-3 3v8a3 3 0 006 0V4a3 3 0 00-3-3z"/><path d="M19 10v2a7 7 0 01-14 0v-2"/><line x1="12" y1="19" x2="12" y2="23"/><line x1="8" y1="23" x2="16" y2="23"/>',
+        'arrow-r'     => '<line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/>',
+        'arrow-ur'    => '<line x1="7" y1="17" x2="17" y2="7"/><polyline points="7 7 17 7 17 17"/>',
+        'arrow-d'     => '<line x1="12" y1="5" x2="12" y2="19"/><polyline points="19 12 12 19 5 12"/>',
+        'check'       => '<polyline points="20 6 9 17 4 12"/>',
+        'bar-chart'   => '<line x1="12" y1="20" x2="12" y2="10"/><line x1="18" y1="20" x2="18" y2="4"/><line x1="6" y1="20" x2="6" y2="16"/>',
+        'users'       => '<path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87M16 3.13a4 4 0 010 7.75"/>',
+        'layers'      => '<polygon points="12 2 2 7 12 12 22 7 12 2"/><polyline points="2 17 12 22 22 17"/><polyline points="2 12 12 17 22 12"/>',
+        'send'        => '<line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/>',
+        'eye'         => '<path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/>',
+        'quote'       => '<path d="M3 21c3 0 7-1 7-8V5c0-1.25-.756-2.017-2-2H4c-1.25 0-2 .75-2 1.972V11c0 1.25.75 2 2 2 1 0 1 0 1 1v1c0 1-1 2-2 2s-1 .008-1 1.031V20c0 1 0 1 1 1zm12 0c3 0 7-1 7-8V5c0-1.25-.757-2.017-2-2h-4c-1.25 0-2 .75-2 1.972V11c0 1.25.75 2 2 2h.75c0 2.25.25 4-2.75 4v3c0 1 0 1 1 1z"/>',
+        'play'        => '<circle cx="12" cy="12" r="10"/><polygon points="10 8 16 12 10 16 10 8"/>',
+        'briefcase'   => '<rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 7V5a2 2 0 00-2-2h-4a2 2 0 00-2 2v2"/>',
+    ];
+    $path = $p[$id] ?? '<circle cx="12" cy="12" r="10"/>';
+    return '<svg width="' . $w . '" height="' . $h . '" viewBox="0 0 24 24" fill="none" stroke="' . $col . '" stroke-width="' . $sw . '" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">' . $path . '</svg>';
 }
-$fallback = [
-    "boAt",
-    "Fastrack",
-    "Masters' Union",
-    "Myntra",
-    "OnePlus",
-    "Netflix",
-    "Amazon Prime",
-    "Disney+",
-    "Dharma",
-    "YRF",
-    "Sony",
-    "T-Series",
-    "Warner Bros",
-    "Zee5",
-    "Jio Cinema",
-    "Maddock Films"
+$svcs = [
+    ['trending', 'Influencer Marketing', 'Precision-matched creator partnerships — nano to celebrity — that feel authentic and perform powerfully.'],
+    ['film', 'Meme Marketing', 'Culturally embedded viral content crafted to spread because it belongs, not because it was placed.'],
+    ['video', 'Film Promotions', 'End-to-end cinematic promotion strategy. We power the buzz that fills seats and drives streams.'],
+    ['eye', 'Video Production', 'Concept, craft, deliver. Brand films to web series — OTT-grade quality at studio speed.'],
+    ['users', 'Film Screenings', 'Curated influencer screening events generating authentic pre-release buzz at scale.'],
+    ['pin', 'On-Ground Activations', 'Real-world brand moments bridging digital reach with physical memory.'],
+    ['mic', 'LinkedIn &amp; X Strategy', 'Platform-native campaigns building authority for studios and executive voices.'],
+    ['star', 'Celebrity Endorsements', 'Curated star partnerships that amplify brand credibility and unlock millions of loyal followers.'],
 ];
-
-$proc_steps = [
-    ['01', '🎯', 'Strategy & Discovery', 'Deep-dive into brand soul, audience nuance, and cultural context. We study the landscape before a single frame is shot.'],
-    ['02', '🌐', 'Network & Matching',   'Match with ideal influencers, meme pages, and creators from our curated pool of 10,000+ accounts across every niche.'],
-    ['03', '🚀', 'Execute & Launch',     'Precision campaigns with real-time monitoring, creative iteration, and A/B optimisation for maximum cultural resonance.'],
-    ['04', '📈', 'Scale & Compound',     'Analyse, optimise, double down on winners. Compound the momentum until your brand becomes the conversation.'],
+$feats = [
+    ['target', 'Cultural Intelligence', 'We know what trends before it does — our team lives and breathes pop culture every single day.'],
+    ['zap', '24–48h Turnaround', 'Lightning-fast execution without compromising quality. Your campaign launch never waits on us.'],
+    ['globe', '10,000+ Creators', 'Access to authentic voices for every niche, genre, and audience segment across India.'],
+    ['bar-chart', 'Data-Driven', 'Every campaign is monitored in real time and optimised for maximum cultural resonance and ROI.'],
+    ['film', 'OTT Expertise', 'We have powered 32% of all OTT releases — no one understands streaming promotion like we do.'],
+    ['layers', 'End-to-End', 'From strategy to execution, we handle everything so you can focus on what matters most.'],
 ];
+$testi = [
+    ['"The Cine Caffe turned our OTT launch into a cultural moment. 3M+ organic impressions in 72 hours."', 'Priya S. &mdash; Marketing Head, Major OTT Platform'],
+    ['"Their meme strategy was unmatched. Content felt native, not paid &mdash; that\'s extraordinarily rare."', 'Rohit K. &mdash; Producer, Bollywood Production House'],
+    ['"From strategy to execution, absolutely flawless. 40% above-target reach on our influencer campaign."', 'Meera V. &mdash; Brand Manager, Consumer Electronics'],
+];
+$procs = [
+    ['target', 'Strategy & Discovery', 'Deep-dive into brand soul, audience nuance, and cultural context before a single frame is shot.'],
+    ['globe', 'Network & Matching', 'Match with ideal influencers from our curated pool of 10,000+ accounts across every niche.'],
+    ['send', 'Execute & Launch', 'Precision campaigns with real-time monitoring, creative iteration, and A/B optimisation.'],
+    ['bar-chart', 'Scale & Compound', 'Analyse, optimise, double down on winners. Compound momentum until your brand owns the conversation.'],
+];
+$brands = ['Netflix', 'Amazon Prime', 'Disney+', 'Dharma Productions', 'YRF', 'Sony Pictures', 'T-Series', 'Warner Bros', 'Zee5', 'JioCinema', 'Maddock Films', 'boAt', 'Myntra', 'OnePlus', 'Fastrack', 'Viacom18'];
 ?>
-<!--- NOTE: This file is loaded INSIDE frontend_layout_v5.php via _render().
-      All <style> and <script> tags here are appended into <body> by the layout. --->
-
-<!-- ═══════════════════════════════════════════════════════
-     GLOBAL TOKENS + RESET (scoped to this page)
-═══════════════════════════════════════════════════════ -->
 <style>
-    /* ── PAGE-LEVEL TOKENS ───────────────────────────── */
-    :root {
-        --cc-dark: #0a0a0d;
-        --cc-darker: #060608;
-        --cc-ink: #111118;
-        --cc-card: #15151e;
-        --cc-cream: #f0ebe1;
-        --cc-cream2: #e8e2d6;
-        --cc-cream3: #d9d3c5;
-        --cc-gold: #c9a84c;
-        --cc-gold2: #e8c05a;
-        --cc-rose: #e8836a;
-        --cc-plum: #8b5da0;
-        --cc-teal: #3abfb8;
-        --cc-sage: #6baf8d;
-        --cc-border: #1e1e28;
-        --cc-muted: rgba(240, 235, 225, .38);
-        --cc-smoke: rgba(240, 235, 225, .22);
-        --fd: 'Cormorant Garamond', Georgia, serif;
-        --fb: 'DM Sans', system-ui, sans-serif;
-        --ease: cubic-bezier(.16, 1, .3, 1);
+    /* ================================================================
+   HOME PAGE — Complete Cinematic Styles
+================================================================ */
+
+    /* ── §1 HERO ──────────────────────────────────────────────── */
+    .hero {
+        background: var(--olive);
+        min-height: 100svh;
+        display: flex;
+        flex-direction: column;
+        position: relative;
+        overflow: hidden;
     }
 
-    /* ── PAGE RESET ──────────────────────────────────── */
-    *,
-    *::before,
-    *::after {
-        box-sizing: border-box;
-        margin: 0;
-        padding: 0;
+    /* dot grid */
+    .hero::before {
+        content: '';
+        position: absolute;
+        inset: 0;
+        background-image: radial-gradient(rgba(242, 234, 216, .055) 1px, transparent 1px);
+        background-size: 28px 28px;
+        pointer-events: none;
+        z-index: 0;
     }
 
-    img {
-        max-width: 100%;
-        height: auto;
+    /* ambient glows */
+    .h-glow {
+        position: absolute;
+        border-radius: 50%;
+        filter: blur(88px);
+        pointer-events: none;
+        z-index: 0;
+    }
+
+    .hg1 {
+        width: 460px;
+        height: 460px;
+        background: rgba(212, 146, 10, .09);
+        top: -120px;
+        right: -80px;
+        animation: float-a 22s ease-in-out infinite;
+    }
+
+    .hg2 {
+        width: 300px;
+        height: 300px;
+        background: rgba(107, 122, 85, .2);
+        bottom: 14%;
+        left: -60px;
+        animation: float-b 28s ease-in-out 6s infinite;
+    }
+
+    .hg3 {
+        width: 200px;
+        height: 200px;
+        background: rgba(212, 146, 10, .06);
+        top: 40%;
+        left: 40%;
+        animation: float-a 16s ease-in-out 3s infinite;
+    }
+
+    /* main body */
+    .hero-body {
+        flex: 1;
+        position: relative;
+        z-index: 2;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        text-align: center;
+        padding: calc(var(--nav-h) + 48px) var(--px) 40px;
+    }
+
+    /* eyebrow */
+    .hero-eye {
+        font-family: var(--f-c);
+        font-size: 10px;
+        font-weight: 700;
+        letter-spacing: .32em;
+        text-transform: uppercase;
+        color: rgba(242, 234, 216, .52);
+        display: inline-flex;
+        align-items: center;
+        gap: 12px;
+        margin-bottom: var(--s6);
+        opacity: 0;
+        animation: fadeUp .7s var(--ease) .2s forwards;
+    }
+
+    .hero-eye::before,
+    .hero-eye::after {
+        content: '';
+        width: 28px;
+        height: 1.5px;
+        background: var(--amber);
         display: block;
     }
 
-    /* ── SELECTION ───────────────────────────────────── */
-    ::selection {
-        background: var(--cc-gold);
-        color: #000;
-    }
-
-    /* ── UTILITY ─────────────────────────────────────── */
-    .u-max {
-        max-width: 1440px;
-        margin: 0 auto;
-    }
-
-    /* ── SCROLL REVEAL ───────────────────────────────── */
-    .sr {
+    /* giant headline */
+    .hero-h1 {
+        font-family: var(--f-d);
+        font-size: clamp(72px, 16vw, 220px);
+        line-height: .8;
+        letter-spacing: .02em;
+        color: var(--cream);
+        position: relative;
+        z-index: 1;
         opacity: 0;
-        transform: translateY(48px);
-        transition: opacity .9s var(--ease), transform .9s var(--ease);
+        animation: fadeUp 1.1s var(--ease) .35s forwards;
     }
 
-    .sr.sl {
-        transform: translateX(-48px);
+    .hero-h1 .line-outline {
+        display: block;
+        color: transparent;
+        -webkit-text-stroke: 2.5px rgba(242, 234, 216, .45);
     }
 
-    .sr.sr2 {
-        transform: translateX(48px);
+    .hero-h1 .line-gold {
+        display: block;
+        color: var(--amber);
+        margin-top: -.02em;
     }
 
-    .sr.ss {
-        transform: scale(.94);
+    .hero-h1 .line-solid {
+        display: block;
     }
 
-    .sr.in {
-        opacity: 1;
-        transform: none;
+    /* subtext */
+    .hero-sub {
+        font-family: var(--f-c);
+        font-size: clamp(13px, 1.6vw, 16px);
+        font-weight: 400;
+        letter-spacing: .06em;
+        color: rgba(242, 234, 216, .52);
+        max-width: 480px;
+        line-height: 1.72;
+        margin: var(--s6) auto 0;
+        opacity: 0;
+        animation: fadeUp .8s var(--ease) .75s forwards;
     }
 
-    .d1 {
-        transition-delay: .06s !important
-    }
-
-    .d2 {
-        transition-delay: .13s !important
-    }
-
-    .d3 {
-        transition-delay: .20s !important
-    }
-
-    .d4 {
-        transition-delay: .27s !important
-    }
-
-    .d5 {
-        transition-delay: .34s !important
-    }
-
-    .d6 {
-        transition-delay: .41s !important
-    }
-
-    .d7 {
-        transition-delay: .48s !important
-    }
-
-    .d8 {
-        transition-delay: .55s !important
-    }
-
-    /* ── MARQUEE ─────────────────────────────────────── */
-    @keyframes mq-left {
-        from {
-            transform: translateX(0)
-        }
-
-        to {
-            transform: translateX(-50%)
-        }
-    }
-
-    @keyframes mq-right {
-        from {
-            transform: translateX(-50%)
-        }
-
-        to {
-            transform: translateX(0)
-        }
-    }
-
-    .mq-track {
+    /* CTA row */
+    .hero-btns {
         display: flex;
-        width: max-content;
-        will-change: transform;
+        gap: 12px;
+        flex-wrap: wrap;
+        justify-content: center;
+        margin-top: var(--s10);
+        opacity: 0;
+        animation: fadeUp .7s var(--ease) .95s forwards;
     }
 
-    .mq-track.go-l {
-        animation: mq-left var(--dur, 40s) linear infinite;
+    /* floating left panel */
+    .hero-float-l {
+        position: absolute;
+        left: clamp(16px, 3vw, 52px);
+        top: 50%;
+        transform: translateY(-50%);
+        z-index: 3;
+        display: flex;
+        flex-direction: column;
+        gap: var(--s3);
+        align-items: flex-start;
+        opacity: 0;
+        animation: fadeUp .8s var(--ease) 1.1s forwards;
     }
 
-    .mq-track.go-r {
-        animation: mq-right var(--dur, 40s) linear infinite;
+    /* spinning circular badge */
+    .spin-badge {
+        position: relative;
+        width: 108px;
+        height: 108px;
+        flex-shrink: 0;
+        animation: float-a 7s ease-in-out 1s infinite;
     }
 
-    .mq-track:hover {
-        animation-play-state: paused;
+    .spin-badge-ring {
+        width: 100%;
+        height: 100%;
+        border: 1.5px solid rgba(242, 234, 216, .22);
+        border-radius: 50%;
+        position: relative;
+        animation: spin-cw 22s linear infinite;
     }
 
-    /* ── ORB DRIFT ───────────────────────────────────── */
-    @keyframes orb-drift {
-
-        0%,
-        100% {
-            transform: translate(0, 0) scale(1)
-        }
-
-        50% {
-            transform: translate(22px, -18px) scale(1.06)
-        }
+    .spin-badge-inner {
+        position: absolute;
+        inset: 0;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        animation: spin-cw 22s linear infinite reverse;
     }
 
-    @keyframes float-y {
-
-        0%,
-        100% {
-            transform: translateY(0)
-        }
-
-        50% {
-            transform: translateY(-14px)
-        }
+    .spin-badge-n {
+        font-family: var(--f-d);
+        font-size: 26px;
+        line-height: 1;
+        color: var(--amber);
+        display: block;
     }
 
-    @keyframes float-y2 {
-
-        0%,
-        100% {
-            transform: translateY(0)
-        }
-
-        50% {
-            transform: translateY(10px)
-        }
+    .spin-badge-l {
+        font-family: var(--f-c);
+        font-size: 7.5px;
+        font-weight: 700;
+        letter-spacing: .14em;
+        text-transform: uppercase;
+        color: rgba(242, 234, 216, .42);
+        margin-top: 3px;
+        display: block;
     }
 
-    @keyframes pulse-dot {
-
-        0%,
-        100% {
-            opacity: 1;
-            transform: scale(1)
-        }
-
-        50% {
-            opacity: .3;
-            transform: scale(.45)
-        }
+    /* scroll cue */
+    .hero-scroll {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: var(--s2);
     }
 
-    @keyframes spin-cw {
-        to {
-            transform: rotate(360deg)
-        }
+    .hero-scroll-line {
+        width: 1px;
+        height: 48px;
+        background: linear-gradient(var(--amber), transparent);
+        animation: float-a 2.8s ease-in-out infinite;
     }
 
-    @keyframes spin-ccw {
-        to {
-            transform: rotate(-360deg)
-        }
+    .hero-scroll-t {
+        font-family: var(--f-c);
+        font-size: 7.5px;
+        font-weight: 700;
+        letter-spacing: .24em;
+        text-transform: uppercase;
+        color: rgba(242, 234, 216, .24);
+        writing-mode: vertical-rl;
+        transform: rotate(180deg);
     }
 
-    @keyframes line-grow {
-        from {
-            transform: scaleX(0)
-        }
-
-        to {
-            transform: scaleX(1)
-        }
+    /* floating right stat cards */
+    .hero-float-r {
+        position: absolute;
+        right: clamp(16px, 3vw, 52px);
+        top: 50%;
+        transform: translateY(-50%);
+        z-index: 3;
+        display: flex;
+        flex-direction: column;
+        gap: 2px;
+        min-width: 148px;
+        opacity: 0;
+        animation: fadeUp .9s var(--ease) 1.2s forwards;
     }
 
-    @keyframes count-in {
+    .hfc {
+        background: rgba(26, 26, 16, .84);
+        border: 1px solid rgba(242, 234, 216, .09);
+        backdrop-filter: blur(14px);
+        -webkit-backdrop-filter: blur(14px);
+        padding: 14px 18px;
+        transition: border-color var(--t2), transform var(--t2);
+        animation: float-b 8s ease-in-out 1s infinite;
+    }
+
+    .hfc:nth-child(2) {
+        animation-duration: 6s;
+        animation-delay: 2s;
+    }
+
+    .hfc:nth-child(3) {
+        animation-duration: 9s;
+        animation-delay: 1.5s;
+    }
+
+    .hfc:hover {
+        border-color: rgba(212, 146, 10, .3);
+        transform: translateX(-4px);
+    }
+
+    .hfc-n {
+        font-family: var(--f-d);
+        font-size: 28px;
+        line-height: 1;
+        letter-spacing: .02em;
+    }
+
+    .hfc-l {
+        font-family: var(--f-c);
+        font-size: 8px;
+        font-weight: 700;
+        letter-spacing: .18em;
+        text-transform: uppercase;
+        color: var(--l-muted);
+        margin-top: 4px;
+    }
+
+    /* vertical decorative text */
+    .hero-vert-text {
+        position: absolute;
+        bottom: 80px;
+        right: clamp(16px, 3vw, 52px);
+        z-index: 3;
+        font-family: var(--f-c);
+        font-size: 8px;
+        font-weight: 700;
+        letter-spacing: .26em;
+        text-transform: uppercase;
+        color: rgba(242, 234, 216, .18);
+        writing-mode: vertical-rl;
+        opacity: 0;
+        animation: fadeUp .6s var(--ease) 1.6s forwards;
+    }
+
+    @keyframes fadeUp {
         from {
             opacity: 0;
-            transform: translateY(20px)
+            transform: translateY(26px)
         }
 
         to {
@@ -284,1533 +390,1141 @@ $proc_steps = [
         }
     }
 
-
-    /* ════════════════════════════════════════════════════
-   §1  HERO
-════════════════════════════════════════════════════ */
-    #hm-hero {
-        min-height: 100svh;
-        background: var(--cc-dark);
-        position: relative;
-        overflow: hidden;
-        display: flex;
-        flex-direction: column;
-    }
-
-    /* ambient orbs */
-    .h-orb {
-        position: absolute;
-        border-radius: 50%;
-        filter: blur(120px);
-        pointer-events: none;
-    }
-
-    .h-orb-1 {
-        width: 700px;
-        height: 700px;
-        background: rgba(201, 168, 76, .07);
-        top: -180px;
-        left: -100px;
-        animation: orb-drift 20s ease-in-out infinite;
-    }
-
-    .h-orb-2 {
-        width: 500px;
-        height: 500px;
-        background: rgba(139, 93, 160, .06);
-        bottom: 10%;
-        right: -120px;
-        animation: orb-drift 26s ease-in-out 6s infinite;
-    }
-
-    .h-orb-3 {
-        width: 380px;
-        height: 380px;
-        background: rgba(58, 191, 184, .05);
-        top: 40%;
-        left: 35%;
-        animation: orb-drift 18s ease-in-out 3s infinite;
-    }
-
-    /* grain */
-    .h-grain {
-        position: absolute;
-        inset: 0;
-        pointer-events: none;
-        z-index: 1;
-        opacity: .03;
-        background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
-    }
-
-    /* hero main body */
-    .h-body {
-        flex: 1;
-        display: grid;
-        grid-template-columns: 1fr 1fr;
-        align-items: center;
-        padding: 140px 72px 60px;
-        gap: 60px;
-        position: relative;
-        z-index: 2;
-    }
-
-    /* eyebrow */
-    .h-eye {
-        display: inline-flex;
-        align-items: center;
-        gap: 10px;
-        margin-bottom: 28px;
-        opacity: 0;
-        animation: count-in .7s var(--ease) .3s forwards;
-    }
-
-    .h-eye-dot {
-        width: 7px;
-        height: 7px;
-        border-radius: 50%;
-        background: var(--cc-gold);
-        animation: pulse-dot 2.4s ease-in-out infinite;
-        flex-shrink: 0;
-    }
-
-    .h-eye-lbl {
-        font-size: 9px;
-        font-weight: 700;
-        letter-spacing: .3em;
-        text-transform: uppercase;
-        color: var(--cc-gold);
-    }
-
-    /* headline */
-    .h-h1 {
-        font-family: var(--fd);
-        font-weight: 300;
-        font-style: italic;
-        font-size: clamp(64px, 9.5vw, 148px);
-        line-height: .82;
-        letter-spacing: -.035em;
-        color: var(--cc-cream);
-        margin-bottom: 28px;
-        opacity: 0;
-        animation: count-in 1.1s var(--ease) .5s forwards;
-    }
-
-    .h-h1 em {
-        color: var(--cc-gold);
-        font-style: normal;
-    }
-
-    /* subtext */
-    .h-sub {
-        font-size: clamp(14px, 1.6vw, 18px);
-        font-weight: 300;
-        color: var(--cc-muted);
-        line-height: 1.85;
-        max-width: 420px;
-        margin-bottom: 44px;
-        opacity: 0;
-        animation: count-in .8s var(--ease) .9s forwards;
-    }
-
-    /* cta row */
-    .h-btns {
-        display: flex;
-        gap: 14px;
-        flex-wrap: wrap;
-        opacity: 0;
-        animation: count-in .7s var(--ease) 1.1s forwards;
-    }
-
-    .h-btn {
-        display: inline-flex;
-        align-items: center;
-        gap: 10px;
-        font-family: var(--fd);
-        font-style: italic;
-        font-size: 18px;
-        letter-spacing: .04em;
-        padding: 15px 36px;
-        border-radius: 2px;
-        text-decoration: none;
-        transition: transform .25s var(--ease), box-shadow .25s var(--ease), border-color .2s, color .2s;
-        white-space: nowrap;
-    }
-
-    .h-btn-gold {
-        background: linear-gradient(135deg, var(--cc-gold), var(--cc-rose));
-        color: #060608;
-    }
-
-    .h-btn-gold:hover {
-        transform: translateY(-3px);
-        box-shadow: 0 18px 48px rgba(201, 168, 76, .38);
-    }
-
-    .h-btn-ghost {
-        border: 1.5px solid rgba(240, 235, 225, .18);
-        color: var(--cc-cream);
-    }
-
-    .h-btn-ghost:hover {
-        border-color: var(--cc-gold);
-        color: var(--cc-gold);
-        transform: translateY(-2px);
-    }
-
-    /* right visual panel */
-    .h-visual {
-        position: relative;
-        height: 520px;
-        border-radius: 14px;
-        background: rgba(255, 255, 255, .015);
-        border: 1px solid var(--cc-border);
-        overflow: hidden;
-        opacity: 0;
-        animation: count-in 1.2s var(--ease) .8s forwards;
-    }
-
-    /* rotating decorative rings */
-    .h-ring {
-        position: absolute;
-        top: 50%;
-        left: 50%;
-        border-radius: 50%;
-        border: 1px solid rgba(201, 168, 76, .1);
-        transform: translate(-50%, -50%);
-        pointer-events: none;
-    }
-
-    .h-ring-1 {
-        width: 480px;
-        height: 480px;
-        animation: spin-cw 32s linear infinite;
-    }
-
-    .h-ring-2 {
-        width: 360px;
-        height: 360px;
-        animation: spin-ccw 22s linear infinite;
-        border-color: rgba(139, 93, 160, .08);
-    }
-
-    .h-ring-3 {
-        width: 240px;
-        height: 240px;
-        animation: spin-cw 16s linear infinite;
-        border-color: rgba(58, 191, 184, .07);
-    }
-
-    /* central disc */
-    .h-disc {
-        position: absolute;
-        top: 50%;
-        left: 50%;
-        transform: translate(-50%, -50%);
-        width: 190px;
-        height: 190px;
-        border-radius: 50%;
-        background: radial-gradient(circle at 38% 32%, #1e1a12, #0a0a0e);
-        border: 1px solid rgba(201, 168, 76, .22);
-        box-shadow: 0 0 80px rgba(201, 168, 76, .13), inset 0 1px 0 rgba(201, 168, 76, .18);
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        justify-content: center;
-        text-align: center;
-        z-index: 3;
-    }
-
-    .h-disc-n {
-        font-family: var(--fd);
-        font-weight: 300;
-        font-style: italic;
-        font-size: 68px;
-        line-height: 1;
-        letter-spacing: -.04em;
-        color: var(--cc-gold);
-    }
-
-    .h-disc-l {
-        font-size: 8px;
-        font-weight: 700;
-        letter-spacing: .22em;
-        text-transform: uppercase;
-        color: rgba(240, 235, 225, .3);
-        margin-top: 4px;
-    }
-
-    /* floating stat cards */
-    .h-float {
-        position: absolute;
-        background: rgba(14, 14, 20, .95);
-        border: 1px solid rgba(255, 255, 255, .07);
-        border-radius: 10px;
-        padding: 14px 18px;
-        backdrop-filter: blur(20px);
-        z-index: 4;
-    }
-
-    .h-float-n {
-        font-family: var(--fd);
-        font-weight: 300;
-        font-style: italic;
-        font-size: 34px;
-        line-height: 1;
-        letter-spacing: -.03em;
-    }
-
-    .h-float-l {
-        font-size: 9px;
-        font-weight: 700;
-        letter-spacing: .2em;
-        text-transform: uppercase;
-        color: var(--cc-muted);
-        margin-top: 4px;
-    }
-
-    .hf-a {
-        top: 12%;
-        left: 6%;
-        animation: float-y 6s ease-in-out infinite;
-    }
-
-    .hf-b {
-        bottom: 14%;
-        right: 8%;
-        animation: float-y2 7s ease-in-out infinite;
-    }
-
-    .hf-c {
-        top: 50%;
-        right: 5%;
-        transform: translateY(-50%);
-        animation: float-y 5s ease-in-out infinite;
-    }
-
-    /* film strip holes left/right */
-    .h-strip {
-        position: absolute;
-        top: 0;
-        bottom: 0;
-        width: 30px;
-        display: flex;
-        flex-direction: column;
-        gap: 6px;
-        padding: 8px 0;
-        z-index: 2;
-    }
-
-    .h-strip.hs-l {
-        left: 0;
-    }
-
-    .h-strip.hs-r {
-        right: 0;
-    }
-
-    .h-hole {
-        width: 16px;
-        height: 10px;
-        border-radius: 2px;
-        background: rgba(201, 168, 76, .07);
-        border: 1px solid rgba(201, 168, 76, .12);
-        margin: 0 auto;
-        flex-shrink: 0;
-    }
-
-    /* glow behind disc */
-    .h-glow {
-        position: absolute;
-        top: 50%;
-        left: 50%;
-        transform: translate(-50%, -50%);
-        width: 280px;
-        height: 280px;
-        border-radius: 50%;
-        background: radial-gradient(circle, rgba(201, 168, 76, .16) 0%, transparent 70%);
-        z-index: 1;
-        animation: orb-drift 4s ease-in-out infinite;
-    }
-
-    /* bottom stats bar */
-    .h-stats {
+    /* hero stats bar */
+    .hero-stats {
         display: grid;
         grid-template-columns: repeat(4, 1fr);
-        border-top: 1px solid var(--cc-border);
+        border-top: 2px solid rgba(242, 234, 216, .12);
         position: relative;
         z-index: 2;
         opacity: 0;
-        animation: count-in .7s var(--ease) 1.3s forwards;
+        animation: fadeUp .7s var(--ease) 1.4s forwards;
     }
 
-    .h-stat {
-        padding: 28px clamp(20px, 3.5vw, 60px);
-        border-right: 1px solid var(--cc-border);
-        transition: background .3s;
+    .hs-cell {
+        padding: 22px 24px;
+        border-right: 1px solid rgba(242, 234, 216, .09);
+        transition: background var(--t2);
         cursor: default;
     }
 
-    .h-stat:last-child {
+    .hs-cell:last-child {
         border-right: none;
     }
 
-    .h-stat:hover {
-        background: rgba(201, 168, 76, .03);
+    .hs-cell:hover {
+        background: rgba(242, 234, 216, .05);
     }
 
     .hs-n {
-        font-family: var(--fd);
-        font-weight: 300;
-        font-style: italic;
-        font-size: clamp(30px, 4vw, 50px);
+        font-family: var(--f-d);
+        font-size: clamp(26px, 4vw, 44px);
         line-height: 1;
-        letter-spacing: -.03em;
-        color: var(--cc-cream);
+        letter-spacing: .02em;
+        color: var(--cream);
     }
 
     .hs-l {
-        font-size: 9px;
+        font-family: var(--f-c);
+        font-size: 8.5px;
         font-weight: 700;
         letter-spacing: .2em;
         text-transform: uppercase;
-        color: var(--cc-muted);
-        margin-top: 6px;
+        color: rgba(242, 234, 216, .3);
+        margin-top: 5px;
     }
 
-    /* scroll cue */
-    .h-scroll-cue {
-        position: absolute;
-        bottom: 108px;
-        left: 72px;
-        z-index: 3;
-        display: flex;
-        align-items: center;
-        gap: 12px;
-        opacity: 0;
-        animation: count-in .5s ease 1.8s forwards;
-    }
-
-    .h-scroll-line {
-        width: 1px;
-        height: 52px;
-        background: linear-gradient(var(--cc-gold), transparent);
-        animation: float-y 2.6s ease-in-out infinite;
-    }
-
-    .h-scroll-lbl {
-        font-size: 8px;
-        font-weight: 700;
-        letter-spacing: .3em;
-        text-transform: uppercase;
-        color: rgba(240, 235, 225, .2);
-        writing-mode: vertical-rl;
-        transform: rotate(180deg);
-    }
-
-
-    /* ════════════════════════════════════════════════════
-   §2  MARQUEE TICKER (dark band)
-════════════════════════════════════════════════════ */
-    #hm-ticker {
-        background: var(--cc-ink);
-        border-top: 1px solid var(--cc-border);
-        border-bottom: 1px solid var(--cc-border);
-        padding: 0;
+    /* ── §2 TICKER ────────────────────────────────────────── */
+    .ticker {
+        background: var(--ink);
+        border-top: 3px solid var(--amber);
+        border-bottom: 3px solid var(--amber);
+        padding: 14px 0;
         overflow: hidden;
-        position: relative;
-        z-index: 1;
     }
 
-    .tk-row {
-        padding: 22px 0;
-        overflow: hidden;
-        position: relative;
-    }
-
-    .tk-row+.tk-row {
-        border-top: 1px solid var(--cc-border);
-    }
-
-    .tk-row::before,
-    .tk-row::after {
-        content: '';
-        position: absolute;
-        top: 0;
-        bottom: 0;
-        width: 120px;
-        z-index: 2;
-        pointer-events: none;
-    }
-
-    .tk-row::before {
-        left: 0;
-        background: linear-gradient(90deg, var(--cc-ink), transparent);
-    }
-
-    .tk-row::after {
-        right: 0;
-        background: linear-gradient(-90deg, var(--cc-ink), transparent);
-    }
-
-    /* image ticker */
-    .tk-img {
-        display: flex;
-        gap: 0;
-        align-items: center;
-    }
-
-    .tk-img img {
-        height: 44px;
-        width: auto;
-        max-width: 130px;
-        object-fit: contain;
-        padding: 0 44px;
-        flex-shrink: 0;
-        opacity: .28;
-        filter: grayscale(1) brightness(1.4);
-        transition: opacity .4s, filter .4s, transform .4s;
-        cursor: pointer;
-    }
-
-    .tk-img img:hover {
-        opacity: .9;
-        filter: grayscale(0);
-        transform: scale(1.18) translateY(-3px);
-    }
-
-    /* text chip ticker */
-    .tk-chip {
-        display: inline-flex;
-        align-items: center;
-        gap: 10px;
-        padding: 8px 24px;
-        margin: 0 4px;
-        border: 1px solid rgba(255, 255, 255, .06);
-        border-radius: 100px;
-        font-size: 11px;
-        font-weight: 600;
-        letter-spacing: .08em;
-        color: rgba(240, 235, 225, .25);
-        white-space: nowrap;
-        transition: border-color .3s, color .3s;
-    }
-
-    .tk-chip:hover {
-        border-color: rgba(201, 168, 76, .3);
-        color: var(--cc-gold);
-    }
-
-    .tk-dot {
-        width: 4px;
-        height: 4px;
-        border-radius: 50%;
-        background: var(--cc-gold);
-        opacity: .4;
-    }
-
-    /* text separator ticker (large running words) */
-    .tk-word {
-        font-family: var(--fd);
-        font-weight: 300;
-        font-style: italic;
-        font-size: clamp(32px, 5vw, 56px);
-        letter-spacing: -.02em;
-        color: rgba(240, 235, 225, .06);
-        padding: 0 48px;
+    .tk-w {
+        font-family: var(--f-d);
+        font-size: clamp(24px, 3.5vw, 40px);
+        letter-spacing: .04em;
+        color: rgba(242, 234, 216, .1);
+        padding: 0 32px;
         white-space: nowrap;
         display: inline-block;
-        cursor: default;
     }
 
     .tk-sep {
-        color: var(--cc-gold);
-        opacity: .3;
-        font-size: clamp(20px, 3vw, 36px);
-        padding: 0 8px;
+        color: var(--amber);
+        font-size: 16px;
+        opacity: .6;
         display: inline-block;
+        padding: 0 2px;
     }
 
-
-    /* ════════════════════════════════════════════════════
-   §3  ABOUT (cream section — high contrast alternation)
-════════════════════════════════════════════════════ */
-    #hm-about {
-        background: var(--cc-cream);
-        color: var(--cc-dark);
-        position: relative;
-        overflow: hidden;
-        z-index: 1;
-        padding: 100px 72px;
+    /* ── §3 BRANDS ────────────────────────────────────────── */
+    .brands {
+        background: var(--cream-2);
+        border-bottom: 1.5px solid var(--border);
+        padding: 22px 0;
     }
 
-    .ab-wrap {
+    .brand-chip {
+        font-family: var(--f-c);
+        font-size: 10.5px;
+        font-weight: 700;
+        letter-spacing: .1em;
+        text-transform: uppercase;
+        color: rgba(26, 26, 16, .28);
+        padding: 5px 18px;
+        margin: 0 3px;
+        border: 1.5px solid rgba(26, 26, 16, .09);
+        border-radius: 100px;
+        white-space: nowrap;
+        display: inline-block;
+        transition: border-color var(--t2), color var(--t2);
+        cursor: default;
+    }
+
+    .brand-chip:hover {
+        border-color: rgba(26, 26, 16, .25);
+        color: rgba(26, 26, 16, .55);
+    }
+
+    /* ── §4 ABOUT ─────────────────────────────────────────── */
+    .about {
+        background: var(--cream);
+    }
+
+    .about-wrap {
+        max-width: var(--max);
+        margin: 0 auto;
+        padding: var(--sec-py) var(--px);
         display: grid;
         grid-template-columns: 1fr 1fr;
         gap: 72px;
         align-items: center;
     }
 
-    /* section label */
-    .sec-lbl {
-        display: inline-flex;
-        align-items: center;
-        gap: 14px;
-        font-size: 9px;
-        font-weight: 700;
-        letter-spacing: .3em;
-        text-transform: uppercase;
-        margin-bottom: 20px;
+    .about-h {
+        font-family: var(--f-d);
+        font-size: clamp(44px, 7.5vw, 100px);
+        line-height: .86;
+        letter-spacing: .02em;
+        color: var(--ink);
+        margin-bottom: var(--s6);
     }
 
-    .sec-lbl::before {
-        content: '';
-        width: 28px;
-        height: 1px;
-        background: currentColor;
-        flex-shrink: 0;
+    .about-h .ul {
+        text-decoration: underline;
+        text-decoration-thickness: 4px;
+        text-underline-offset: 7px;
+        text-decoration-color: var(--amber);
     }
 
-    /* about headline */
-    .ab-h {
-        font-family: var(--fd);
-        font-weight: 600;
+    .about-body {
+        font-family: var(--f-s);
         font-style: italic;
-        font-size: clamp(48px, 7.5vw, 104px);
-        line-height: .84;
-        letter-spacing: -.035em;
-        color: var(--cc-dark);
-        margin-bottom: 28px;
-    }
-
-    .ab-h span {
-        color: var(--cc-gold);
-    }
-
-    .ab-body {
-        font-size: clamp(15px, 1.5vw, 17px);
+        font-size: clamp(14px, 1.5vw, 16.5px);
+        color: var(--muted);
         line-height: 1.88;
-        font-weight: 300;
-        color: rgba(10, 10, 13, .65);
-        max-width: 440px;
-        margin-bottom: 36px;
+        max-width: 420px;
+        margin-bottom: var(--s8);
     }
 
-    .ab-link {
+    .about-cta {
+        font-family: var(--f-c);
+        font-size: 10.5px;
+        font-weight: 700;
+        letter-spacing: .18em;
+        text-transform: uppercase;
+        border-bottom: 2px solid var(--amber);
+        padding-bottom: 2px;
         display: inline-flex;
         align-items: center;
-        gap: 10px;
-        font-family: var(--fd);
-        font-style: italic;
-        font-size: 17px;
-        letter-spacing: .05em;
-        color: var(--cc-dark);
-        border-bottom: 1px solid currentColor;
-        padding-bottom: 2px;
-        text-decoration: none;
-        transition: color .2s, border-color .2s;
+        gap: 8px;
+        transition: color var(--t1);
     }
 
-    .ab-link:hover {
-        color: var(--cc-gold);
-        border-color: var(--cc-gold);
+    .about-cta:hover {
+        color: var(--amber);
     }
 
-    /* mini stat grid inside about */
-    .ab-stat-grid {
+    .about-stats {
         display: grid;
         grid-template-columns: 1fr 1fr;
         gap: 2px;
-        margin-top: 48px;
-        border: 2px solid var(--cc-dark);
-        border-radius: 4px;
+        margin-top: var(--s12);
+        border: 2.5px solid var(--ink);
         overflow: hidden;
     }
 
-    .ab-stat-cell {
-        background: var(--cc-dark);
-        color: var(--cc-cream);
-        padding: 24px 20px;
-        transition: background .3s;
+    .as-c {
+        background: var(--ink);
+        color: var(--cream);
+        padding: 22px 18px;
+        transition: background var(--t2);
+        cursor: default;
     }
 
-    .ab-stat-cell:nth-child(odd) {
-        background: rgba(10, 10, 13, .92);
+    .as-c:hover {
+        background: var(--olive-d);
     }
 
-    .ab-stat-cell:hover {
-        background: #1a1a22;
-    }
-
-    .asc-n {
-        font-family: var(--fd);
-        font-weight: 300;
-        font-style: italic;
-        font-size: clamp(28px, 4vw, 46px);
+    .as-n {
+        font-family: var(--f-d);
+        font-size: clamp(28px, 4vw, 44px);
         line-height: 1;
-        letter-spacing: -.03em;
+        letter-spacing: .02em;
     }
 
-    .asc-l {
-        font-size: 9px;
+    .as-l {
+        font-family: var(--f-c);
+        font-size: 8px;
         font-weight: 700;
         letter-spacing: .2em;
         text-transform: uppercase;
-        color: var(--cc-muted);
-        margin-top: 6px;
+        color: rgba(242, 234, 216, .3);
+        margin-top: 4px;
     }
 
-    /* right visual panel in about */
-    .ab-visual {
+    /* visual box */
+    .av {
         position: relative;
-        height: 580px;
+        height: 500px;
     }
 
-    .ab-vis-main {
+    .av-main {
         position: absolute;
         inset: 0;
-        background: var(--cc-dark);
-        border-radius: 12px;
+        background: var(--ink);
+        border: 2.5px solid var(--ink);
         overflow: hidden;
-        border: 2px solid var(--cc-dark);
     }
 
-    /* corner frame brackets */
-    .ab-vis-main::before,
-    .ab-vis-main::after {
+    .av-main::before,
+    .av-main::after {
         content: '';
         position: absolute;
-        width: 44px;
-        height: 44px;
-        border-color: var(--cc-gold);
+        width: 36px;
+        height: 36px;
+        border-color: var(--amber);
         border-style: solid;
         pointer-events: none;
-    }
-
-    .ab-vis-main::before {
-        top: 24px;
-        left: 24px;
-        border-width: 1.5px 0 0 1.5px;
-    }
-
-    .ab-vis-main::after {
-        bottom: 24px;
-        right: 24px;
-        border-width: 0 1.5px 1.5px 0;
-    }
-
-    /* vertical client ticker */
-    .ab-vtick {
-        position: absolute;
-        right: 0;
-        top: 0;
-        bottom: 0;
-        width: 90px;
-        border-left: 1px solid rgba(255, 255, 255, .06);
-        overflow: hidden;
-    }
-
-    .ab-vtick::before,
-    .ab-vtick::after {
-        content: '';
-        position: absolute;
-        left: 0;
-        right: 0;
-        height: 56px;
         z-index: 2;
-        pointer-events: none;
     }
 
-    .ab-vtick::before {
-        top: 0;
-        background: linear-gradient(var(--cc-dark), transparent);
+    .av-main::before {
+        top: 16px;
+        left: 16px;
+        border-width: 2px 0 0 2px;
     }
 
-    .ab-vtick::after {
-        bottom: 0;
-        background: linear-gradient(transparent, var(--cc-dark));
+    .av-main::after {
+        bottom: 16px;
+        right: 16px;
+        border-width: 0 2px 2px 0;
     }
 
-    @keyframes vtick-up {
-        0% {
-            transform: translateY(0)
-        }
-
-        100% {
-            transform: translateY(-50%)
-        }
-    }
-
-    .ab-vtick-track {
-        animation: vtick-up 22s linear infinite;
-    }
-
-    .ab-vtick-track:hover {
-        animation-play-state: paused;
-    }
-
-    .ab-vti {
-        padding: 14px 8px;
-        border-bottom: 1px solid rgba(255, 255, 255, .04);
-        text-align: center;
-        font-size: 9px;
-        font-weight: 700;
-        letter-spacing: .1em;
-        text-transform: uppercase;
-        color: rgba(240, 235, 225, .25);
-        transition: color .3s;
-        cursor: default;
-        white-space: nowrap;
-        overflow: hidden;
-        text-overflow: ellipsis;
-    }
-
-    .ab-vti:hover {
-        color: var(--cc-gold);
-    }
-
-    /* content inside left part of visual */
-    .ab-vis-content {
-        position: absolute;
-        left: 0;
-        top: 0;
-        bottom: 0;
-        right: 90px;
-        display: flex;
-        flex-direction: column;
-        justify-content: space-between;
-        padding: 32px;
-    }
-
-    .ab-year {
-        font-family: var(--fd);
-        font-weight: 300;
-        font-style: italic;
-        font-size: clamp(72px, 11vw, 130px);
+    .av-yr {
+        font-family: var(--f-d);
+        font-size: clamp(76px, 14vw, 152px);
         line-height: 1;
-        letter-spacing: -.06em;
+        letter-spacing: -.04em;
         color: transparent;
-        -webkit-text-stroke: 1px rgba(201, 168, 76, .18);
+        -webkit-text-stroke: 1px rgba(242, 234, 216, 1.06);
+        position: absolute;
+        bottom: 14px;
+        left: 14px;
         pointer-events: none;
         user-select: none;
     }
 
-    .ab-facts {
-        list-style: none;
+    .av-facts {
+        padding: var(--s8) var(--s6);
+        position: relative;
+        z-index: 1;
     }
 
-    .ab-fact {
-        display: flex;
-        align-items: center;
-        gap: 14px;
-        padding: 11px 0;
-        border-bottom: 1px solid rgba(255, 255, 255, .05);
-        border-radius: 4px;
-        transition: padding-left .25s, background .25s;
-    }
-
-    .ab-fact:last-child {
-        border-bottom: none;
-    }
-
-    .ab-fact:hover {
-        background: rgba(201, 168, 76, .04);
-        padding-left: 8px;
-    }
-
-    .ab-fact-ico {
-        font-size: 17px;
-        opacity: .55;
-        transition: opacity .3s, transform .3s;
-        flex-shrink: 0;
-    }
-
-    .ab-fact:hover .ab-fact-ico {
-        opacity: 1;
-        transform: scale(1.25) rotate(-6deg);
-    }
-
-    .ab-fact-txt {
-        font-size: 13px;
-        font-weight: 400;
-        color: rgba(240, 235, 225, .6);
-        letter-spacing: .03em;
-    }
-
-    /* floating badge */
-    .ab-badge {
-        position: absolute;
-        top: -32px;
-        right: 108px;
-        background: linear-gradient(135deg, rgba(18, 18, 24, .98), rgba(12, 12, 18, .98));
-        border: 1px solid rgba(201, 168, 76, .32);
-        border-radius: 12px;
-        padding: 20px 24px;
-        z-index: 5;
-        box-shadow: 0 20px 56px rgba(0, 0, 0, .55), 0 0 0 1px rgba(201, 168, 76, .1) inset;
-        animation: float-y 6s ease-in-out infinite;
-    }
-
-    .ab-badge-n {
-        font-family: var(--fd);
-        font-weight: 300;
-        font-style: italic;
-        font-size: 48px;
-        line-height: 1;
-        letter-spacing: -.04em;
-        color: var(--cc-gold);
-    }
-
-    .ab-badge-l {
-        font-size: 9px;
-        font-weight: 700;
-        letter-spacing: .2em;
-        text-transform: uppercase;
-        color: var(--cc-muted);
-        margin-top: 5px;
-    }
-
-    /* live indicator card */
-    .ab-live-card {
-        position: absolute;
-        bottom: -28px;
-        left: 24px;
-        background: rgba(12, 12, 18, .97);
-        border: 1px solid rgba(58, 191, 184, .25);
-        border-radius: 10px;
-        padding: 14px 18px;
-        z-index: 5;
+    .av-fact {
         display: flex;
         align-items: center;
         gap: 12px;
-        box-shadow: 0 10px 36px rgba(0, 0, 0, .4);
-        animation: float-y2 7s ease-in-out infinite;
+        padding: 10px 0;
+        border-bottom: 1px solid rgba(242, 234, 216, .05);
+        transition: padding-left var(--t2);
     }
 
-    .ab-live-dot {
-        width: 8px;
-        height: 8px;
-        border-radius: 50%;
-        background: var(--cc-teal);
-        animation: pulse-dot 2s ease-in-out infinite;
+    .av-fact:last-child {
+        border-bottom: none;
+    }
+
+    .av-fact:hover {
+        padding-left: 8px;
+    }
+
+    .av-fact svg {
+        opacity: .38;
+        transition: opacity var(--t2), transform var(--t2);
         flex-shrink: 0;
     }
 
-    .ab-live-txt {
+    .av-fact:hover svg {
+        opacity: .85;
+        transform: scale(1.18);
+    }
+
+    .av-ft {
+        font-family: var(--f-c);
         font-size: 12px;
-        font-weight: 700;
-        color: var(--cc-cream);
+        font-weight: 600;
+        letter-spacing: .06em;
+        color: rgba(242, 234, 216, .5);
+    }
+
+    .av-badge {
+        position: absolute;
+        top: -22px;
+        right: 60px;
+        background: var(--amber);
+        color: var(--ink);
+        padding: 14px 18px;
+        z-index: 3;
+        animation: float-a 5.5s ease-in-out infinite;
+    }
+
+    .av-badge-n {
+        font-family: var(--f-d);
+        font-size: 36px;
+        line-height: 1;
         letter-spacing: .02em;
     }
 
-    .ab-live-sub {
-        font-size: 10px;
-        color: var(--cc-muted);
-        margin-top: 1px;
-        letter-spacing: .06em;
+    .av-badge-l {
+        font-family: var(--f-c);
+        font-size: 8px;
+        font-weight: 700;
+        letter-spacing: .18em;
+        text-transform: uppercase;
+        color: rgba(26, 26, 16, .6);
+        margin-top: 3px;
     }
 
+    /* ── §5 FEATURE CARDS ─────────────────────────────────── */
+    .features {
+        background: var(--cream-2);
+    }
 
-    /* ════════════════════════════════════════════════════
-   §4  SERVICES (dark, bento-style)
-════════════════════════════════════════════════════ */
-    #hm-services {
-        background: var(--cc-darker);
+    .feat-wrap {
+        max-width: var(--max);
+        margin: 0 auto;
+        padding: var(--sec-py) var(--px);
+    }
+
+    .feat-top {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: var(--s12);
+        align-items: end;
+        margin-bottom: var(--s12);
+    }
+
+    .feat-sub {
+        font-family: var(--f-c);
+        font-size: 14px;
+        letter-spacing: .04em;
+        color: var(--muted);
+        line-height: 1.72;
+        max-width: 300px;
+        padding-bottom: 6px;
+    }
+
+    .feat-grid {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 3px;
+        border: 2.5px solid var(--ink);
+        overflow: hidden;
+    }
+
+    .fc {
+        background: var(--ink-2);
+        padding: var(--s12) var(--s8) var(--s10);
+        transition: background var(--t2);
+        cursor: default;
         position: relative;
-        z-index: 1;
+        overflow: hidden;
+    }
+
+    .fc::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 2.5px;
+        background: var(--amber);
+        transform: scaleX(0);
+        transform-origin: left;
+        transition: transform .4s var(--ease);
+    }
+
+    .fc:hover::before {
+        transform: scaleX(1);
+    }
+
+    .fc:hover {
+        background: var(--ink-3);
+    }
+
+    .fc-ico {
+        width: 40px;
+        height: 40px;
+        border: 1.5px solid rgba(242, 234, 216, .11);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin-bottom: var(--s6);
+        transition: border-color var(--t2), background var(--t2);
+    }
+
+    .fc:hover .fc-ico {
+        border-color: rgba(212, 146, 10, .3);
+        background: rgba(212, 146, 10, .06);
+    }
+
+    .fc-ico svg {
+        stroke: rgba(242, 234, 216, .4);
+        transition: stroke var(--t2), transform var(--t2);
+    }
+
+    .fc:hover .fc-ico svg {
+        stroke: var(--amber-2);
+        transform: scale(1.12);
+    }
+
+    .fc-t {
+        font-family: var(--f-d);
+        font-size: clamp(19px, 2.2vw, 26px);
+        letter-spacing: .04em;
+        color: var(--cream);
+        margin-bottom: 8px;
+        transition: color var(--t2);
+    }
+
+    .fc:hover .fc-t {
+        color: var(--amber);
+    }
+
+    .fc-d {
+        font-size: 12.5px;
+        color: rgba(242, 234, 216, .34);
+        line-height: 1.68;
+        font-weight: 300;
+    }
+
+    /* ── §6 SERVICES ──────────────────────────────────────── */
+    .services {
+        background: var(--ink);
+    }
+
+    .svc-wrap {
+        max-width: var(--max);
+        margin: 0 auto;
     }
 
     .svc-hdr {
         display: flex;
         align-items: flex-end;
         justify-content: space-between;
-        padding: 88px 72px 52px;
-        gap: 24px;
+        padding: var(--sec-py) var(--px) var(--s12);
+        border-bottom: 1px solid var(--l-border);
         flex-wrap: wrap;
-        border-bottom: 1px solid var(--cc-border);
+        gap: var(--s6);
     }
 
-    .svc-hdr-h {
-        font-family: var(--fd);
-        font-weight: 300;
-        font-style: italic;
-        font-size: clamp(48px, 7.5vw, 108px);
-        line-height: .84;
-        letter-spacing: -.035em;
-        color: var(--cc-cream);
+    .svc-h {
+        font-family: var(--f-d);
+        font-size: clamp(44px, 7.5vw, 100px);
+        line-height: .86;
+        letter-spacing: .02em;
+        color: var(--cream);
     }
 
-    .svc-hdr-h span {
-        color: var(--cc-gold);
+    .svc-h span {
+        color: var(--amber);
     }
 
-    /* bento grid */
-    .svc-grid {
+    .svc-list {
+        padding: 0 var(--px) var(--sec-py);
+    }
+
+    .svc-row {
         display: grid;
-        grid-template-columns: repeat(4, 1fr);
-        gap: 2px;
-        background: var(--cc-border);
-    }
-
-    .svc-card {
-        position: relative;
-        background: var(--cc-card);
-        padding: 40px 32px 48px;
-        overflow: hidden;
+        grid-template-columns: 60px 1fr auto auto;
+        align-items: center;
+        gap: var(--s8);
+        padding: 18px 0;
+        border-top: 1px solid var(--l-border);
+        transition: padding-left var(--t2);
         cursor: default;
-        min-height: 300px;
-        display: flex;
-        flex-direction: column;
-        transition: background .4s var(--ease);
     }
 
-    /* top accent sweep */
-    .svc-card::before {
-        content: '';
-        position: absolute;
-        top: 0;
-        left: 0;
-        right: 0;
-        height: 2px;
-        background: var(--sc, var(--cc-gold));
-        transform: scaleX(0);
-        transform-origin: left;
-        transition: transform .45s var(--ease);
+    .svc-row:last-child {
+        border-bottom: 1px solid var(--l-border);
     }
 
-    .svc-card:hover::before {
-        transform: scaleX(1);
+    .svc-row:hover {
+        padding-left: 14px;
     }
 
-    /* shimmer */
-    .svc-card::after {
-        content: '';
-        position: absolute;
-        inset: 0;
-        background: linear-gradient(108deg, transparent 40%, rgba(255, 255, 255, .025) 50%, transparent 60%);
-        transform: translateX(-100%);
-        transition: transform .65s var(--ease);
+    .svc-row:hover .svc-num,
+    .svc-row:hover .svc-t {
+        color: var(--amber);
     }
 
-    .svc-card:hover::after {
-        transform: translateX(100%);
+    .svc-row:hover .svc-arr {
+        border-color: rgba(212, 146, 10, .4);
+        transform: rotate(-45deg) translate(2px, -2px);
     }
 
-    .svc-card:hover {
-        background: #17171f;
-    }
-
-    .svc-bg-ico {
-        position: absolute;
-        bottom: -10px;
-        right: -6px;
-        font-size: 90px;
-        opacity: .05;
-        pointer-events: none;
-        user-select: none;
-        line-height: 1;
-        transition: opacity .4s, transform .4s;
-    }
-
-    .svc-card:hover .svc-bg-ico {
-        opacity: .12;
-        transform: scale(1.1) rotate(-8deg);
+    .svc-row:hover .svc-arr svg {
+        stroke: var(--amber);
     }
 
     .svc-num {
-        font-family: var(--fd);
-        font-style: italic;
+        font-family: var(--f-d);
         font-size: 13px;
-        letter-spacing: .04em;
-        color: var(--sc, var(--cc-gold));
-        opacity: .45;
-        margin-bottom: 20px;
-        transition: opacity .3s;
+        letter-spacing: .1em;
+        color: rgba(242, 234, 216, .14);
+        transition: color var(--t2);
     }
 
-    .svc-card:hover .svc-num {
-        opacity: 1;
+    .svc-body {
+        display: flex;
+        flex-direction: column;
+        gap: 3px;
+    }
+
+    .svc-t {
+        font-family: var(--f-d);
+        font-size: clamp(19px, 2.6vw, 32px);
+        letter-spacing: .03em;
+        color: var(--cream);
+        transition: color var(--t2);
+    }
+
+    .svc-d {
+        font-size: 12.5px;
+        color: rgba(242, 234, 216, .28);
+        line-height: 1.6;
+        font-weight: 300;
+        max-width: 400px;
     }
 
     .svc-ico {
-        font-size: 32px;
-        margin-bottom: 16px;
-        display: inline-block;
-        transition: transform .4s var(--ease);
-    }
-
-    .svc-card:hover .svc-ico {
-        transform: scale(1.22) rotate(-6deg);
-    }
-
-    .svc-title {
-        font-family: var(--fd);
-        font-weight: 300;
-        font-style: italic;
-        font-size: clamp(20px, 2vw, 28px);
-        line-height: 1.1;
-        color: var(--cc-cream);
-        margin-bottom: 14px;
-        transition: color .3s;
-    }
-
-    .svc-card:hover .svc-title {
-        color: var(--sc, var(--cc-gold));
-    }
-
-    .svc-desc {
-        font-size: 13px;
-        color: rgba(240, 235, 225, .45);
-        line-height: 1.75;
-        font-weight: 300;
-        max-height: 0;
-        overflow: hidden;
-        opacity: 0;
-        transition: max-height .5s var(--ease), opacity .4s;
-    }
-
-    .svc-card:hover .svc-desc {
-        max-height: 200px;
-        opacity: 1;
-    }
-
-    .svc-tags {
-        display: flex;
-        flex-wrap: wrap;
-        gap: 6px;
-        margin-top: auto;
-        padding-top: 20px;
-    }
-
-    .svc-tag {
-        font-size: 9px;
-        font-weight: 700;
-        letter-spacing: .1em;
-        text-transform: uppercase;
-        padding: 4px 10px;
-        border-radius: 100px;
-        border: 1px solid rgba(255, 255, 255, .07);
-        color: rgba(240, 235, 225, .3);
-        transition: border-color .3s, color .3s;
-    }
-
-    .svc-card:hover .svc-tag {
-        border-color: var(--sc, var(--cc-gold));
-        color: var(--sc, var(--cc-gold));
-        opacity: .7;
-    }
-
-    /* arrow cta */
-    .svc-arr {
-        position: absolute;
-        bottom: 24px;
-        right: 24px;
         width: 34px;
-        height: 34px;
-        border-radius: 50%;
-        border: 1px solid rgba(255, 255, 255, .07);
         display: flex;
         align-items: center;
         justify-content: center;
-        color: rgba(240, 235, 225, .25);
-        font-size: 16px;
-        text-decoration: none;
-        transition: all .3s var(--ease);
+        opacity: .3;
+        transition: opacity var(--t2), transform var(--t2);
     }
 
-    .svc-card:hover .svc-arr {
-        border-color: var(--sc, var(--cc-gold));
-        color: var(--sc, var(--cc-gold));
-        transform: translate(2px, -2px);
+    .svc-row:hover .svc-ico {
+        opacity: .8;
+        transform: scale(1.15) rotate(-5deg);
     }
 
+    .svc-arr {
+        width: 34px;
+        height: 34px;
+        border: 1.5px solid rgba(242, 234, 216, .1);
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-shrink: 0;
+        transition: border-color var(--t2), transform var(--t2);
+    }
 
-    /* ════════════════════════════════════════════════════
-   §5  CAMPAIGNS / WORK (magazine grid — cream bg)
-════════════════════════════════════════════════════ */
-    #hm-campaigns {
-        background: var(--cc-cream);
-        color: var(--cc-dark);
-        padding: 100px 72px;
-        position: relative;
-        z-index: 1;
+    .svc-arr svg {
+        stroke: rgba(242, 234, 216, .18);
+        transition: stroke var(--t2);
+    }
+
+    /* ── §7 CAMPAIGNS ─────────────────────────────────────── */
+    .campaigns {
+        background: var(--cream);
+    }
+
+    .camp-wrap {
+        max-width: var(--max);
+        margin: 0 auto;
+        padding: var(--sec-py) var(--px);
     }
 
     .camp-hdr {
         display: flex;
         align-items: flex-end;
         justify-content: space-between;
-        margin-bottom: 52px;
-        gap: 24px;
+        margin-bottom: var(--s12);
         flex-wrap: wrap;
+        gap: var(--s6);
     }
 
-    .camp-hdr-h {
-        font-family: var(--fd);
-        font-weight: 600;
-        font-style: italic;
-        font-size: clamp(48px, 7.5vw, 108px);
-        line-height: .84;
-        letter-spacing: -.035em;
-        color: var(--cc-dark);
+    .camp-h {
+        font-family: var(--f-d);
+        font-size: clamp(44px, 7.5vw, 100px);
+        line-height: .86;
+        letter-spacing: .02em;
+        color: var(--ink);
     }
 
-    .camp-hdr-h span {
-        color: var(--cc-gold);
+    .camp-h span {
+        color: var(--olive);
     }
 
-    .camp-view-all {
+    .camp-see {
+        font-family: var(--f-c);
+        font-size: 10.5px;
+        font-weight: 700;
+        letter-spacing: .18em;
+        text-transform: uppercase;
+        border-bottom: 2px solid var(--ink);
+        padding-bottom: 2px;
         display: inline-flex;
         align-items: center;
-        gap: 8px;
-        font-family: var(--fd);
-        font-style: italic;
-        font-size: 17px;
-        letter-spacing: .05em;
-        color: var(--cc-dark);
-        border-bottom: 1px solid currentColor;
-        padding-bottom: 2px;
-        text-decoration: none;
-        transition: color .2s, border-color .2s;
-        flex-shrink: 0;
+        gap: 7px;
+        transition: color var(--t1), border-color var(--t1);
         align-self: flex-end;
-        margin-bottom: 8px;
+        margin-bottom: 4px;
     }
 
-    .camp-view-all:hover {
-        color: var(--cc-gold);
-        border-color: var(--cc-gold);
+    .camp-see:hover {
+        color: var(--amber);
+        border-color: var(--amber);
     }
 
-    /* 12-col magazine grid */
     .camp-grid {
         display: grid;
         grid-template-columns: repeat(12, 1fr);
-        gap: 2px;
-        border: 2px solid var(--cc-dark);
-        border-radius: 8px;
+        gap: 3px;
+        border: 2.5px solid var(--ink);
         overflow: hidden;
     }
 
-    .camp-card {
+    .ccard {
         position: relative;
-        background: #1a1a22;
-        text-decoration: none;
-        display: block;
+        background: var(--ink-2);
         overflow: hidden;
-        transition: background .35s;
+        display: block;
+        transition: background var(--t2);
     }
 
-    .camp-card:hover {
-        background: #1e1e28;
+    .ccard:hover {
+        background: var(--ink-3);
     }
 
-    .camp-card.c-feat {
+    .ccard.feat {
         grid-column: span 8;
     }
 
-    .camp-card.c-sm {
+    .ccard.sm {
         grid-column: span 4;
     }
 
-    .camp-iw {
+    .c-img {
         overflow: hidden;
         position: relative;
     }
 
-    .camp-iw img {
+    .c-img img {
         width: 100%;
         height: 100%;
         object-fit: cover;
-        filter: brightness(.5) saturate(.75);
+        filter: brightness(.46) saturate(.68);
         transition: transform .85s var(--ease), filter .85s;
     }
 
-    .camp-card:hover .camp-iw img {
+    .ccard:hover .c-img img {
         transform: scale(1.07);
-        filter: brightness(.7) saturate(1);
+        filter: brightness(.66) saturate(1);
     }
 
-    .camp-card.c-feat .camp-iw {
-        height: 400px;
-    }
-
-    .camp-card.c-sm .camp-iw {
-        height: 240px;
-    }
-
-    .camp-iw::after {
+    .c-img::after {
         content: '';
         position: absolute;
         inset: 0;
-        background: linear-gradient(to top, rgba(6, 6, 8, .96) 0%, transparent 58%);
+        background: linear-gradient(to top, rgba(26, 26, 16, .98) 0%, transparent 55%);
     }
 
-    .camp-ph {
-        /* placeholder when no image */
+    .ccard.feat .c-img {
+        height: 340px;
+    }
+
+    .ccard.sm .c-img {
+        height: 200px;
+    }
+
+    .c-ph {
         display: flex;
         align-items: center;
         justify-content: center;
-        background: linear-gradient(135deg, #141420, #0a0a0e);
+        background: var(--ink);
     }
 
-    .camp-ph span {
-        font-family: var(--fd);
-        font-size: 60px;
-        font-style: italic;
-        color: rgba(201, 168, 76, .05);
+    .c-ph span {
+        font-family: var(--f-d);
+        font-size: 48px;
+        color: rgba(242, 234, 216, .04);
     }
 
-    .camp-body {
-        padding: 28px;
+    .c-body {
+        padding: 20px;
     }
 
-    .camp-card.c-feat .camp-body {
-        padding: 36px;
+    .ccard.feat .c-body {
+        padding: 24px;
     }
 
-    .camp-author {
-        font-size: 9px;
+    .c-auth {
+        font-family: var(--f-c);
+        font-size: 8.5px;
         font-weight: 700;
         letter-spacing: .22em;
         text-transform: uppercase;
-        color: var(--cc-gold);
+        color: var(--amber);
         opacity: .7;
-        margin-bottom: 10px;
+        margin-bottom: 7px;
         display: block;
     }
 
-    .camp-title {
-        font-family: var(--fd);
-        font-weight: 300;
-        font-style: italic;
-        font-size: clamp(20px, 2.4vw, 32px);
-        line-height: 1.15;
-        color: var(--cc-cream);
-        margin-bottom: 10px;
-        transition: color .25s;
+    .c-t {
+        font-family: var(--f-d);
+        font-size: clamp(17px, 2vw, 26px);
+        letter-spacing: .02em;
+        color: var(--cream);
+        line-height: 1.1;
+        margin-bottom: 6px;
+        transition: color var(--t2);
     }
 
-    .camp-card.c-feat .camp-title {
-        font-size: clamp(26px, 3.2vw, 46px);
+    .ccard.feat .c-t {
+        font-size: clamp(22px, 2.8vw, 36px);
     }
 
-    .camp-card:hover .camp-title {
-        color: var(--cc-gold);
+    .ccard:hover .c-t {
+        color: var(--amber-2);
     }
 
-    .camp-desc {
-        font-size: 13px;
-        color: rgba(240, 235, 225, .4);
-        line-height: 1.65;
+    .c-d {
+        font-size: 12px;
+        color: rgba(242, 234, 216, .33);
+        line-height: 1.6;
         display: -webkit-box;
         -webkit-line-clamp: 2;
         -webkit-box-orient: vertical;
         overflow: hidden;
     }
 
-    .camp-cta {
+    .c-cta {
         display: inline-flex;
         align-items: center;
-        gap: 6px;
-        margin-top: 16px;
-        font-size: 10px;
+        gap: 5px;
+        margin-top: 12px;
+        font-family: var(--f-c);
+        font-size: 9.5px;
         font-weight: 700;
         letter-spacing: .18em;
         text-transform: uppercase;
-        color: rgba(201, 168, 76, .32);
-        transition: color .25s, gap .25s;
+        color: rgba(242, 234, 216, .2);
+        transition: color var(--t2), gap var(--t2);
     }
 
-    .camp-card:hover .camp-cta {
-        color: var(--cc-gold);
-        gap: 12px;
+    .ccard:hover .c-cta {
+        color: var(--amber-2);
+        gap: 10px;
     }
 
-    /* empty state */
     .camp-empty {
         grid-column: span 12;
-        padding: 80px;
+        padding: 64px;
         display: flex;
         flex-direction: column;
         align-items: center;
-        gap: 16px;
-        background: #111118;
+        gap: 12px;
+        background: var(--ink-2);
     }
 
     .camp-empty-h {
-        font-family: var(--fd);
-        font-style: italic;
-        font-size: 40px;
-        color: rgba(240, 235, 225, .25);
+        font-family: var(--f-d);
+        font-size: 36px;
+        color: rgba(242, 234, 216, .15);
     }
 
-    .camp-empty-p {
-        font-size: 14px;
-        color: rgba(240, 235, 225, .2);
-    }
-
-
-    /* ════════════════════════════════════════════════════
-   §6  WORD TICKER (bold running text between sections)
-════════════════════════════════════════════════════ */
-    #hm-word-ticker {
-        background: var(--cc-dark);
-        border-top: 1px solid var(--cc-border);
-        border-bottom: 1px solid var(--cc-border);
-        padding: 32px 0;
+    /* ── §8 STATS COUNTER ─────────────────────────────────── */
+    .stats-sec {
+        background: var(--olive);
+        position: relative;
         overflow: hidden;
     }
 
+    .stats-sec::before {
+        content: '';
+        position: absolute;
+        inset: 0;
+        background: radial-gradient(ellipse 70% 80% at 50% 50%, rgba(212, 146, 10, .07) 0%, transparent 70%);
+        pointer-events: none;
+    }
 
-    /* ════════════════════════════════════════════════════
-   §7  PROCESS (dark, editorial split rows)
-════════════════════════════════════════════════════ */
-    #hm-process {
-        background: var(--cc-ink);
+    .stats-inner {
+        max-width: var(--max);
+        margin: 0 auto;
+        padding: var(--sec-py) var(--px);
+    }
+
+    .stats-top {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: var(--s12);
+        align-items: end;
+        margin-bottom: var(--s12);
+    }
+
+    .stats-h {
+        font-family: var(--f-d);
+        font-size: clamp(40px, 6.5vw, 84px);
+        line-height: .88;
+        letter-spacing: .02em;
+        color: var(--cream);
+    }
+
+    .stats-h span {
+        color: var(--amber);
+    }
+
+    .stats-sub {
+        font-family: var(--f-c);
+        font-size: 14px;
+        letter-spacing: .04em;
+        color: rgba(242, 234, 216, .38);
+        line-height: 1.72;
+        max-width: 300px;
+        padding-bottom: 6px;
+    }
+
+    .stats-grid {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 2px;
+        background: rgba(242, 234, 216, .1);
+        border: 1.5px solid rgba(242, 234, 216, .12);
+        overflow: hidden;
+    }
+
+    .stat-cell {
+        background: rgba(242, 234, 216, .04);
+        padding: 30px 22px;
+        border-right: 1px solid rgba(242, 234, 216, .08);
+        transition: background var(--t2);
+        cursor: default;
+    }
+
+    .stat-cell:last-child {
+        border-right: none;
+    }
+
+    .stat-cell:hover {
+        background: rgba(242, 234, 216, .09);
+    }
+
+    .stat-n {
+        font-family: var(--f-d);
+        font-size: clamp(38px, 6vw, 68px);
+        line-height: 1;
+        letter-spacing: .02em;
+        color: var(--amber);
+    }
+
+    .stat-l {
+        font-family: var(--f-c);
+        font-size: 8.5px;
+        font-weight: 700;
+        letter-spacing: .22em;
+        text-transform: uppercase;
+        color: rgba(242, 234, 216, .34);
+        margin-top: 6px;
+    }
+
+    /* ── §9 TESTIMONIALS ──────────────────────────────────── */
+    .testi {
+        background: var(--cream-2);
+    }
+
+    .testi-wrap {
+        max-width: var(--max);
+        margin: 0 auto;
+        padding: var(--sec-py) var(--px);
+    }
+
+    .testi-hdr {
+        display: flex;
+        align-items: flex-end;
+        justify-content: space-between;
+        margin-bottom: var(--s12);
+        flex-wrap: wrap;
+        gap: var(--s6);
+    }
+
+    .testi-h {
+        font-family: var(--f-d);
+        font-size: clamp(40px, 6.5vw, 84px);
+        line-height: .88;
+        letter-spacing: .02em;
+        color: var(--ink);
+    }
+
+    .testi-h em {
+        font-family: var(--f-s);
+        font-style: italic;
+        color: var(--amber);
+    }
+
+    .testi-grid {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 3px;
+        border: 2.5px solid var(--ink);
+        overflow: hidden;
+    }
+
+    .tcard {
+        background: var(--ink-2);
+        padding: var(--s12) var(--s8);
         position: relative;
-        z-index: 1;
-        padding: 88px 0;
+        overflow: hidden;
+        transition: background var(--t2);
+    }
+
+    .tcard::before {
+        content: '';
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        height: 2.5px;
+        background: var(--amber);
+        transform: scaleX(0);
+        transform-origin: left;
+        transition: transform .4s var(--ease);
+    }
+
+    .tcard:hover {
+        background: var(--ink-3);
+    }
+
+    .tcard:hover::before {
+        transform: scaleX(1);
+    }
+
+    .tcard-qi {
+        width: 26px;
+        height: 26px;
+        margin-bottom: var(--s6);
+        opacity: .28;
+    }
+
+    .tcard-qi svg {
+        stroke: var(--amber-2);
+    }
+
+    .tcard-stars {
+        display: flex;
+        gap: 3px;
+        margin-bottom: var(--s4);
+    }
+
+    .tcard-stars svg {
+        stroke: var(--amber);
+        fill: var(--amber);
+    }
+
+    .tcard-q {
+        font-family: var(--f-s);
+        font-style: italic;
+        font-size: clamp(13px, 1.4vw, 14.5px);
+        color: rgba(242, 234, 216, .56);
+        line-height: 1.78;
+        margin-bottom: var(--s6);
+    }
+
+    .tcard-name {
+        font-family: var(--f-c);
+        font-size: 9px;
+        font-weight: 700;
+        letter-spacing: .18em;
+        text-transform: uppercase;
+        color: rgba(242, 234, 216, .26);
+    }
+
+    /* ── §10 PROCESS ──────────────────────────────────────── */
+    .process {
+        background: var(--ink);
+    }
+
+    .proc-wrap {
+        max-width: var(--max);
+        margin: 0 auto;
     }
 
     .proc-hdr {
+        display: flex;
+        align-items: flex-end;
+        justify-content: space-between;
+        padding: var(--sec-py) var(--px) var(--s12);
+        border-bottom: 1px solid var(--l-border);
+        flex-wrap: wrap;
+        gap: var(--s6);
+    }
+
+    .proc-h {
+        font-family: var(--f-d);
+        font-size: clamp(44px, 7.5vw, 100px);
+        line-height: .86;
+        letter-spacing: .02em;
+        color: var(--cream);
+    }
+
+    .proc-h span {
+        color: var(--amber);
+    }
+
+    .proc-sub {
+        font-family: var(--f-c);
+        font-size: 13px;
+        letter-spacing: .04em;
+        color: rgba(242, 234, 216, .34);
+        max-width: 300px;
+        line-height: 1.72;
+        padding-bottom: 6px;
+    }
+
+    .proc-rows {
+        padding: 0 var(--px);
+    }
+
+    .proc-row {
         display: grid;
-        grid-template-columns: 1fr 1fr;
-        gap: 48px;
-        align-items: end;
-        padding: 0 72px;
-        margin-bottom: 60px;
+        grid-template-columns: 76px 1fr 1fr;
+        border-top: 1px solid var(--l-border);
+        min-height: 172px;
+        transition: background var(--t2);
     }
 
-    .proc-hdr-h {
-        font-family: var(--fd);
-        font-weight: 300;
-        font-style: italic;
-        font-size: clamp(48px, 7.5vw, 108px);
-        line-height: .84;
-        letter-spacing: -.035em;
-        color: var(--cc-cream);
+    .proc-row:last-child {
+        border-bottom: 1px solid var(--l-border);
     }
 
-    .proc-hdr-h span {
-        color: var(--cc-teal);
+    .proc-row:hover {
+        background: rgba(242, 234, 216, .018);
     }
 
-    .proc-hdr-p {
-        font-size: 15px;
-        color: var(--cc-muted);
-        line-height: 1.85;
-        font-weight: 300;
-        max-width: 400px;
-        padding-bottom: 8px;
+    .proc-nn {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-family: var(--f-d);
+        font-size: clamp(46px, 7.5vw, 86px);
+        line-height: 1;
+        letter-spacing: -.04em;
+        color: rgba(242, 234, 216, .06);
+        border-right: 1px solid var(--l-border);
+        transition: color .5s;
     }
 
-    .proc-list {
-        list-style: none;
+    .proc-row:hover .proc-nn {
+        color: rgba(242, 234, 216, .18);
     }
 
-    .proc-item {
-        display: grid;
-        grid-template-columns: 1fr 1px 1fr;
-        border-top: 1px solid var(--cc-border);
-        border-bottom: 1px solid var(--cc-border);
-        margin-bottom: -1px;
-        min-height: 200px;
-        transition: background .3s;
+    .proc-l {
+        padding: 26px var(--s8);
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        border-right: 1px solid var(--l-border);
     }
 
-    .proc-item:hover {
-        background: rgba(255, 255, 255, .01);
-    }
-
-    .proc-div {
-        background: var(--cc-border);
-    }
-
-    .proc-l,
     .proc-r {
-        padding: 48px 72px;
+        padding: 26px var(--s8);
         display: flex;
         flex-direction: column;
         justify-content: center;
     }
 
-    .proc-num {
-        font-family: var(--fd);
-        font-size: 92px;
-        font-weight: 300;
-        font-style: italic;
-        line-height: 1;
-        letter-spacing: -.06em;
-        color: rgba(255, 255, 255, .03);
-        margin-bottom: -10px;
-        transition: color .5s;
-    }
-
-    .proc-item:hover .proc-num {
-        color: rgba(201, 168, 76, .1);
-    }
-
     .proc-tag {
+        font-family: var(--f-c);
         font-size: 9px;
         font-weight: 700;
-        letter-spacing: .28em;
+        letter-spacing: .26em;
         text-transform: uppercase;
-        opacity: .5;
-        margin-bottom: 10px;
-        transition: opacity .3s;
+        color: rgba(242, 234, 216, .28);
+        margin-bottom: 8px;
+        transition: color var(--t2);
     }
 
-    .proc-item:hover .proc-tag {
-        opacity: 1;
+    .proc-row:hover .proc-tag {
+        color: var(--amber);
     }
 
     .proc-title {
-        font-family: var(--fd);
-        font-weight: 300;
-        font-style: italic;
-        font-size: clamp(26px, 3.5vw, 52px);
-        line-height: .9;
-        letter-spacing: -.02em;
-        color: rgba(240, 235, 225, .4);
+        font-family: var(--f-d);
+        font-size: clamp(20px, 2.8vw, 38px);
+        letter-spacing: .02em;
+        color: rgba(242, 234, 216, .3);
+        line-height: .92;
         transition: color .5s;
     }
 
-    .proc-item:hover .proc-title {
-        color: var(--pp, var(--cc-gold));
+    .proc-row:hover .proc-title {
+        color: var(--cream);
     }
 
     .proc-ico {
-        font-size: 40px;
-        margin-bottom: 14px;
-        opacity: .45;
-        transition: opacity .4s, transform .4s;
+        width: 30px;
+        height: 30px;
+        margin-bottom: 12px;
+        opacity: .32;
+        transition: opacity var(--t2), transform var(--t2);
     }
 
-    .proc-item:hover .proc-ico {
-        opacity: 1;
-        transform: scale(1.18) rotate(-5deg);
+    .proc-ico svg {
+        stroke: var(--cream);
+    }
+
+    .proc-row:hover .proc-ico {
+        opacity: .9;
+        transform: scale(1.12) rotate(-5deg);
     }
 
     .proc-desc {
-        font-size: 14px;
-        color: var(--cc-muted);
-        line-height: 1.85;
+        font-size: 13px;
+        color: rgba(242, 234, 216, .36);
+        line-height: 1.78;
         font-weight: 300;
-        max-width: 440px;
+        max-width: 380px;
     }
 
+    .proc-cta {
+        padding: var(--s16) var(--px);
+        display: flex;
+        justify-content: center;
+    }
 
-    /* ════════════════════════════════════════════════════
-   §8  CTA CLOSING (cream with giant ghost text)
-════════════════════════════════════════════════════ */
-    #hm-cta {
-        background: var(--cc-cream);
-        color: var(--cc-dark);
+    /* ── §11 CTA ──────────────────────────────────────────── */
+    .cta-sec {
+        background: var(--cream);
         position: relative;
         overflow: hidden;
-        z-index: 1;
-        padding: 120px 72px;
-        text-align: center;
     }
 
     .cta-ghost {
@@ -1818,309 +1532,192 @@ $proc_steps = [
         top: 50%;
         left: 50%;
         transform: translate(-50%, -50%);
-        font-family: var(--fd);
-        font-weight: 600;
-        font-style: italic;
-        font-size: clamp(80px, 14vw, 220px);
-        letter-spacing: -.05em;
+        font-family: var(--f-d);
+        font-size: clamp(64px, 14vw, 210px);
+        letter-spacing: -.02em;
         line-height: 1;
         color: transparent;
-        -webkit-text-stroke: 1.5px rgba(10, 10, 13, .07);
+        -webkit-text-stroke: 1.5px rgba(26, 26, 16, .055);
         white-space: nowrap;
         pointer-events: none;
         user-select: none;
     }
 
-    .cta-h {
-        font-family: var(--fd);
-        font-weight: 600;
-        font-style: italic;
-        font-size: clamp(52px, 9vw, 136px);
-        line-height: .82;
-        letter-spacing: -.04em;
-        color: var(--cc-dark);
-        margin-bottom: 44px;
+    .cta-inner {
         position: relative;
         z-index: 2;
+        max-width: var(--max);
+        margin: 0 auto;
+        padding: var(--sec-py) var(--px);
+        text-align: center;
+    }
+
+    .cta-h {
+        font-family: var(--f-d);
+        font-size: clamp(48px, 9vw, 128px);
+        line-height: .84;
+        letter-spacing: .02em;
+        color: var(--ink);
+        margin-bottom: var(--s10);
     }
 
     .cta-h span {
-        color: var(--cc-gold);
+        color: var(--amber);
     }
 
     .cta-btns {
         display: flex;
         justify-content: center;
-        gap: 16px;
+        gap: 12px;
         flex-wrap: wrap;
-        position: relative;
-        z-index: 2;
-    }
-
-    .cta-btn-dark {
-        display: inline-flex;
-        align-items: center;
-        gap: 10px;
-        font-family: var(--fd);
-        font-style: italic;
-        font-size: 18px;
-        letter-spacing: .04em;
-        background: var(--cc-dark);
-        color: var(--cc-cream);
-        padding: 15px 40px;
-        border-radius: 2px;
-        text-decoration: none;
-        transition: background .2s, transform .25s, box-shadow .25s;
-    }
-
-    .cta-btn-dark:hover {
-        background: #1e1e28;
-        transform: translateY(-2px);
-        box-shadow: 0 16px 44px rgba(10, 10, 13, .28);
-    }
-
-    .cta-btn-outline {
-        display: inline-flex;
-        align-items: center;
-        gap: 10px;
-        font-family: var(--fd);
-        font-style: italic;
-        font-size: 18px;
-        letter-spacing: .04em;
-        border: 2px solid var(--cc-dark);
-        color: var(--cc-dark);
-        padding: 14px 38px;
-        border-radius: 2px;
-        text-decoration: none;
-        transition: background .2s, color .2s, transform .25s;
-    }
-
-    .cta-btn-outline:hover {
-        background: var(--cc-dark);
-        color: var(--cc-cream);
-        transform: translateY(-2px);
+        margin-bottom: var(--s8);
     }
 
     .cta-sub {
-        margin-top: 36px;
-        font-size: 13px;
-        color: rgba(10, 10, 13, .4);
-        letter-spacing: .1em;
-        position: relative;
-        z-index: 2;
+        font-family: var(--f-c);
+        font-size: 10.5px;
+        font-weight: 700;
+        letter-spacing: .12em;
+        text-transform: uppercase;
+        color: rgba(26, 26, 16, .28);
     }
 
-
-    /* ════════════════════════════════════════════════════
-   RESPONSIVE
-════════════════════════════════════════════════════ */
-    @media(max-width:1200px) {
-        .svc-grid {
-            grid-template-columns: repeat(2, 1fr);
-        }
-    }
-
+    /* ── RESPONSIVE ───────────────────────────────────────── */
     @media(max-width:1100px) {
-        .h-body {
+        .about-wrap {
             grid-template-columns: 1fr;
-            padding: 130px 40px 60px;
+            gap: 48px;
         }
 
-        .h-visual {
-            height: 360px;
+        .av {
+            height: 380px;
         }
 
-        .h-ring-1 {
-            width: 320px;
-            height: 320px;
-        }
-
-        .h-ring-2 {
-            width: 240px;
-            height: 240px;
-        }
-
-        .h-ring-3 {
-            width: 160px;
-            height: 160px;
-        }
-
-        .h-disc {
-            width: 170px;
-            height: 170px;
-        }
-
-        .h-disc-n {
-            font-size: 52px;
-        }
-
-        .hf-a,
-        .hf-b,
-        .hf-c {
-            display: none;
-        }
-
-        .h-stats {
-            grid-template-columns: repeat(2, 1fr);
-        }
-
-        .h-scroll-cue {
-            display: none;
-        }
-
-        .ab-wrap {
+        .feat-top {
             grid-template-columns: 1fr;
-            gap: 52px;
+            gap: var(--s8);
         }
 
-        .ab-visual {
-            height: 420px;
+        .feat-grid {
+            grid-template-columns: 1fr 1fr;
         }
 
-        .ab-badge {
-            right: 100px;
-        }
-
-        .camp-card.c-feat {
+        .ccard.feat {
             grid-column: span 12;
         }
 
-        .camp-card.c-sm {
+        .ccard.sm {
             grid-column: span 6;
         }
 
-        .proc-hdr {
-            grid-template-columns: 1fr;
-            padding: 0 40px;
+        .stats-grid {
+            grid-template-columns: repeat(2, 1fr);
         }
 
-        .proc-item {
+        .stats-top {
             grid-template-columns: 1fr;
-            min-height: auto;
+            gap: var(--s6);
         }
 
-        .proc-div {
+        .testi-grid {
+            grid-template-columns: 1fr;
+        }
+
+        .proc-row {
+            grid-template-columns: 60px 1fr;
+        }
+
+        .proc-r {
             display: none;
         }
 
-        .proc-l,
-        .proc-r {
-            padding: 32px 40px;
+        .proc-nn {
+            font-size: 50px;
         }
 
-        #hm-about,
-        #hm-campaigns,
-        #hm-cta {
-            padding: 80px 40px;
+        .hero-float-l,
+        .hero-float-r {
+            display: none;
         }
 
-        .svc-hdr {
-            padding: 64px 40px 44px;
+        .hero-vert-text {
+            display: none;
+        }
+
+        .hero-body {
+            padding-top: calc(var(--nav-h) + 56px);
+        }
+    }
+
+    @media(max-width:900px) {
+        .svc-row {
+            grid-template-columns: 52px 1fr;
+        }
+
+        .svc-ico,
+        .svc-arr {
+            display: none;
+        }
+
+        .svc-d {
+            display: none;
+        }
+
+        .av-badge {
+            display: none;
         }
     }
 
     @media(max-width:768px) {
-        .h-body {
-            padding: 108px 24px 52px;
+        .hero-stats {
+            grid-template-columns: 1fr 1fr;
         }
 
-        .h-visual {
-            height: 280px;
+        .hs-cell {
+            padding: 16px 16px;
         }
 
-        .h-ring-1 {
-            width: 240px;
-            height: 240px;
+        .about-stats {
+            grid-template-columns: 1fr 1fr;
         }
 
-        .h-ring-2 {
-            width: 180px;
-            height: 180px;
-        }
-
-        .h-ring-3 {
-            width: 120px;
-            height: 120px;
-        }
-
-        .h-disc {
-            width: 130px;
-            height: 130px;
-        }
-
-        .h-disc-n {
-            font-size: 40px;
-        }
-
-        .h-stats {
-            grid-template-columns: repeat(2, 1fr);
-        }
-
-        .h-stat {
-            padding: 18px 24px;
-        }
-
-        .ab-visual {
-            height: 360px;
-        }
-
-        .ab-vtick {
-            width: 72px;
-        }
-
-        .ab-badge {
-            right: 84px;
-        }
-
-        .camp-card.c-sm {
-            grid-column: span 12;
-        }
-
-        .camp-card.c-feat .camp-iw {
-            height: 260px;
-        }
-
-        #hm-about,
-        #hm-campaigns,
-        #hm-cta {
-            padding: 64px 24px;
-        }
-
-        .svc-hdr {
-            padding: 52px 24px 36px;
-        }
-
-        .proc-l,
-        .proc-r {
-            padding: 28px 24px;
-        }
-
-        .proc-hdr {
-            padding: 0 24px;
-        }
-
-        .camp-hdr-h {
-            font-size: clamp(40px, 10vw, 72px);
-        }
-    }
-
-    @media(max-width:600px) {
-        .svc-grid {
+        .feat-grid {
             grid-template-columns: 1fr;
         }
 
-        .svc-desc {
-            max-height: 200px !important;
-            opacity: 1 !important;
+        .ccard.sm {
+            grid-column: span 12;
         }
 
-        .h-btns {
+        .ccard.feat .c-img {
+            height: 240px;
+        }
+
+        .stats-grid {
+            grid-template-columns: 1fr 1fr;
+        }
+
+        .testi-grid {
+            grid-template-columns: 1fr;
+        }
+
+        .proc-row {
+            min-height: auto;
+        }
+
+        .proc-l {
+            padding: 20px var(--s6);
+        }
+
+        .proc-nn {
+            font-size: 38px;
+        }
+    }
+
+    @media(max-width:540px) {
+        .hero-btns {
             flex-direction: column;
-        }
-
-        .h-btn {
-            justify-content: center;
-            text-align: center;
+            align-items: center;
         }
 
         .cta-btns {
@@ -2128,330 +1725,253 @@ $proc_steps = [
             align-items: center;
         }
 
-        .h-stats {
-            grid-template-columns: 1fr 1fr;
+        .hero-h1 {
+            font-size: clamp(56px, 17vw, 120px);
         }
 
-        .ab-stat-grid {
-            grid-template-columns: 1fr 1fr;
+        .feat-grid {
+            border: 2px solid var(--ink);
+        }
+
+        .testi-grid {
+            border: 2px solid var(--ink);
         }
     }
 </style>
 
+<!-- ─── §1 HERO ─────────────────────────────────────── -->
+<section class="hero" aria-labelledby="h-hero">
+    <div class="h-glow hg1" aria-hidden="true"></div>
+    <div class="h-glow hg2" aria-hidden="true"></div>
+    <div class="h-glow hg3" aria-hidden="true"></div>
 
-<!-- ══════════════════════════════════════════
-     §1  HERO
-══════════════════════════════════════════════ -->
-<section id="hm-hero" aria-labelledby="hm-h1">
-    <!-- ambient -->
-    <div class="h-orb h-orb-1" aria-hidden="true"></div>
-    <div class="h-orb h-orb-2" aria-hidden="true"></div>
-    <div class="h-orb h-orb-3" aria-hidden="true"></div>
-    <div class="h-grain" aria-hidden="true"></div>
+    <!-- Floating LEFT: spin badge + scroll cue -->
+    <div class="hero-float-l" aria-hidden="true">
+        <div class="spin-badge">
+            <div class="spin-badge-ring">
+                <div class="spin-badge-inner">
+                    <span class="spin-badge-n">32%</span>
+                    <span class="spin-badge-l">OTT Share</span>
+                </div>
+            </div>
+        </div>
+        <!-- <div class="hero-scroll" style="margin-top:var(--s8)">
+            <div class="hero-scroll-line"></div>
+            <span class="hero-scroll-t">Scroll Down</span>
+        </div> -->
+    </div>
 
-    <div class="h-body">
-        <!-- LEFT: copy -->
+    <!-- CENTER body -->
+    <div class="hero-body">
+        <div class="hero-eye">India&#8217;s Premier Cinema Marketing Studio</div>
+        <h1 class="hero-h1" id="h-hero">
+            <span class="line-solid">WHERE</span>
+            <span class="line-outline">CINEMA</span>
+            <span class="line-gold">MEETS</span>
+        </h1>
+        <p class="hero-sub">
+            <?= htmlspecialchars($settings['hero_subtext'] ?? 'Authentic influencer campaigns, viral content and cinematic promotions that move audiences and fill seats.') ?>
+        </p>
+        <div class="hero-btns">
+            <a href="#hp-camp" class="btn btn-amber btn-lg">Explore Our Work</a>
+            <a href="<?= base_url('contact') ?>" class="btn btn-ol-lt btn-lg">Reserve a Table</a>
+        </div>
+    </div>
+
+    <!-- Floating RIGHT: stat cards -->
+    <div class="hero-float-r" aria-hidden="true">
+        <div class="hfc">
+            <div class="hfc-n" style="color:var(--amber)">300+</div>
+            <div class="hfc-l">Campaigns</div>
+        </div>
+        <div style="height:2px;background:rgba(242,234,216,.07)"></div>
+        <div class="hfc">
+            <div class="hfc-n" style="color:var(--olive-l)">12M+</div>
+            <div class="hfc-l">People Reached</div>
+        </div>
+        <div style="height:2px;background:rgba(242,234,216,.07)"></div>
+        <div class="hfc">
+            <div class="hfc-n" style="color:var(--cream)">70+</div>
+            <div class="hfc-l">Screenings</div>
+        </div>
+    </div>
+
+    <!-- Vertical decorative label -->
+    <!-- <div class="hero-vert-text" aria-hidden="true">Cinema &middot; Culture &middot; Commerce</div> -->
+
+    <!-- STATS BAR -->
+    <!-- <div class="hero-stats" aria-label="Key metrics">
+        <?php foreach (
+            [
+                [$settings['stat_campaigns'] ?? '300+', 'Campaigns'],
+                ['32%', 'OTT Releases'],
+                [$settings['stat_reach'] ?? '12M+', 'People Reached'],
+                [$settings['stat_movies'] ?? '150+', 'Films Promoted'],
+            ] as $hs
+        ): ?>
+            <div class="hs-cell">
+                <div class="hs-n"><?= htmlspecialchars($hs[0]) ?></div>
+                <div class="hs-l"><?= htmlspecialchars($hs[1]) ?></div>
+            </div>
+        <?php endforeach; ?>
+    </div> -->
+</section>
+
+<!-- ─── §2 TICKER ────────────────────────────────────── -->
+<div class="ticker" aria-hidden="true">
+    <div class="mq-wrap">
+        <div class="mq-track mq-l" style="--d:30s">
+            <?php $tw = ['WHERE CINEMA MEETS CULTURE', 'INFLUENCER MARKETING', 'FILM PROMOTIONS', 'MEME MARKETING', 'VIDEO PRODUCTION', 'CELEBRITY ENDORSEMENTS', 'OTT STRATEGY', 'ON-GROUND ACTIVATIONS'];
+            foreach (array_merge($tw, $tw) as $w): ?>
+                <span class="tk-w"><?= htmlspecialchars($w) ?></span><span class="tk-sep">&#8725;</span>
+            <?php endforeach; ?>
+        </div>
+    </div>
+</div>
+
+<!-- ─── §3 BRANDS ────────────────────────────────────── -->
+<div class="brands" aria-label="Brand partners">
+    <div class="mq-wrap">
+        <div class="mq-track mq-l" style="--d:38s">
+            <?php foreach (array_merge($brands, $brands) as $b): ?>
+                <span class="brand-chip"><?= htmlspecialchars($b) ?></span>
+            <?php endforeach; ?>
+        </div>
+    </div>
+</div>
+
+<!-- ─── §4 ABOUT ─────────────────────────────────────── -->
+<section class="about" aria-labelledby="h-about">
+    <div class="about-wrap">
         <div>
-            <div class="h-eye" aria-label="India's Premier Cinema Marketing Studio">
-                <span class="h-eye-dot" aria-hidden="true"></span>
-                <span class="h-eye-lbl">India's Premier Cinema Marketing Studio</span>
-            </div>
-
-            <h1 class="h-h1" id="hm-h1">
-                Where<br>Cinema<br>Meets&nbsp;<em>Culture</em>
-            </h1>
-
-            <p class="h-sub">
-                <?= htmlspecialchars($settings['hero_subtext'] ?? 'A refined studio crafting authentic influencer campaigns, viral content, and cinematic promotions that move audiences.') ?>
+            <p class="s-lbl rv" style="color:var(--amber);margin-bottom:14px">Who We Are</p>
+            <h2 id="h-about" class="about-h rv d1">CRAFTING<br><span class="ul">CINEMATIC</span><br>IMPACT</h2>
+            <p class="about-body rv d2">
+                <?= htmlspecialchars($settings['about_text'] ?? 'The Cine Caffe is a premium cinema marketing studio driving high-impact campaigns for brands and production houses across entertainment, culture, and commerce.') ?>
             </p>
-
-            <div class="h-btns">
-                <a href="#hm-campaigns" class="h-btn h-btn-gold">Explore Our Work</a>
-                <a href="<?= base_url('contact') ?>" class="h-btn h-btn-ghost">Reserve a Table →</a>
-            </div>
-        </div>
-
-        <!-- RIGHT: cinematic visual -->
-        <div class="h-visual" aria-hidden="true">
-            <div class="h-glow"></div>
-            <div class="h-ring h-ring-1"></div>
-            <div class="h-ring h-ring-2"></div>
-            <div class="h-ring h-ring-3"></div>
-
-            <!-- film strip holes -->
-            <div class="h-strip hs-l">
-                <?php for ($i = 0; $i < 18; $i++): ?><div class="h-hole"></div><?php endfor; ?>
-            </div>
-            <div class="h-strip hs-r">
-                <?php for ($i = 0; $i < 18; $i++): ?><div class="h-hole"></div><?php endfor; ?>
-            </div>
-
-            <!-- central disc -->
-            <div class="h-disc">
-                <div class="h-disc-n" data-target="32" data-suffix="%">0%</div>
-                <div class="h-disc-l">OTT Releases</div>
-            </div>
-
-            <!-- floating stats -->
-            <div class="h-float hf-a">
-                <div class="h-float-n" style="color:var(--cc-gold);" data-target="300" data-suffix="+">0+</div>
-                <div class="h-float-l">Campaigns</div>
-            </div>
-            <div class="h-float hf-b">
-                <div class="h-float-n" style="color:var(--cc-teal);" data-target="12" data-suffix="M+">0M+</div>
-                <div class="h-float-l">People Reached</div>
-            </div>
-            <div class="h-float hf-c">
-                <div class="h-float-n" style="color:var(--cc-rose);" data-target="70" data-suffix="+">0+</div>
-                <div class="h-float-l">Screenings</div>
-            </div>
-        </div>
-    </div><!-- /.h-body -->
-
-    <!-- scroll cue -->
-    <div class="h-scroll-cue" aria-hidden="true">
-        <div class="h-scroll-line"></div>
-        <span class="h-scroll-lbl">Scroll</span>
-    </div>
-
-    <!-- bottom stats bar -->
-    <div class="h-stats" aria-label="Key metrics">
-        <?php $hs = [
-            [$settings['stat_campaigns'] ?? '300+', 'Campaigns',        '--cc-gold'],
-            ['32%',                              'OTT Releases',     '--cc-rose'],
-            [$settings['stat_reach'] ?? '12M+',   'People Reached',   '--cc-plum'],
-            [$settings['stat_movies'] ?? '150+',  'Films',            '--cc-teal'],
-        ];
-        foreach ($hs as $h): ?>
-            <div class="h-stat">
-                <div class="hs-n" style="color:var(<?= $h[2] ?>)"><?= htmlspecialchars($h[0]) ?></div>
-                <div class="hs-l"><?= $h[1] ?></div>
-            </div>
-        <?php endforeach; ?>
-    </div>
-</section>
-
-
-<!-- ══════════════════════════════════════════
-     §2  BRAND TICKER
-══════════════════════════════════════════════ -->
-<section id="hm-ticker" aria-label="Brand partners">
-    <?php if (!empty($brand_imgs)): ?>
-        <!-- Image ticker row 1 — left -->
-        <div class="tk-row">
-            <div class="mq-track go-l" style="--dur:50s;">
-                <?php $ti = array_merge($brand_imgs, $brand_imgs);
-                foreach ($ti as $img): ?>
-                    <img src="<?= htmlspecialchars($img) ?>" alt="Brand partner" loading="lazy" style="height:40px;width:auto;max-width:120px;object-fit:contain;padding:0 44px;flex-shrink:0;
-                  opacity:.28;filter:grayscale(1) brightness(1.4);
-                  transition:opacity .4s,filter .4s,transform .4s;"
-                        onmouseover="this.style.opacity='.9';this.style.filter='none';this.style.transform='scale(1.18) translateY(-3px)'"
-                        onmouseout="this.style.opacity='.28';this.style.filter='grayscale(1) brightness(1.4)';this.style.transform=''">
+            <a href="<?= base_url('about') ?>" class="about-cta rv d3">Our Full Story <?= svg('arrow-r', 14) ?></a>
+            <div class="about-stats rv d4">
+                <?php foreach (
+                    [
+                        [$settings['stat_campaigns'] ?? '300+', 'Campaigns', 'var(--amber)'],
+                        ['32%', 'OTT Releases', 'var(--olive-l)'],
+                        [$settings['stat_reach'] ?? '12M+', 'Reached', 'var(--amber)'],
+                        [$settings['stat_screenings'] ?? '70+', 'Screenings', 'var(--olive-l)'],
+                    ] as $as
+                ): ?>
+                    <div class="as-c">
+                        <div class="as-n" style="color:<?= $as[2] ?>"><?= htmlspecialchars($as[0]) ?></div>
+                        <div class="as-l"><?= htmlspecialchars($as[1]) ?></div>
+                    </div>
                 <?php endforeach; ?>
             </div>
         </div>
-    <?php else: ?>
-        <!-- Text chip ticker -->
-        <div class="tk-row" style="padding:28px 0;">
-            <div class="mq-track go-l tk-chip-track" style="--dur:38s;">
-                <?php $tc = array_merge($fallback, $fallback);
-                foreach ($tc as $b): ?>
-                    <span class="tk-chip"><span class="tk-dot" aria-hidden="true"></span><?= htmlspecialchars($b) ?></span>
-                <?php endforeach; ?>
+        <div class="av rv sr d2">
+            <div class="av-badge">
+                <div class="av-badge-n">32%</div>
+                <div class="av-badge-l">Of All OTT Releases</div>
+            </div>
+            <div class="av-main">
+                <div class="av-yr" aria-hidden="true"><?= date('Y') ?></div>
+                <div class="av-facts">
+                    <?php foreach ([['film', 'End-to-End Campaign Management'], ['globe', '10,000+ Creator Network'], ['pin', 'Pan-India Coverage'], ['zap', '24–48h Response Time'], ['award', '300+ Successful Campaigns'], ['play', '32% of All OTT Releases']] as $f): ?>
+                        <div class="av-fact">
+                            <?= svg($f[0], 15, 15, 'rgba(242,234,216,.4)', 1.7) ?>
+                            <span class="av-ft"><?= htmlspecialchars($f[1]) ?></span>
+                        </div>
+                    <?php endforeach; ?>
+                </div>
             </div>
         </div>
-    <?php endif; ?>
-</section>
-
-
-<!-- ══════════════════════════════════════════
-     §3  WHO WE ARE  (cream)
-══════════════════════════════════════════════ -->
-<section id="hm-about" aria-labelledby="hm-about-h">
-    <div class="u-max">
-        <div class="ab-wrap">
-
-            <!-- LEFT: copy -->
-            <div>
-                <p class="sec-lbl sr" style="color:var(--cc-gold);">Who We Are</p>
-                <h2 id="hm-about-h" class="ab-h sr d1">
-                    Crafting<br><span>Cinematic</span><br>Impact
-                </h2>
-                <p class="ab-body sr d2">
-                    <?= htmlspecialchars($settings['about_text'] ?? 'The Cine Caffe is a premium cinema marketing studio driving high-impact campaigns for brands and production houses across entertainment, culture, and commerce.') ?>
-                </p>
-                <a href="<?= base_url('about') ?>" class="ab-link sr d3">Our Full Story →</a>
-
-                <div class="ab-stat-grid sr d4">
-                    <?php $stats = [
-                        [$settings['stat_campaigns'] ?? '300+', 'Campaigns', '--cc-gold'],
-                        ['32%', 'OTT Releases', '--cc-rose'],
-                        [$settings['stat_reach'] ?? '12M+', 'Reached', '--cc-plum'],
-                        [$settings['stat_screenings'] ?? '70+', 'Screenings', '--cc-teal'],
-                    ];
-                    foreach ($stats as $s): ?>
-                        <div class="ab-stat-cell">
-                            <div class="asc-n" style="color:var(<?= $s[2] ?>)"><?= htmlspecialchars($s[0]) ?></div>
-                            <div class="asc-l"><?= $s[1] ?></div>
-                        </div>
-                    <?php endforeach; ?>
-                </div>
-            </div><!-- /left -->
-
-            <!-- RIGHT: layered visual -->
-            <div class="ab-visual sr sr2 d1">
-                <!-- floating % badge -->
-                <div class="ab-badge" aria-hidden="true">
-                    <div class="ab-badge-n">32%</div>
-                    <div class="ab-badge-l">Of All OTT Releases</div>
-                </div>
-
-                <!-- main dark panel -->
-                <div class="ab-vis-main">
-                    <!-- vertical client ticker -->
-                    <div class="ab-vtick" aria-hidden="true">
-                        <div class="ab-vtick-track">
-                            <?php
-                            $clients = [
-                                'Netflix',
-                                'Amazon',
-                                'Disney+',
-                                'Dharma',
-                                'YRF',
-                                'Sony',
-                                'T-Series',
-                                'Warner',
-                                'Zee5',
-                                'Jio Cinema',
-                                'Maddock',
-                                'boAt',
-                                'Myntra',
-                                'OnePlus',
-                                'Fastrack'
-                            ];
-                            $cv = array_merge($clients, $clients);
-                            foreach ($cv as $c): ?>
-                                <div class="ab-vti"><?= htmlspecialchars($c) ?></div>
-                            <?php endforeach; ?>
-                        </div>
-                    </div>
-
-                    <!-- left content -->
-                    <div class="ab-vis-content">
-                        <div class="ab-year" aria-hidden="true"><?= date('Y') ?></div>
-                        <ul class="ab-facts">
-                            <?php $facts = [
-                                ['🎬', 'End-to-End Campaign Management'],
-                                ['🌐', '10,000+ Creator Network'],
-                                ['📍', 'Pan-India Coverage'],
-                                ['⚡', '24–48h Response Time'],
-                                ['🏆', '300+ Successful Campaigns'],
-                            ];
-                            foreach ($facts as $f): ?>
-                                <li class="ab-fact">
-                                    <span class="ab-fact-ico" aria-hidden="true"><?= $f[0] ?></span>
-                                    <span class="ab-fact-txt"><?= $f[1] ?></span>
-                                </li>
-                            <?php endforeach; ?>
-                        </ul>
-                    </div>
-                </div><!-- /.ab-vis-main -->
-
-                <!-- live card -->
-                <div class="ab-live-card" aria-hidden="true">
-                    <div class="ab-live-dot"></div>
-                    <div>
-                        <div class="ab-live-txt">Live Campaigns</div>
-                        <div class="ab-live-sub">India's Trusted Studio</div>
-                    </div>
-                </div>
-            </div><!-- /right visual -->
-
-        </div><!-- /.ab-wrap -->
     </div>
 </section>
 
-
-<!-- ══════════════════════════════════════════
-     §4  SERVICES  (dark bento)
-══════════════════════════════════════════════ -->
-<section id="hm-services" aria-labelledby="hm-svc-h">
-    <div class="svc-hdr">
-        <div class="sr">
-            <p class="sec-lbl" style="color:var(--cc-rose);">What We Do</p>
-            <h2 id="hm-svc-h" class="svc-hdr-h">
-                Our <span>Services</span>
-            </h2>
+<!-- ─── §5 FEATURE CARDS ─────────────────────────────── -->
+<section class="features">
+    <div class="feat-wrap">
+        <div class="feat-top">
+            <div class="rv sl">
+                <p class="s-lbl" style="color:var(--olive);margin-bottom:12px">Our Strengths</p>
+                <h2 style="font-family:var(--f-d);font-size:clamp(40px,7vw,88px);line-height:.88;letter-spacing:.02em">
+                    WHY <span style="color:var(--amber)">CHOOSE US</span></h2>
+            </div>
+            <p class="feat-sub rv sr">A refined studio crafting authentic campaigns that move audiences and build
+                lasting brand authority.</p>
         </div>
-        <a href="<?= base_url('contact') ?>" class="h-btn h-btn-ghost sr" style="align-self:flex-end">Work With Us →</a>
-    </div>
-
-    <div class="svc-grid" role="list">
-        <?php
-        $svc_colors = ['#C9A84C', '#E8836A', '#8B5DA0', '#3ABFB8', '#6BAF8D', '#C9A84C', '#E8836A', '#8B5DA0'];
-        foreach ($svcs as $i => $sv):
-        ?>
-            <article class="svc-card sr d<?= ($i % 4) + 1 ?>" style="--sc:<?= $svc_colors[$i] ?>;" role="listitem">
-                <div class="svc-bg-ico" aria-hidden="true"><?= $sv[4] ?></div>
-                <div class="svc-num"><?= str_pad($i + 1, 2, '0', STR_PAD_LEFT) ?></div>
-                <div class="svc-ico" aria-hidden="true"><?= $sv[4] ?></div>
-                <h3 class="svc-title"><?= htmlspecialchars($sv[1]) ?></h3>
-                <p class="svc-desc"><?= htmlspecialchars($sv[2]) ?></p>
-                <div class="svc-tags">
-                    <?php foreach ($sv[3] as $tag): ?>
-                        <span class="svc-tag"><?= htmlspecialchars($tag) ?></span>
-                    <?php endforeach; ?>
+        <div class="feat-grid rv ss d2">
+            <?php foreach ($feats as $i => $fc): ?>
+                <div class="fc rv d<?= $i + 1 ?>">
+                    <div class="fc-ico"><?= svg($fc[0], 18, 18, 'rgba(242,234,216,.4)', 1.7) ?></div>
+                    <div class="fc-t"><?= htmlspecialchars($fc[1]) ?></div>
+                    <p class="fc-d"><?= htmlspecialchars($fc[2]) ?></p>
                 </div>
-                <a href="<?= base_url('contact') ?>" class="svc-arr"
-                    aria-label="Start <?= htmlspecialchars($sv[1]) ?>">›</a>
-            </article>
-        <?php endforeach; ?>
+            <?php endforeach; ?>
+        </div>
     </div>
 </section>
 
+<!-- ─── §6 SERVICES ──────────────────────────────────── -->
+<section class="services" aria-labelledby="h-svc">
+    <div class="svc-wrap">
+        <div class="svc-hdr">
+            <div class="rv">
+                <p class="s-lbl" style="color:rgba(242,234,216,.26);margin-bottom:12px">What We Do</p>
+                <h2 id="h-svc" class="svc-h">OUR <span>SERVICES</span></h2>
+            </div>
+            <a href="<?= base_url('contact') ?>" class="btn btn-ol-lt rv" style="align-self:flex-end">Work With Us</a>
+        </div>
+        <ul class="svc-list">
+            <?php foreach ($svcs as $i => $sv): ?>
+                <li class="svc-row rv d<?= ($i % 5) + 1 ?>">
+                    <span class="svc-num">0<?= $i + 1 ?></span>
+                    <div class="svc-body">
+                        <span class="svc-t"><?= $sv[1] ?></span>
+                        <span class="svc-d"><?= htmlspecialchars($sv[2]) ?></span>
+                    </div>
+                    <div class="svc-ico"><?= svg($sv[0], 18, 18, 'rgba(242,234,216,.4)', 1.7) ?></div>
+                    <div class="svc-arr"><?= svg('arrow-ur', 13, 13, 'rgba(242,234,216,.2)', 2) ?></div>
+                </li>
+            <?php endforeach; ?>
+        </ul>
+    </div>
+</section>
 
-<!-- ══════════════════════════════════════════
-     §5  CAMPAIGNS  (cream, magazine grid)
-══════════════════════════════════════════════ -->
-<section id="hm-campaigns" aria-labelledby="hm-camp-h">
-    <div class="u-max">
+<!-- ─── §7 CAMPAIGNS ─────────────────────────────────── -->
+<section class="campaigns" id="hp-camp" aria-labelledby="h-camp">
+    <div class="camp-wrap">
         <div class="camp-hdr">
-            <div class="sr sl">
-                <p class="sec-lbl" style="color:var(--cc-plum);">Case Studies</p>
-                <h2 id="hm-camp-h" class="camp-hdr-h">
-                    Signature <span>Campaigns</span>
-                </h2>
+            <div class="rv sl">
+                <p class="s-lbl" style="color:var(--olive);margin-bottom:12px">Case Studies</p>
+                <h2 id="h-camp" class="camp-h">SIGNATURE <span>CAMPAIGNS</span></h2>
             </div>
-            <a href="<?= base_url('work') ?>" class="camp-view-all sr sr2">View All Work →</a>
+            <a href="<?= base_url('work') ?>" class="camp-see rv sr">View All Work
+                <?= svg('arrow-r', 12, 12, 'currentColor', 2) ?></a>
         </div>
-
-        <div class="camp-grid sr ss">
+        <div class="camp-grid rv ss">
             <?php if (empty($posts)): ?>
                 <div class="camp-empty">
                     <p class="camp-empty-h">Coming Soon</p>
-                    <p class="camp-empty-p">Great campaigns are in the making — check back soon.</p>
+                    <p style="font-size:13px;color:rgba(242,234,216,.16)">Great campaigns in the making &mdash; check back
+                        soon.</p>
                 </div>
                 <?php else: foreach ($posts as $i => $p):
                     $feat = ($i === 0);
-                    $cls = $feat ? 'c-feat' : 'c-sm';
+                    $cls = $feat ? 'feat' : 'sm';
                 ?>
-                    <a href="<?= base_url('post/' . $p['slug']) ?>" class="camp-card <?= $cls ?>"
-                        aria-label="<?= htmlspecialchars($p['title']) ?>">
+                    <a href="<?= base_url('post/' . $p['slug']) ?>" class="ccard <?= $cls ?>">
                         <?php if (!empty($p['image'])): ?>
-                            <div class="camp-iw" style="<?= $feat ? 'height:400px' : 'height:240px' ?>">
+                            <div class="c-img" style="height:<?= $feat ? '340px' : '200px' ?>">
                                 <img src="<?= base_url('assets/images/uploads/' . $p['image']) ?>"
                                     alt="<?= htmlspecialchars($p['title']) ?>" loading="lazy">
                             </div>
                         <?php else: ?>
-                            <div class="camp-iw camp-ph" style="<?= $feat ? 'height:400px' : 'height:240px' ?>">
-                                <span>Cine</span>
-                            </div>
+                            <div class="c-img c-ph" style="height:<?= $feat ? '340px' : '200px' ?>"><span>Cine</span></div>
                         <?php endif; ?>
-                        <div class="camp-body">
-                            <span class="camp-author"><?= htmlspecialchars($p['author']) ?></span>
-                            <h3 class="camp-title"><?= htmlspecialchars($p['title']) ?></h3>
-                            <p class="camp-desc"><?= htmlspecialchars(mb_substr($p['description'], 0, 110)) ?>…</p>
-                            <div class="camp-cta">View Campaign <span>→</span></div>
+                        <div class="c-body">
+                            <span class="c-auth"><?= htmlspecialchars($p['author']) ?></span>
+                            <h3 class="c-t"><?= htmlspecialchars($p['title']) ?></h3>
+                            <p class="c-d"><?= htmlspecialchars(mb_substr($p['description'], 0, 100)) ?>&#8230;</p>
+                            <div class="c-cta">View Campaign &rarr;</div>
                         </div>
                     </a>
             <?php endforeach;
@@ -2460,178 +1980,104 @@ $proc_steps = [
     </div>
 </section>
 
-
-<!-- ══════════════════════════════════════════
-     §6  BOLD WORD TICKER
-══════════════════════════════════════════════ -->
-<section id="hm-word-ticker" aria-hidden="true">
-    <div class="mq-track go-l" style="--dur:36s;">
-        <?php $words = [
-            'Where Cinema Meets Culture',
-            'Influencer Marketing',
-            'Film Promotions',
-            'Meme Marketing',
-            'Video Production',
-            'Celebrity Endorsements',
-            'OTT Strategy',
-            'On-Ground Activations'
-        ];
-        $wt = array_merge($words, $words);
-        foreach ($wt as $w): ?>
-            <span class="tk-word"><?= htmlspecialchars($w) ?></span>
-            <span class="tk-sep" aria-hidden="true">✦</span>
-        <?php endforeach; ?>
-    </div>
-</section>
-
-
-<!-- ══════════════════════════════════════════
-     §7  PROCESS  (dark editorial)
-══════════════════════════════════════════════ -->
-<section id="hm-process" aria-labelledby="hm-proc-h">
-    <div class="proc-hdr">
-        <div class="sr">
-            <p class="sec-lbl" style="color:var(--cc-teal);">How We Work</p>
-            <h2 id="hm-proc-h" class="proc-hdr-h">
-                Our <span>Process</span>
-            </h2>
+<!-- ─── §8 STATS COUNTER ─────────────────────────────── -->
+<section class="stats-sec" aria-label="Studio statistics">
+    <div class="stats-inner">
+        <div class="stats-top">
+            <h2 class="stats-h rv sl">NUMBERS THAT<br><span>SPEAK</span></h2>
+            <p class="stats-sub rv sr">Measurable results that prove cultural impact at scale &mdash; campaign after
+                campaign.</p>
         </div>
-        <p class="proc-hdr-p sr d2">
-            A refined four-act framework that transforms brands into cultural icons — from strategy to compound growth.
-        </p>
-    </div>
-
-    <ul class="proc-list" role="list">
-        <?php
-        $proc_colors = ['--cc-gold', '--cc-rose', '--cc-plum', '--cc-teal'];
-        foreach ($proc_steps as $i => $ps):
-        ?>
-            <li class="proc-item sr" style="--pp:var(<?= $proc_colors[$i] ?>);" role="listitem">
-                <div class="proc-l">
-                    <div class="proc-num" aria-hidden="true"><?= $ps[0] ?></div>
-                    <div class="proc-tag" style="color:var(<?= $proc_colors[$i] ?>)"><?= $ps[0] ?> — <?= $ps[2] ?></div>
-                    <h3 class="proc-title"><?= $ps[2] ?></h3>
+        <div class="stats-grid rv ss d1">
+            <?php foreach ([['300', 'Campaigns Delivered', '+'], ['12', 'Million People Reached', 'M+'], ['32', 'Of All OTT Releases', '%'], ['70', 'Influencer Screenings', '+']] as $i => $st): ?>
+                <div class="stat-cell rv d<?= $i + 1 ?>">
+                    <div class="stat-n"><span data-target="<?= $st[0] ?>" data-suffix="<?= $st[2] ?>">0<?= $st[2] ?></span>
+                    </div>
+                    <div class="stat-l"><?= htmlspecialchars($st[1]) ?></div>
                 </div>
-                <div class="proc-div" aria-hidden="true"></div>
-                <div class="proc-r">
-                    <div class="proc-ico" aria-hidden="true"><?= $ps[1] ?></div>
-                    <p class="proc-desc"><?= $ps[3] ?></p>
-                </div>
-            </li>
-        <?php endforeach; ?>
-    </ul>
-
-    <div style="margin-top:56px;display:flex;justify-content:center;" class="sr">
-        <a href="<?= base_url('contact') ?>" class="h-btn h-btn-gold" style="font-size:18px;padding:18px 52px;">
-            Start Your Campaign →
-        </a>
+            <?php endforeach; ?>
+        </div>
     </div>
 </section>
 
+<!-- ─── §9 TESTIMONIALS ──────────────────────────────── -->
+<section class="testi" aria-labelledby="h-testi">
+    <div class="testi-wrap">
+        <div class="testi-hdr">
+            <div class="rv sl">
+                <p class="s-lbl" style="color:var(--olive-d);margin-bottom:12px">Client Love</p>
+                <h2 id="h-testi" class="testi-h">WHAT CLIENTS <em>Say</em></h2>
+            </div>
+        </div>
+        <div class="testi-grid rv ss">
+            <?php foreach ($testi as $i => $t): ?>
+                <div class="tcard rv d<?= $i + 1 ?>">
+                    <div class="tcard-qi"><?= svg('quote', 26, 26, 'var(--amber-2)', 1.4) ?></div>
+                    <div class="tcard-stars">
+                        <?php for ($s = 0; $s < 5; $s++): ?><span><?= svg('star', 11, 11, 'var(--amber)', 1.5) ?></span><?php endfor; ?>
+                    </div>
+                    <blockquote class="tcard-q"><?= htmlspecialchars($t[0]) ?></blockquote>
+                    <cite class="tcard-name"><?= $t[1] ?></cite>
+                </div>
+            <?php endforeach; ?>
+        </div>
+    </div>
+</section>
 
-<!-- ══════════════════════════════════════════
-     §8  CTA CLOSING  (cream)
-══════════════════════════════════════════════ -->
-<section id="hm-cta" aria-label="Call to action">
+<!-- ─── §10 PROCESS ──────────────────────────────────── -->
+<section class="process" aria-labelledby="h-proc">
+    <div class="proc-wrap">
+        <div class="proc-hdr">
+            <div class="rv">
+                <p class="s-lbl" style="color:rgba(242,234,216,.24);margin-bottom:12px">How We Work</p>
+                <h2 id="h-proc" class="proc-h">OUR <span>PROCESS</span></h2>
+            </div>
+            <p class="proc-sub rv d2">A refined four-act framework that transforms brands into cultural icons.</p>
+        </div>
+        <ul class="proc-rows">
+            <?php foreach ($procs as $i => $p): ?>
+                <li class="proc-row rv d<?= $i + 1 ?>">
+                    <div class="proc-nn" aria-hidden="true">0<?= $i + 1 ?></div>
+                    <div class="proc-l">
+                        <div class="proc-tag">0<?= $i + 1 ?> &mdash; <?= htmlspecialchars($p[1]) ?></div>
+                        <div class="proc-title"><?= strtoupper(htmlspecialchars($p[1])) ?></div>
+                    </div>
+                    <div class="proc-r">
+                        <div class="proc-ico"><?= svg($p[0], 30, 30, 'var(--cream)', 1.6) ?></div>
+                        <p class="proc-desc"><?= htmlspecialchars($p[2]) ?></p>
+                    </div>
+                </li>
+            <?php endforeach; ?>
+        </ul>
+        <div class="proc-cta rv"><a href="<?= base_url('contact') ?>" class="btn btn-amber btn-lg">Start Your Campaign
+                &rarr;</a></div>
+    </div>
+</section>
+
+<!-- ─── §11 CTA ───────────────────────────────────────── -->
+<section class="cta-sec" aria-label="Call to action">
     <div class="cta-ghost" aria-hidden="true">Extraordinary</div>
-
-    <div class="u-max" style="position:relative;z-index:2;">
-        <p class="sec-lbl sr" style="color:var(--cc-sage);justify-content:center;margin:0 auto 24px;">Ready to Begin?
-        </p>
-        <h2 class="cta-h sr d1">
-            Let's Create<br>Something <span>Extraordinary</span>
-        </h2>
-        <div class="cta-btns sr d2">
-            <a href="<?= base_url('contact') ?>" class="cta-btn-dark">Start a Campaign</a>
+    <div class="cta-inner">
+        <p class="s-lbl rv" style="color:var(--olive);justify-content:center;margin:0 auto 16px">Ready to Begin?</p>
+        <h2 class="cta-h rv d1">LET&#8217;S CREATE<br>SOMETHING <span>EXTRAORDINARY</span></h2>
+        <div class="cta-btns rv d2">
+            <a href="<?= base_url('contact') ?>" class="btn btn-ink btn-lg">Start a Campaign</a>
             <a href="mailto:<?= htmlspecialchars($settings['site_email'] ?? 'contact@thecinecaffe.com') ?>"
-                class="cta-btn-outline">Email Us</a>
+                class="btn btn-ol-dk btn-lg">Email Us</a>
         </div>
-        <p class="cta-sub sr d3">
-            <?= htmlspecialchars($settings['site_phone'] ?? '+91 9990802115') ?>
-            &nbsp;·&nbsp;
+        <p class="cta-sub rv d3">
+            <?= htmlspecialchars($settings['site_phone'] ?? '+91 9990802115') ?> &nbsp;&middot;&nbsp;
             <?= htmlspecialchars($settings['site_email'] ?? 'contact@thecinecaffe.com') ?>
         </p>
     </div>
 </section>
 
-
-<!-- ══════════════════════════════════════════
-     JS
-══════════════════════════════════════════════ -->
 <script>
     (function() {
-        'use strict';
-
-        /* ── 1. Scroll reveal ──────────────────────── */
-        var items = document.querySelectorAll('.sr');
-        if ('IntersectionObserver' in window) {
-            var io = new IntersectionObserver(function(entries) {
-                entries.forEach(function(e) {
-                    if (e.isIntersecting) {
-                        e.target.classList.add('in');
-                        io.unobserve(e.target);
-                    }
-                });
-            }, {
-                threshold: .1,
-                rootMargin: '0px 0px -36px 0px'
-            });
-            items.forEach(function(el) {
-                io.observe(el);
-            });
-        } else {
-            items.forEach(function(el) {
-                el.classList.add('in');
-            });
-        }
-
-        /* ── 2. Counter animation ──────────────────── */
-        function animCounter(el) {
-            var target = parseFloat(el.dataset.target) || 0;
-            var suffix = el.dataset.suffix || '';
-            var dur = 1800,
-                step = 16,
-                cur = 0,
-                inc = target / (dur / step);
-            var t = setInterval(function() {
-                cur += inc;
-                if (cur >= target) {
-                    cur = target;
-                    clearInterval(t);
-                }
-                el.textContent = Math.floor(cur) + suffix;
-            }, step);
-        }
-        var cObs = new IntersectionObserver(function(entries) {
-            entries.forEach(function(e) {
-                if (e.isIntersecting) {
-                    animCounter(e.target);
-                    cObs.unobserve(e.target);
-                }
-            });
-        }, {
-            threshold: .5
-        });
-        document.querySelectorAll('[data-target]').forEach(function(el) {
-            cObs.observe(el);
-        });
-
-        /* ── 3. Hero visual parallax tilt (desktop) ── */
-        var vis = document.querySelector('.h-visual');
-        if (vis && window.innerWidth > 1100) {
-            document.addEventListener('mousemove', function(e) {
-                var x = (e.clientX / window.innerWidth - .5) * 10;
-                var y = (e.clientY / window.innerHeight - .5) * 6;
-                vis.style.transform = 'perspective(900px) rotateY(' + x + 'deg) rotateX(' + (-y) + 'deg)';
-            }, {
-                passive: true
-            });
-        }
-
-        /* ── 4. Campaign grid responsive fix ─────────── */
+        /* campaign grid responsive */
         function fixCamp() {
-            var f = document.querySelector('.camp-card.c-feat');
-            var sm = document.querySelectorAll('.camp-card.c-sm');
+            var f = document.querySelector('.ccard.feat'),
+                sm = document.querySelectorAll('.ccard.sm');
             if (!f) return;
             var w = window.innerWidth;
             f.style.gridColumn = w <= 1100 ? 'span 12' : 'span 8';
@@ -2643,20 +2089,8 @@ $proc_steps = [
         window.addEventListener('resize', fixCamp, {
             passive: true
         });
-
-        /* ── 5. Process grid responsive fix ──────────── */
-        function fixProc() {
-            document.querySelectorAll('.proc-item').forEach(function(el) {
-                el.style.gridTemplateColumns = window.innerWidth <= 1100 ? '1fr' : '1fr 1px 1fr';
-            });
-        }
-        fixProc();
-        window.addEventListener('resize', fixProc, {
-            passive: true
-        });
-
-        /* ── 6. Smooth anchor scroll ──────────────────── */
-        document.querySelectorAll('a[href^="#hm-"]').forEach(function(a) {
+        /* smooth anchor scroll */
+        document.querySelectorAll('a[href^="#"]').forEach(function(a) {
             a.addEventListener('click', function(e) {
                 var t = document.querySelector(this.getAttribute('href'));
                 if (t) {
@@ -2668,6 +2102,5 @@ $proc_steps = [
                 }
             });
         });
-
-    })();
+    }());
 </script>
