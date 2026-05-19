@@ -1,6 +1,5 @@
 <?php defined('BASEPATH') or exit('No direct script access allowed'); ?>
 <?php
-/* ── Inline SVG icon helper ── */
 function svg($id, $w = 20, $h = null, $col = 'currentColor', $sw = 1.7)
 {
     $h = $h ?? $w;
@@ -17,7 +16,6 @@ function svg($id, $w = 20, $h = null, $col = 'currentColor', $sw = 1.7)
         'mic'         => '<path d="M12 1a3 3 0 00-3 3v8a3 3 0 006 0V4a3 3 0 00-3-3z"/><path d="M19 10v2a7 7 0 01-14 0v-2"/><line x1="12" y1="19" x2="12" y2="23"/><line x1="8" y1="23" x2="16" y2="23"/>',
         'arrow-r'     => '<line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/>',
         'arrow-ur'    => '<line x1="7" y1="17" x2="17" y2="7"/><polyline points="7 7 17 7 17 17"/>',
-        'arrow-d'     => '<line x1="12" y1="5" x2="12" y2="19"/><polyline points="19 12 12 19 5 12"/>',
         'check'       => '<polyline points="20 6 9 17 4 12"/>',
         'bar-chart'   => '<line x1="12" y1="20" x2="12" y2="10"/><line x1="18" y1="20" x2="18" y2="4"/><line x1="6" y1="20" x2="6" y2="16"/>',
         'users'       => '<path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87M16 3.13a4 4 0 010 7.75"/>',
@@ -31,6 +29,7 @@ function svg($id, $w = 20, $h = null, $col = 'currentColor', $sw = 1.7)
     $path = $p[$id] ?? '<circle cx="12" cy="12" r="10"/>';
     return '<svg width="' . $w . '" height="' . $h . '" viewBox="0 0 24 24" fill="none" stroke="' . $col . '" stroke-width="' . $sw . '" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">' . $path . '</svg>';
 }
+
 $svcs = [
     ['trending', 'Influencer Marketing', 'Precision-matched creator partnerships — nano to celebrity — that feel authentic and perform powerfully.'],
     ['film', 'Meme Marketing', 'Culturally embedded viral content crafted to spread because it belongs, not because it was placed.'],
@@ -50,9 +49,9 @@ $feats = [
     ['layers', 'End-to-End', 'From strategy to execution, we handle everything so you can focus on what matters most.'],
 ];
 $testi = [
-    ['"The Cine Caffe turned our OTT launch into a cultural moment. 3M+ organic impressions in 72 hours."', 'Priya S. &mdash; Marketing Head, Major OTT Platform'],
-    ['"Their meme strategy was unmatched. Content felt native, not paid &mdash; that\'s extraordinarily rare."', 'Rohit K. &mdash; Producer, Bollywood Production House'],
-    ['"From strategy to execution, absolutely flawless. 40% above-target reach on our influencer campaign."', 'Meera V. &mdash; Brand Manager, Consumer Electronics'],
+    ['"The Cine Caffe turned our OTT launch into a cultural moment. 3M+ organic impressions in 72 hours."', 'Priya S.', 'Marketing Head, Major OTT Platform'],
+    ['"Their meme strategy was unmatched. Content felt native, not paid — that\'s extraordinarily rare."', 'Rohit K.', 'Producer, Bollywood Production House'],
+    ['"From strategy to execution, absolutely flawless. 40% above-target reach on our influencer campaign."', 'Meera V.', 'Brand Manager, Consumer Electronics'],
 ];
 $procs = [
     ['target', 'Strategy & Discovery', 'Deep-dive into brand soul, audience nuance, and cultural context before a single frame is shot.'],
@@ -62,14 +61,15 @@ $procs = [
 ];
 $brands = ['Netflix', 'Amazon Prime', 'Disney+', 'Dharma Productions', 'YRF', 'Sony Pictures', 'T-Series', 'Warner Bros', 'Zee5', 'JioCinema', 'Maddock Films', 'boAt', 'Myntra', 'OnePlus', 'Fastrack', 'Viacom18'];
 ?>
+
 <style>
     /* ================================================================
-   HOME PAGE — Complete Cinematic Styles
+   HOME PAGE — CINEMATIC PREMIUM
 ================================================================ */
 
-    /* ── §1 HERO ──────────────────────────────────────────────── */
+    /* ── HERO ── */
     .hero {
-        background: var(--olive);
+        background: var(--olive-dk);
         min-height: 100svh;
         display: flex;
         flex-direction: column;
@@ -82,8 +82,8 @@ $brands = ['Netflix', 'Amazon Prime', 'Disney+', 'Dharma Productions', 'YRF', 'S
         content: '';
         position: absolute;
         inset: 0;
-        background-image: radial-gradient(rgba(242, 234, 216, .055) 1px, transparent 1px);
-        background-size: 28px 28px;
+        background-image: radial-gradient(rgba(242, 234, 216, .06) 1px, transparent 1px);
+        background-size: 30px 30px;
         pointer-events: none;
         z-index: 0;
     }
@@ -92,39 +92,48 @@ $brands = ['Netflix', 'Amazon Prime', 'Disney+', 'Dharma Productions', 'YRF', 'S
     .h-glow {
         position: absolute;
         border-radius: 50%;
-        filter: blur(88px);
+        filter: blur(100px);
         pointer-events: none;
         z-index: 0;
     }
 
     .hg1 {
-        width: 460px;
-        height: 460px;
-        background: rgba(212, 146, 10, .09);
-        top: -120px;
-        right: -80px;
-        animation: float-a 22s ease-in-out infinite;
+        width: 500px;
+        height: 500px;
+        background: rgba(212, 146, 10, .10);
+        top: -140px;
+        right: -100px;
+        animation: float-a 24s ease-in-out infinite;
     }
 
     .hg2 {
-        width: 300px;
-        height: 300px;
-        background: rgba(107, 122, 85, .2);
-        bottom: 14%;
-        left: -60px;
-        animation: float-b 28s ease-in-out 6s infinite;
+        width: 360px;
+        height: 360px;
+        background: rgba(107, 122, 85, .22);
+        bottom: 10%;
+        left: -80px;
+        animation: float-b 30s ease-in-out 6s infinite;
     }
 
     .hg3 {
-        width: 200px;
-        height: 200px;
-        background: rgba(212, 146, 10, .06);
-        top: 40%;
-        left: 40%;
-        animation: float-a 16s ease-in-out 3s infinite;
+        width: 240px;
+        height: 240px;
+        background: rgba(212, 146, 10, .07);
+        top: 45%;
+        left: 38%;
+        animation: float-a 18s ease-in-out 3s infinite;
     }
 
-    /* main body */
+    .hg4 {
+        width: 180px;
+        height: 180px;
+        background: rgba(93, 120, 60, .15);
+        top: 20%;
+        right: 30%;
+        animation: float-b 20s ease-in-out 9s infinite;
+    }
+
+    /* hero body center */
     .hero-body {
         flex: 1;
         position: relative;
@@ -134,39 +143,37 @@ $brands = ['Netflix', 'Amazon Prime', 'Disney+', 'Dharma Productions', 'YRF', 'S
         justify-content: center;
         align-items: center;
         text-align: center;
-        padding: calc(var(--nav-h) + 48px) var(--px) 40px;
+        padding: calc(var(--nav-h) + 56px) var(--px) 48px;
     }
 
-    /* eyebrow */
     .hero-eye {
         font-family: var(--f-c);
-        font-size: 10px;
+        font-size: 11.5px;
         font-weight: 700;
-        letter-spacing: .32em;
+        letter-spacing: .34em;
         text-transform: uppercase;
-        color: rgba(242, 234, 216, .52);
+        color: rgba(242, 234, 216, .5);
         display: inline-flex;
         align-items: center;
-        gap: 12px;
-        margin-bottom: var(--s6);
+        gap: 14px;
+        margin-bottom: var(--s8);
         opacity: 0;
-        animation: fadeUp .7s var(--ease) .2s forwards;
+        animation: fadeUp .8s var(--ease) .2s forwards;
     }
 
     .hero-eye::before,
     .hero-eye::after {
         content: '';
-        width: 28px;
+        width: 32px;
         height: 1.5px;
         background: var(--amber);
         display: block;
     }
 
-    /* giant headline */
     .hero-h1 {
         font-family: var(--f-d);
-        font-size: clamp(72px, 16vw, 220px);
-        line-height: .8;
+        font-size: clamp(80px, 17vw, 228px);
+        line-height: .78;
         letter-spacing: .02em;
         color: var(--cream);
         position: relative;
@@ -178,7 +185,7 @@ $brands = ['Netflix', 'Amazon Prime', 'Disney+', 'Dharma Productions', 'YRF', 'S
     .hero-h1 .line-outline {
         display: block;
         color: transparent;
-        -webkit-text-stroke: 2.5px rgba(242, 234, 216, .45);
+        -webkit-text-stroke: 2.5px rgba(242, 234, 216, .4);
     }
 
     .hero-h1 .line-gold {
@@ -191,51 +198,49 @@ $brands = ['Netflix', 'Amazon Prime', 'Disney+', 'Dharma Productions', 'YRF', 'S
         display: block;
     }
 
-    /* subtext */
     .hero-sub {
-        font-family: var(--f-c);
-        font-size: clamp(13px, 1.6vw, 16px);
-        font-weight: 400;
-        letter-spacing: .06em;
+        font-family: var(--f-s);
+        font-style: italic;
+        font-size: clamp(15px, 1.8vw, 18px);
+        letter-spacing: .04em;
         color: rgba(242, 234, 216, .52);
-        max-width: 480px;
-        line-height: 1.72;
-        margin: var(--s6) auto 0;
+        max-width: 500px;
+        line-height: 1.8;
+        margin: var(--s8) auto 0;
         opacity: 0;
-        animation: fadeUp .8s var(--ease) .75s forwards;
+        animation: fadeUp .8s var(--ease) .8s forwards;
     }
 
-    /* CTA row */
     .hero-btns {
         display: flex;
-        gap: 12px;
+        gap: 14px;
         flex-wrap: wrap;
         justify-content: center;
-        margin-top: var(--s10);
+        margin-top: var(--s12);
         opacity: 0;
-        animation: fadeUp .7s var(--ease) .95s forwards;
+        animation: fadeUp .7s var(--ease) 1s forwards;
     }
 
-    /* floating left panel */
+    /* ── FLOATING LEFT PANEL ── */
     .hero-float-l {
         position: absolute;
-        left: clamp(16px, 3vw, 52px);
+        left: clamp(18px, 3.5vw, 56px);
         top: 50%;
         transform: translateY(-50%);
         z-index: 3;
         display: flex;
         flex-direction: column;
-        gap: var(--s3);
+        gap: var(--s4);
         align-items: flex-start;
         opacity: 0;
-        animation: fadeUp .8s var(--ease) 1.1s forwards;
+        animation: fadeUp .9s var(--ease) 1.1s forwards;
     }
 
-    /* spinning circular badge */
+    /* OTT orbit badge */
     .spin-badge {
         position: relative;
-        width: 108px;
-        height: 108px;
+        width: 116px;
+        height: 116px;
         flex-shrink: 0;
         animation: float-a 7s ease-in-out 1s infinite;
     }
@@ -243,10 +248,10 @@ $brands = ['Netflix', 'Amazon Prime', 'Disney+', 'Dharma Productions', 'YRF', 'S
     .spin-badge-ring {
         width: 100%;
         height: 100%;
-        border: 1.5px solid rgba(242, 234, 216, .22);
+        border: 1.5px solid rgba(242, 234, 216, .2);
         border-radius: 50%;
         position: relative;
-        animation: spin-cw 22s linear infinite;
+        animation: spin-cw 24s linear infinite;
     }
 
     .spin-badge-inner {
@@ -256,12 +261,12 @@ $brands = ['Netflix', 'Amazon Prime', 'Disney+', 'Dharma Productions', 'YRF', 'S
         flex-direction: column;
         align-items: center;
         justify-content: center;
-        animation: spin-cw 22s linear infinite reverse;
+        animation: spin-cw 24s linear infinite reverse;
     }
 
     .spin-badge-n {
         font-family: var(--f-d);
-        font-size: 26px;
+        font-size: 28px;
         line-height: 1;
         color: var(--amber);
         display: block;
@@ -269,91 +274,145 @@ $brands = ['Netflix', 'Amazon Prime', 'Disney+', 'Dharma Productions', 'YRF', 'S
 
     .spin-badge-l {
         font-family: var(--f-c);
-        font-size: 7.5px;
+        font-size: 8px;
         font-weight: 700;
         letter-spacing: .14em;
         text-transform: uppercase;
-        color: rgba(242, 234, 216, .42);
+        color: rgba(242, 234, 216, .4);
         margin-top: 3px;
         display: block;
     }
 
-    /* scroll cue */
-    .hero-scroll {
+    /* Vertical scroll label */
+    .hero-scroll-cue {
         display: flex;
         flex-direction: column;
         align-items: center;
-        gap: var(--s2);
+        gap: var(--s3);
+        margin-top: var(--s8);
     }
 
     .hero-scroll-line {
         width: 1px;
-        height: 48px;
+        height: 52px;
         background: linear-gradient(var(--amber), transparent);
-        animation: float-a 2.8s ease-in-out infinite;
+        animation: float-a 3s ease-in-out infinite;
     }
 
     .hero-scroll-t {
         font-family: var(--f-c);
-        font-size: 7.5px;
+        font-size: 8px;
         font-weight: 700;
-        letter-spacing: .24em;
+        letter-spacing: .26em;
         text-transform: uppercase;
-        color: rgba(242, 234, 216, .24);
+        color: rgba(242, 234, 216, .22);
         writing-mode: vertical-rl;
         transform: rotate(180deg);
     }
 
-    /* floating right stat cards */
+    /* Small achievement chip */
+    .hero-chip {
+        background: rgba(26, 26, 10, .7);
+        border: 1px solid rgba(242, 234, 216, .10);
+        backdrop-filter: blur(16px);
+        padding: 10px 14px;
+        border-radius: 8px;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        min-width: 148px;
+        animation: float-b 9s ease-in-out 2s infinite;
+        margin-top: var(--s4);
+    }
+
+    .hero-chip-dot {
+        width: 8px;
+        height: 8px;
+        border-radius: 50%;
+        background: var(--amber);
+        flex-shrink: 0;
+        animation: pulse-dot 2s ease-in-out infinite;
+    }
+
+    @keyframes pulse-dot {
+
+        0%,
+        100% {
+            box-shadow: 0 0 0 0 rgba(212, 146, 10, .5)
+        }
+
+        50% {
+            box-shadow: 0 0 0 6px rgba(212, 146, 10, 0)
+        }
+    }
+
+    .hero-chip-txt {
+        font-family: var(--f-c);
+        font-size: 10px;
+        font-weight: 700;
+        letter-spacing: .12em;
+        text-transform: uppercase;
+        color: rgba(242, 234, 216, .5);
+    }
+
+    .hero-chip-val {
+        font-family: var(--f-d);
+        font-size: 20px;
+        color: var(--cream);
+        line-height: 1;
+    }
+
+    /* ── FLOATING RIGHT PANEL ── */
     .hero-float-r {
         position: absolute;
-        right: clamp(16px, 3vw, 52px);
+        right: clamp(18px, 3.5vw, 56px);
         top: 50%;
         transform: translateY(-50%);
         z-index: 3;
         display: flex;
         flex-direction: column;
-        gap: 2px;
-        min-width: 148px;
+        gap: 3px;
+        min-width: 156px;
         opacity: 0;
         animation: fadeUp .9s var(--ease) 1.2s forwards;
     }
 
     .hfc {
-        background: rgba(26, 26, 16, .84);
+        background: rgba(26, 26, 10, .78);
         border: 1px solid rgba(242, 234, 216, .09);
         backdrop-filter: blur(14px);
         -webkit-backdrop-filter: blur(14px);
-        padding: 14px 18px;
+        padding: 16px 20px;
         transition: border-color var(--t2), transform var(--t2);
+    }
+
+    .hfc:nth-child(1) {
         animation: float-b 8s ease-in-out 1s infinite;
     }
 
-    .hfc:nth-child(2) {
-        animation-duration: 6s;
-        animation-delay: 2s;
+    .hfc:nth-child(3) {
+        animation: float-a 7s ease-in-out 2s infinite;
     }
 
-    .hfc:nth-child(3) {
-        animation-duration: 9s;
-        animation-delay: 1.5s;
+    .hfc:nth-child(5) {
+        animation: float-b 9s ease-in-out 1.5s infinite;
     }
 
     .hfc:hover {
         border-color: rgba(212, 146, 10, .3);
-        transform: translateX(-4px);
+        transform: translateX(-5px);
     }
 
     .hfc-n {
         font-family: var(--f-d);
-        font-size: 28px;
+        font-size: 30px;
         line-height: 1;
         letter-spacing: .02em;
     }
 
     .hfc-l {
         font-family: var(--f-c);
-        font-size: 8px;
+        font-size: 8.5px;
         font-weight: 700;
         letter-spacing: .18em;
         text-transform: uppercase;
@@ -361,49 +420,42 @@ $brands = ['Netflix', 'Amazon Prime', 'Disney+', 'Dharma Productions', 'YRF', 'S
         margin-top: 4px;
     }
 
-    /* vertical decorative text */
-    .hero-vert-text {
+    .hfc-div {
+        height: 2px;
+        background: rgba(242, 234, 216, .07);
+    }
+
+    /* Vertical decorative text right side */
+    .hero-vert-r {
         position: absolute;
-        bottom: 80px;
-        right: clamp(16px, 3vw, 52px);
+        bottom: 100px;
+        right: clamp(18px, 3.5vw, 56px);
         z-index: 3;
         font-family: var(--f-c);
         font-size: 8px;
         font-weight: 700;
-        letter-spacing: .26em;
+        letter-spacing: .3em;
         text-transform: uppercase;
-        color: rgba(242, 234, 216, .18);
+        color: rgba(242, 234, 216, .16);
         writing-mode: vertical-rl;
         opacity: 0;
         animation: fadeUp .6s var(--ease) 1.6s forwards;
     }
 
-    @keyframes fadeUp {
-        from {
-            opacity: 0;
-            transform: translateY(26px)
-        }
-
-        to {
-            opacity: 1;
-            transform: none
-        }
-    }
-
-    /* hero stats bar */
+    /* hero bottom stats bar */
     .hero-stats {
         display: grid;
         grid-template-columns: repeat(4, 1fr);
-        border-top: 2px solid rgba(242, 234, 216, .12);
+        border-top: 2px solid rgba(242, 234, 216, .1);
         position: relative;
         z-index: 2;
         opacity: 0;
-        animation: fadeUp .7s var(--ease) 1.4s forwards;
+        animation: fadeUp .7s var(--ease) 1.5s forwards;
     }
 
     .hs-cell {
-        padding: 22px 24px;
-        border-right: 1px solid rgba(242, 234, 216, .09);
+        padding: 24px 28px;
+        border-right: 1px solid rgba(242, 234, 216, .08);
         transition: background var(--t2);
         cursor: default;
     }
@@ -418,7 +470,7 @@ $brands = ['Netflix', 'Amazon Prime', 'Disney+', 'Dharma Productions', 'YRF', 'S
 
     .hs-n {
         font-family: var(--f-d);
-        font-size: clamp(26px, 4vw, 44px);
+        font-size: clamp(28px, 4vw, 46px);
         line-height: 1;
         letter-spacing: .02em;
         color: var(--cream);
@@ -426,29 +478,41 @@ $brands = ['Netflix', 'Amazon Prime', 'Disney+', 'Dharma Productions', 'YRF', 'S
 
     .hs-l {
         font-family: var(--f-c);
-        font-size: 8.5px;
+        font-size: 9.5px;
         font-weight: 700;
-        letter-spacing: .2em;
+        letter-spacing: .22em;
         text-transform: uppercase;
-        color: rgba(242, 234, 216, .3);
-        margin-top: 5px;
+        color: rgba(242, 234, 216, .32);
+        margin-top: 6px;
     }
 
-    /* ── §2 TICKER ────────────────────────────────────────── */
+    @keyframes fadeUp {
+        from {
+            opacity: 0;
+            transform: translateY(28px)
+        }
+
+        to {
+            opacity: 1;
+            transform: none
+        }
+    }
+
+    /* ── TICKER ── */
     .ticker {
         background: var(--ink);
         border-top: 3px solid var(--amber);
         border-bottom: 3px solid var(--amber);
-        padding: 14px 0;
+        padding: 16px 0;
         overflow: hidden;
     }
 
     .tk-w {
         font-family: var(--f-d);
-        font-size: clamp(24px, 3.5vw, 40px);
+        font-size: clamp(22px, 3.5vw, 40px);
         letter-spacing: .04em;
-        color: rgba(242, 234, 216, .1);
-        padding: 0 32px;
+        color: rgba(242, 234, 216, .09);
+        padding: 0 36px;
         white-space: nowrap;
         display: inline-block;
     }
@@ -461,23 +525,23 @@ $brands = ['Netflix', 'Amazon Prime', 'Disney+', 'Dharma Productions', 'YRF', 'S
         padding: 0 2px;
     }
 
-    /* ── §3 BRANDS ────────────────────────────────────────── */
+    /* ── BRANDS ── */
     .brands {
         background: var(--cream-2);
         border-bottom: 1.5px solid var(--border);
-        padding: 22px 0;
+        padding: 24px 0;
     }
 
     .brand-chip {
         font-family: var(--f-c);
-        font-size: 10.5px;
+        font-size: 11px;
         font-weight: 700;
         letter-spacing: .1em;
         text-transform: uppercase;
         color: rgba(26, 26, 16, .28);
-        padding: 5px 18px;
+        padding: 6px 20px;
         margin: 0 3px;
-        border: 1.5px solid rgba(26, 26, 16, .09);
+        border: 1.5px solid rgba(26, 26, 16, .10);
         border-radius: 100px;
         white-space: nowrap;
         display: inline-block;
@@ -486,11 +550,11 @@ $brands = ['Netflix', 'Amazon Prime', 'Disney+', 'Dharma Productions', 'YRF', 'S
     }
 
     .brand-chip:hover {
-        border-color: rgba(26, 26, 16, .25);
-        color: rgba(26, 26, 16, .55);
+        border-color: rgba(26, 26, 16, .28);
+        color: rgba(26, 26, 16, .56);
     }
 
-    /* ── §4 ABOUT ─────────────────────────────────────────── */
+    /* ── ABOUT ── */
     .about {
         background: var(--cream);
     }
@@ -501,44 +565,44 @@ $brands = ['Netflix', 'Amazon Prime', 'Disney+', 'Dharma Productions', 'YRF', 'S
         padding: var(--sec-py) var(--px);
         display: grid;
         grid-template-columns: 1fr 1fr;
-        gap: 72px;
+        gap: 80px;
         align-items: center;
     }
 
     .about-h {
         font-family: var(--f-d);
-        font-size: clamp(44px, 7.5vw, 100px);
+        font-size: clamp(48px, 7.5vw, 104px);
         line-height: .86;
         letter-spacing: .02em;
         color: var(--ink);
-        margin-bottom: var(--s6);
+        margin-bottom: var(--s8);
     }
 
     .about-h .ul {
         text-decoration: underline;
         text-decoration-thickness: 4px;
-        text-underline-offset: 7px;
+        text-underline-offset: 8px;
         text-decoration-color: var(--amber);
     }
 
     .about-body {
         font-family: var(--f-s);
         font-style: italic;
-        font-size: clamp(14px, 1.5vw, 16.5px);
+        font-size: clamp(15px, 1.6vw, 17px);
         color: var(--muted);
-        line-height: 1.88;
-        max-width: 420px;
-        margin-bottom: var(--s8);
+        line-height: 1.92;
+        max-width: 440px;
+        margin-bottom: var(--s10);
     }
 
     .about-cta {
         font-family: var(--f-c);
-        font-size: 10.5px;
+        font-size: 11px;
         font-weight: 700;
-        letter-spacing: .18em;
+        letter-spacing: .2em;
         text-transform: uppercase;
         border-bottom: 2px solid var(--amber);
-        padding-bottom: 2px;
+        padding-bottom: 3px;
         display: inline-flex;
         align-items: center;
         gap: 8px;
@@ -553,7 +617,7 @@ $brands = ['Netflix', 'Amazon Prime', 'Disney+', 'Dharma Productions', 'YRF', 'S
         display: grid;
         grid-template-columns: 1fr 1fr;
         gap: 2px;
-        margin-top: var(--s12);
+        margin-top: var(--s14);
         border: 2.5px solid var(--ink);
         overflow: hidden;
     }
@@ -561,36 +625,36 @@ $brands = ['Netflix', 'Amazon Prime', 'Disney+', 'Dharma Productions', 'YRF', 'S
     .as-c {
         background: var(--ink);
         color: var(--cream);
-        padding: 22px 18px;
+        padding: 24px 20px;
         transition: background var(--t2);
         cursor: default;
     }
 
     .as-c:hover {
-        background: var(--olive-d);
+        background: var(--olive-dk);
     }
 
     .as-n {
         font-family: var(--f-d);
-        font-size: clamp(28px, 4vw, 44px);
+        font-size: clamp(30px, 4vw, 46px);
         line-height: 1;
         letter-spacing: .02em;
     }
 
     .as-l {
         font-family: var(--f-c);
-        font-size: 8px;
+        font-size: 8.5px;
         font-weight: 700;
-        letter-spacing: .2em;
+        letter-spacing: .22em;
         text-transform: uppercase;
         color: rgba(242, 234, 216, .3);
-        margin-top: 4px;
+        margin-top: 5px;
     }
 
     /* visual box */
     .av {
         position: relative;
-        height: 500px;
+        height: 520px;
     }
 
     .av-main {
@@ -605,8 +669,8 @@ $brands = ['Netflix', 'Amazon Prime', 'Disney+', 'Dharma Productions', 'YRF', 'S
     .av-main::after {
         content: '';
         position: absolute;
-        width: 36px;
-        height: 36px;
+        width: 40px;
+        height: 40px;
         border-color: var(--amber);
         border-style: solid;
         pointer-events: none;
@@ -614,33 +678,33 @@ $brands = ['Netflix', 'Amazon Prime', 'Disney+', 'Dharma Productions', 'YRF', 'S
     }
 
     .av-main::before {
-        top: 16px;
-        left: 16px;
+        top: 18px;
+        left: 18px;
         border-width: 2px 0 0 2px;
     }
 
     .av-main::after {
-        bottom: 16px;
-        right: 16px;
+        bottom: 18px;
+        right: 18px;
         border-width: 0 2px 2px 0;
     }
 
     .av-yr {
         font-family: var(--f-d);
-        font-size: clamp(76px, 14vw, 152px);
+        font-size: clamp(80px, 14vw, 154px);
         line-height: 1;
         letter-spacing: -.04em;
         color: transparent;
-        -webkit-text-stroke: 1px rgba(242, 234, 216, 1.06);
+        -webkit-text-stroke: 1px rgba(242, 234, 216, .06);
         position: absolute;
-        bottom: 14px;
-        left: 14px;
+        bottom: 16px;
+        left: 16px;
         pointer-events: none;
         user-select: none;
     }
 
     .av-facts {
-        padding: var(--s8) var(--s6);
+        padding: var(--s10) var(--s8);
         position: relative;
         z-index: 1;
     }
@@ -648,8 +712,8 @@ $brands = ['Netflix', 'Amazon Prime', 'Disney+', 'Dharma Productions', 'YRF', 'S
     .av-fact {
         display: flex;
         align-items: center;
-        gap: 12px;
-        padding: 10px 0;
+        gap: 14px;
+        padding: 12px 0;
         border-bottom: 1px solid rgba(242, 234, 216, .05);
         transition: padding-left var(--t2);
     }
@@ -659,57 +723,57 @@ $brands = ['Netflix', 'Amazon Prime', 'Disney+', 'Dharma Productions', 'YRF', 'S
     }
 
     .av-fact:hover {
-        padding-left: 8px;
+        padding-left: 10px;
     }
 
     .av-fact svg {
-        opacity: .38;
+        opacity: .4;
         transition: opacity var(--t2), transform var(--t2);
         flex-shrink: 0;
     }
 
     .av-fact:hover svg {
-        opacity: .85;
-        transform: scale(1.18);
+        opacity: .9;
+        transform: scale(1.2);
     }
 
     .av-ft {
         font-family: var(--f-c);
-        font-size: 12px;
+        font-size: 13px;
         font-weight: 600;
         letter-spacing: .06em;
-        color: rgba(242, 234, 216, .5);
+        color: rgba(242, 234, 216, .52);
     }
 
     .av-badge {
         position: absolute;
-        top: -22px;
-        right: 60px;
+        top: -24px;
+        right: 64px;
         background: var(--amber);
         color: var(--ink);
-        padding: 14px 18px;
+        padding: 16px 20px;
         z-index: 3;
         animation: float-a 5.5s ease-in-out infinite;
     }
 
     .av-badge-n {
         font-family: var(--f-d);
-        font-size: 36px;
+        font-size: 38px;
         line-height: 1;
         letter-spacing: .02em;
     }
 
     .av-badge-l {
         font-family: var(--f-c);
-        font-size: 8px;
+        font-size: 8.5px;
         font-weight: 700;
         letter-spacing: .18em;
         text-transform: uppercase;
         color: rgba(26, 26, 16, .6);
-        margin-top: 3px;
+        margin-top: 4px;
     }
 
-    /* ── §5 FEATURE CARDS ─────────────────────────────────── */
+    /* ── FEATURES ── */
     .features {
         background: var(--cream-2);
     }
@@ -723,18 +787,18 @@ $brands = ['Netflix', 'Amazon Prime', 'Disney+', 'Dharma Productions', 'YRF', 'S
     .feat-top {
         display: grid;
         grid-template-columns: 1fr 1fr;
-        gap: var(--s12);
+        gap: var(--s14);
         align-items: end;
-        margin-bottom: var(--s12);
+        margin-bottom: var(--s14);
     }
 
     .feat-sub {
-        font-family: var(--f-c);
-        font-size: 14px;
-        letter-spacing: .04em;
+        font-family: var(--f-b);
+        font-size: 15px;
+        letter-spacing: .02em;
         color: var(--muted);
-        line-height: 1.72;
-        max-width: 300px;
+        line-height: 1.78;
+        max-width: 320px;
         padding-bottom: 6px;
     }
 
@@ -777,8 +841,8 @@ $brands = ['Netflix', 'Amazon Prime', 'Disney+', 'Dharma Productions', 'YRF', 'S
     }
 
     .fc-ico {
-        width: 40px;
-        height: 40px;
+        width: 42px;
+        height: 42px;
         border: 1.5px solid rgba(242, 234, 216, .11);
         display: flex;
         align-items: center;
@@ -793,7 +857,7 @@ $brands = ['Netflix', 'Amazon Prime', 'Disney+', 'Dharma Productions', 'YRF', 'S
     }
 
     .fc-ico svg {
-        stroke: rgba(242, 234, 216, .4);
+        stroke: rgba(242, 234, 216, .42);
         transition: stroke var(--t2), transform var(--t2);
     }
 
@@ -804,10 +868,10 @@ $brands = ['Netflix', 'Amazon Prime', 'Disney+', 'Dharma Productions', 'YRF', 'S
 
     .fc-t {
         font-family: var(--f-d);
-        font-size: clamp(19px, 2.2vw, 26px);
+        font-size: clamp(20px, 2.2vw, 28px);
         letter-spacing: .04em;
         color: var(--cream);
-        margin-bottom: 8px;
+        margin-bottom: 10px;
         transition: color var(--t2);
     }
 
@@ -816,13 +880,13 @@ $brands = ['Netflix', 'Amazon Prime', 'Disney+', 'Dharma Productions', 'YRF', 'S
     }
 
     .fc-d {
-        font-size: 12.5px;
-        color: rgba(242, 234, 216, .34);
-        line-height: 1.68;
+        font-size: 13.5px;
+        color: rgba(242, 234, 216, .36);
+        line-height: 1.72;
         font-weight: 300;
     }
 
-    /* ── §6 SERVICES ──────────────────────────────────────── */
+    /* ── SERVICES ── */
     .services {
         background: var(--ink);
     }
@@ -836,7 +900,7 @@ $brands = ['Netflix', 'Amazon Prime', 'Disney+', 'Dharma Productions', 'YRF', 'S
         display: flex;
         align-items: flex-end;
         justify-content: space-between;
-        padding: var(--sec-py) var(--px) var(--s12);
+        padding: var(--sec-py) var(--px) var(--s14);
         border-bottom: 1px solid var(--l-border);
         flex-wrap: wrap;
         gap: var(--s6);
@@ -844,7 +908,7 @@ $brands = ['Netflix', 'Amazon Prime', 'Disney+', 'Dharma Productions', 'YRF', 'S
 
     .svc-h {
         font-family: var(--f-d);
-        font-size: clamp(44px, 7.5vw, 100px);
+        font-size: clamp(48px, 7.5vw, 104px);
         line-height: .86;
         letter-spacing: .02em;
         color: var(--cream);
@@ -860,10 +924,10 @@ $brands = ['Netflix', 'Amazon Prime', 'Disney+', 'Dharma Productions', 'YRF', 'S
 
     .svc-row {
         display: grid;
-        grid-template-columns: 60px 1fr auto auto;
+        grid-template-columns: 64px 1fr auto auto;
         align-items: center;
         gap: var(--s8);
-        padding: 18px 0;
+        padding: 20px 0;
         border-top: 1px solid var(--l-border);
         transition: padding-left var(--t2);
         cursor: default;
@@ -874,7 +938,7 @@ $brands = ['Netflix', 'Amazon Prime', 'Disney+', 'Dharma Productions', 'YRF', 'S
     }
 
     .svc-row:hover {
-        padding-left: 14px;
+        padding-left: 16px;
     }
 
     .svc-row:hover .svc-num,
@@ -893,7 +957,7 @@ $brands = ['Netflix', 'Amazon Prime', 'Disney+', 'Dharma Productions', 'YRF', 'S
 
     .svc-num {
         font-family: var(--f-d);
-        font-size: 13px;
+        font-size: 14px;
         letter-spacing: .1em;
         color: rgba(242, 234, 216, .14);
         transition: color var(--t2);
@@ -902,27 +966,27 @@ $brands = ['Netflix', 'Amazon Prime', 'Disney+', 'Dharma Productions', 'YRF', 'S
     .svc-body {
         display: flex;
         flex-direction: column;
-        gap: 3px;
+        gap: 4px;
     }
 
     .svc-t {
         font-family: var(--f-d);
-        font-size: clamp(19px, 2.6vw, 32px);
+        font-size: clamp(20px, 2.6vw, 34px);
         letter-spacing: .03em;
         color: var(--cream);
         transition: color var(--t2);
     }
 
     .svc-d {
-        font-size: 12.5px;
-        color: rgba(242, 234, 216, .28);
-        line-height: 1.6;
+        font-size: 13.5px;
+        color: rgba(242, 234, 216, .3);
+        line-height: 1.65;
         font-weight: 300;
-        max-width: 400px;
+        max-width: 420px;
     }
 
     .svc-ico {
-        width: 34px;
+        width: 36px;
         display: flex;
         align-items: center;
         justify-content: center;
@@ -931,13 +995,13 @@ $brands = ['Netflix', 'Amazon Prime', 'Disney+', 'Dharma Productions', 'YRF', 'S
     }
 
     .svc-row:hover .svc-ico {
-        opacity: .8;
-        transform: scale(1.15) rotate(-5deg);
+        opacity: .85;
+        transform: scale(1.18) rotate(-5deg);
     }
 
     .svc-arr {
-        width: 34px;
-        height: 34px;
+        width: 36px;
+        height: 36px;
         border: 1.5px solid rgba(242, 234, 216, .1);
         border-radius: 50%;
         display: flex;
@@ -952,7 +1016,7 @@ $brands = ['Netflix', 'Amazon Prime', 'Disney+', 'Dharma Productions', 'YRF', 'S
         transition: stroke var(--t2);
     }
 
-    /* ── §7 CAMPAIGNS ─────────────────────────────────────── */
+    /* ── CAMPAIGNS ── */
     .campaigns {
         background: var(--cream);
     }
@@ -967,14 +1031,14 @@ $brands = ['Netflix', 'Amazon Prime', 'Disney+', 'Dharma Productions', 'YRF', 'S
         display: flex;
         align-items: flex-end;
         justify-content: space-between;
-        margin-bottom: var(--s12);
+        margin-bottom: var(--s14);
         flex-wrap: wrap;
-        gap: var(--s6);
+        gap: var(--s8);
     }
 
     .camp-h {
         font-family: var(--f-d);
-        font-size: clamp(44px, 7.5vw, 100px);
+        font-size: clamp(48px, 7.5vw, 104px);
         line-height: .86;
         letter-spacing: .02em;
         color: var(--ink);
@@ -986,15 +1050,15 @@ $brands = ['Netflix', 'Amazon Prime', 'Disney+', 'Dharma Productions', 'YRF', 'S
 
     .camp-see {
         font-family: var(--f-c);
-        font-size: 10.5px;
+        font-size: 11px;
         font-weight: 700;
-        letter-spacing: .18em;
+        letter-spacing: .2em;
         text-transform: uppercase;
         border-bottom: 2px solid var(--ink);
         padding-bottom: 2px;
         display: inline-flex;
         align-items: center;
-        gap: 7px;
+        gap: 8px;
         transition: color var(--t1), border-color var(--t1);
         align-self: flex-end;
         margin-bottom: 4px;
@@ -1043,12 +1107,12 @@ $brands = ['Netflix', 'Amazon Prime', 'Disney+', 'Dharma Productions', 'YRF', 'S
         height: 100%;
         object-fit: cover;
         filter: brightness(.46) saturate(.68);
-        transition: transform .85s var(--ease), filter .85s;
+        transition: transform .9s var(--ease), filter .9s;
     }
 
     .ccard:hover .c-img img {
-        transform: scale(1.07);
-        filter: brightness(.66) saturate(1);
+        transform: scale(1.08);
+        filter: brightness(.68) saturate(1);
     }
 
     .c-img::after {
@@ -1059,11 +1123,11 @@ $brands = ['Netflix', 'Amazon Prime', 'Disney+', 'Dharma Productions', 'YRF', 'S
     }
 
     .ccard.feat .c-img {
-        height: 340px;
+        height: 360px;
     }
 
     .ccard.sm .c-img {
-        height: 200px;
+        height: 210px;
     }
 
     .c-ph {
@@ -1080,37 +1144,37 @@ $brands = ['Netflix', 'Amazon Prime', 'Disney+', 'Dharma Productions', 'YRF', 'S
     }
 
     .c-body {
-        padding: 20px;
+        padding: 22px;
     }
 
     .ccard.feat .c-body {
-        padding: 24px;
+        padding: 28px;
     }
 
     .c-auth {
         font-family: var(--f-c);
-        font-size: 8.5px;
+        font-size: 9px;
         font-weight: 700;
-        letter-spacing: .22em;
+        letter-spacing: .24em;
         text-transform: uppercase;
         color: var(--amber);
-        opacity: .7;
-        margin-bottom: 7px;
+        opacity: .72;
+        margin-bottom: 8px;
         display: block;
     }
 
     .c-t {
         font-family: var(--f-d);
-        font-size: clamp(17px, 2vw, 26px);
+        font-size: clamp(18px, 2vw, 28px);
         letter-spacing: .02em;
         color: var(--cream);
         line-height: 1.1;
-        margin-bottom: 6px;
+        margin-bottom: 7px;
         transition: color var(--t2);
     }
 
     .ccard.feat .c-t {
-        font-size: clamp(22px, 2.8vw, 36px);
+        font-size: clamp(24px, 2.8vw, 38px);
     }
 
     .ccard:hover .c-t {
@@ -1118,9 +1182,9 @@ $brands = ['Netflix', 'Amazon Prime', 'Disney+', 'Dharma Productions', 'YRF', 'S
     }
 
     .c-d {
-        font-size: 12px;
-        color: rgba(242, 234, 216, .33);
-        line-height: 1.6;
+        font-size: 13px;
+        color: rgba(242, 234, 216, .34);
+        line-height: 1.65;
         display: -webkit-box;
         -webkit-line-clamp: 2;
         -webkit-box-orient: vertical;
@@ -1130,12 +1194,12 @@ $brands = ['Netflix', 'Amazon Prime', 'Disney+', 'Dharma Productions', 'YRF', 'S
     .c-cta {
         display: inline-flex;
         align-items: center;
-        gap: 5px;
-        margin-top: 12px;
+        gap: 6px;
+        margin-top: 14px;
         font-family: var(--f-c);
-        font-size: 9.5px;
+        font-size: 10px;
         font-weight: 700;
-        letter-spacing: .18em;
+        letter-spacing: .2em;
         text-transform: uppercase;
         color: rgba(242, 234, 216, .2);
         transition: color var(--t2), gap var(--t2);
@@ -1143,26 +1207,26 @@ $brands = ['Netflix', 'Amazon Prime', 'Disney+', 'Dharma Productions', 'YRF', 'S
 
     .ccard:hover .c-cta {
         color: var(--amber-2);
-        gap: 10px;
+        gap: 12px;
     }
 
     .camp-empty {
         grid-column: span 12;
-        padding: 64px;
+        padding: 72px;
         display: flex;
         flex-direction: column;
         align-items: center;
-        gap: 12px;
+        gap: 14px;
         background: var(--ink-2);
     }
 
     .camp-empty-h {
         font-family: var(--f-d);
-        font-size: 36px;
+        font-size: 38px;
         color: rgba(242, 234, 216, .15);
     }
 
-    /* ── §8 STATS COUNTER ─────────────────────────────────── */
+    /* ── STATS ── */
     .stats-sec {
         background: var(--olive);
         position: relative;
@@ -1173,7 +1237,7 @@ $brands = ['Netflix', 'Amazon Prime', 'Disney+', 'Dharma Productions', 'YRF', 'S
         content: '';
         position: absolute;
         inset: 0;
-        background: radial-gradient(ellipse 70% 80% at 50% 50%, rgba(212, 146, 10, .07) 0%, transparent 70%);
+        background: radial-gradient(ellipse 70% 80% at 50% 50%, rgba(212, 146, 10, .08) 0%, transparent 70%);
         pointer-events: none;
     }
 
@@ -1186,14 +1250,14 @@ $brands = ['Netflix', 'Amazon Prime', 'Disney+', 'Dharma Productions', 'YRF', 'S
     .stats-top {
         display: grid;
         grid-template-columns: 1fr 1fr;
-        gap: var(--s12);
+        gap: var(--s14);
         align-items: end;
-        margin-bottom: var(--s12);
+        margin-bottom: var(--s14);
     }
 
     .stats-h {
         font-family: var(--f-d);
-        font-size: clamp(40px, 6.5vw, 84px);
+        font-size: clamp(42px, 6.5vw, 88px);
         line-height: .88;
         letter-spacing: .02em;
         color: var(--cream);
@@ -1204,12 +1268,13 @@ $brands = ['Netflix', 'Amazon Prime', 'Disney+', 'Dharma Productions', 'YRF', 'S
     }
 
     .stats-sub {
-        font-family: var(--f-c);
-        font-size: 14px;
-        letter-spacing: .04em;
-        color: rgba(242, 234, 216, .38);
-        line-height: 1.72;
-        max-width: 300px;
+        font-family: var(--f-s);
+        font-style: italic;
+        font-size: 16px;
+        letter-spacing: .02em;
+        color: rgba(242, 234, 216, .4);
+        line-height: 1.8;
+        max-width: 320px;
         padding-bottom: 6px;
     }
 
@@ -1224,7 +1289,7 @@ $brands = ['Netflix', 'Amazon Prime', 'Disney+', 'Dharma Productions', 'YRF', 'S
 
     .stat-cell {
         background: rgba(242, 234, 216, .04);
-        padding: 30px 22px;
+        padding: 32px 24px;
         border-right: 1px solid rgba(242, 234, 216, .08);
         transition: background var(--t2);
         cursor: default;
@@ -1235,12 +1300,12 @@ $brands = ['Netflix', 'Amazon Prime', 'Disney+', 'Dharma Productions', 'YRF', 'S
     }
 
     .stat-cell:hover {
-        background: rgba(242, 234, 216, .09);
+        background: rgba(242, 234, 216, .10);
     }
 
     .stat-n {
         font-family: var(--f-d);
-        font-size: clamp(38px, 6vw, 68px);
+        font-size: clamp(40px, 6vw, 70px);
         line-height: 1;
         letter-spacing: .02em;
         color: var(--amber);
@@ -1248,15 +1313,15 @@ $brands = ['Netflix', 'Amazon Prime', 'Disney+', 'Dharma Productions', 'YRF', 'S
 
     .stat-l {
         font-family: var(--f-c);
-        font-size: 8.5px;
+        font-size: 9.5px;
         font-weight: 700;
-        letter-spacing: .22em;
+        letter-spacing: .24em;
         text-transform: uppercase;
-        color: rgba(242, 234, 216, .34);
-        margin-top: 6px;
+        color: rgba(242, 234, 216, .36);
+        margin-top: 7px;
     }
 
-    /* ── §9 TESTIMONIALS ──────────────────────────────────── */
+    /* ── TESTIMONIALS ── */
     .testi {
         background: var(--cream-2);
     }
@@ -1271,14 +1336,14 @@ $brands = ['Netflix', 'Amazon Prime', 'Disney+', 'Dharma Productions', 'YRF', 'S
         display: flex;
         align-items: flex-end;
         justify-content: space-between;
-        margin-bottom: var(--s12);
+        margin-bottom: var(--s14);
         flex-wrap: wrap;
         gap: var(--s6);
     }
 
     .testi-h {
         font-family: var(--f-d);
-        font-size: clamp(40px, 6.5vw, 84px);
+        font-size: clamp(42px, 6.5vw, 88px);
         line-height: .88;
         letter-spacing: .02em;
         color: var(--ink);
@@ -1328,8 +1393,8 @@ $brands = ['Netflix', 'Amazon Prime', 'Disney+', 'Dharma Productions', 'YRF', 'S
     }
 
     .tcard-qi {
-        width: 26px;
-        height: 26px;
+        width: 28px;
+        height: 28px;
         margin-bottom: var(--s6);
         opacity: .28;
     }
@@ -1340,7 +1405,7 @@ $brands = ['Netflix', 'Amazon Prime', 'Disney+', 'Dharma Productions', 'YRF', 'S
 
     .tcard-stars {
         display: flex;
-        gap: 3px;
+        gap: 4px;
         margin-bottom: var(--s4);
     }
 
@@ -1352,22 +1417,33 @@ $brands = ['Netflix', 'Amazon Prime', 'Disney+', 'Dharma Productions', 'YRF', 'S
     .tcard-q {
         font-family: var(--f-s);
         font-style: italic;
-        font-size: clamp(13px, 1.4vw, 14.5px);
-        color: rgba(242, 234, 216, .56);
-        line-height: 1.78;
-        margin-bottom: var(--s6);
+        font-size: clamp(13.5px, 1.4vw, 15px);
+        color: rgba(242, 234, 216, .58);
+        line-height: 1.82;
+        margin-bottom: var(--s8);
+    }
+
+    .tcard-author {
+        display: flex;
+        flex-direction: column;
+        gap: 2px;
     }
 
     .tcard-name {
         font-family: var(--f-c);
-        font-size: 9px;
+        font-size: 11px;
         font-weight: 700;
         letter-spacing: .18em;
         text-transform: uppercase;
-        color: rgba(242, 234, 216, .26);
+        color: rgba(242, 234, 216, .6);
     }
 
-    /* ── §10 PROCESS ──────────────────────────────────────── */
+    .tcard-role {
+        font-size: 12px;
+        color: rgba(242, 234, 216, .28);
+    }
+
+    /* ── PROCESS ── */
     .process {
         background: var(--ink);
     }
@@ -1381,7 +1457,7 @@ $brands = ['Netflix', 'Amazon Prime', 'Disney+', 'Dharma Productions', 'YRF', 'S
         display: flex;
         align-items: flex-end;
         justify-content: space-between;
-        padding: var(--sec-py) var(--px) var(--s12);
+        padding: var(--sec-py) var(--px) var(--s14);
         border-bottom: 1px solid var(--l-border);
         flex-wrap: wrap;
         gap: var(--s6);
@@ -1389,7 +1465,7 @@ $brands = ['Netflix', 'Amazon Prime', 'Disney+', 'Dharma Productions', 'YRF', 'S
 
     .proc-h {
         font-family: var(--f-d);
-        font-size: clamp(44px, 7.5vw, 100px);
+        font-size: clamp(48px, 7.5vw, 104px);
         line-height: .86;
         letter-spacing: .02em;
         color: var(--cream);
@@ -1400,12 +1476,13 @@ $brands = ['Netflix', 'Amazon Prime', 'Disney+', 'Dharma Productions', 'YRF', 'S
     }
 
     .proc-sub {
-        font-family: var(--f-c);
-        font-size: 13px;
-        letter-spacing: .04em;
-        color: rgba(242, 234, 216, .34);
+        font-family: var(--f-s);
+        font-style: italic;
+        font-size: 15px;
+        letter-spacing: .02em;
+        color: rgba(242, 234, 216, .36);
         max-width: 300px;
-        line-height: 1.72;
+        line-height: 1.8;
         padding-bottom: 6px;
     }
 
@@ -1415,9 +1492,9 @@ $brands = ['Netflix', 'Amazon Prime', 'Disney+', 'Dharma Productions', 'YRF', 'S
 
     .proc-row {
         display: grid;
-        grid-template-columns: 76px 1fr 1fr;
+        grid-template-columns: 80px 1fr 1fr;
         border-top: 1px solid var(--l-border);
-        min-height: 172px;
+        min-height: 180px;
         transition: background var(--t2);
     }
 
@@ -1434,7 +1511,7 @@ $brands = ['Netflix', 'Amazon Prime', 'Disney+', 'Dharma Productions', 'YRF', 'S
         align-items: center;
         justify-content: center;
         font-family: var(--f-d);
-        font-size: clamp(46px, 7.5vw, 86px);
+        font-size: clamp(50px, 7.5vw, 90px);
         line-height: 1;
         letter-spacing: -.04em;
         color: rgba(242, 234, 216, .06);
@@ -1443,11 +1520,11 @@ $brands = ['Netflix', 'Amazon Prime', 'Disney+', 'Dharma Productions', 'YRF', 'S
     }
 
     .proc-row:hover .proc-nn {
-        color: rgba(242, 234, 216, .18);
+        color: rgba(242, 234, 216, .2);
     }
 
     .proc-l {
-        padding: 26px var(--s8);
+        padding: 28px var(--s8);
         display: flex;
         flex-direction: column;
         justify-content: center;
@@ -1455,7 +1532,7 @@ $brands = ['Netflix', 'Amazon Prime', 'Disney+', 'Dharma Productions', 'YRF', 'S
     }
 
     .proc-r {
-        padding: 26px var(--s8);
+        padding: 28px var(--s8);
         display: flex;
         flex-direction: column;
         justify-content: center;
@@ -1463,12 +1540,12 @@ $brands = ['Netflix', 'Amazon Prime', 'Disney+', 'Dharma Productions', 'YRF', 'S
 
     .proc-tag {
         font-family: var(--f-c);
-        font-size: 9px;
+        font-size: 9.5px;
         font-weight: 700;
-        letter-spacing: .26em;
+        letter-spacing: .28em;
         text-transform: uppercase;
         color: rgba(242, 234, 216, .28);
-        margin-bottom: 8px;
+        margin-bottom: 10px;
         transition: color var(--t2);
     }
 
@@ -1478,7 +1555,7 @@ $brands = ['Netflix', 'Amazon Prime', 'Disney+', 'Dharma Productions', 'YRF', 'S
 
     .proc-title {
         font-family: var(--f-d);
-        font-size: clamp(20px, 2.8vw, 38px);
+        font-size: clamp(22px, 2.8vw, 40px);
         letter-spacing: .02em;
         color: rgba(242, 234, 216, .3);
         line-height: .92;
@@ -1490,9 +1567,9 @@ $brands = ['Netflix', 'Amazon Prime', 'Disney+', 'Dharma Productions', 'YRF', 'S
     }
 
     .proc-ico {
-        width: 30px;
-        height: 30px;
-        margin-bottom: 12px;
+        width: 32px;
+        height: 32px;
+        margin-bottom: 14px;
         opacity: .32;
         transition: opacity var(--t2), transform var(--t2);
     }
@@ -1503,13 +1580,13 @@ $brands = ['Netflix', 'Amazon Prime', 'Disney+', 'Dharma Productions', 'YRF', 'S
 
     .proc-row:hover .proc-ico {
         opacity: .9;
-        transform: scale(1.12) rotate(-5deg);
+        transform: scale(1.14) rotate(-5deg);
     }
 
     .proc-desc {
-        font-size: 13px;
-        color: rgba(242, 234, 216, .36);
-        line-height: 1.78;
+        font-size: 14px;
+        color: rgba(242, 234, 216, .38);
+        line-height: 1.82;
         font-weight: 300;
         max-width: 380px;
     }
@@ -1520,7 +1597,7 @@ $brands = ['Netflix', 'Amazon Prime', 'Disney+', 'Dharma Productions', 'YRF', 'S
         justify-content: center;
     }
 
-    /* ── §11 CTA ──────────────────────────────────────────── */
+    /* ── CTA ── */
     .cta-sec {
         background: var(--cream);
         position: relative;
@@ -1533,7 +1610,7 @@ $brands = ['Netflix', 'Amazon Prime', 'Disney+', 'Dharma Productions', 'YRF', 'S
         left: 50%;
         transform: translate(-50%, -50%);
         font-family: var(--f-d);
-        font-size: clamp(64px, 14vw, 210px);
+        font-size: clamp(68px, 14vw, 220px);
         letter-spacing: -.02em;
         line-height: 1;
         color: transparent;
@@ -1554,11 +1631,11 @@ $brands = ['Netflix', 'Amazon Prime', 'Disney+', 'Dharma Productions', 'YRF', 'S
 
     .cta-h {
         font-family: var(--f-d);
-        font-size: clamp(48px, 9vw, 128px);
+        font-size: clamp(52px, 9vw, 132px);
         line-height: .84;
         letter-spacing: .02em;
         color: var(--ink);
-        margin-bottom: var(--s10);
+        margin-bottom: var(--s12);
     }
 
     .cta-h span {
@@ -1568,34 +1645,31 @@ $brands = ['Netflix', 'Amazon Prime', 'Disney+', 'Dharma Productions', 'YRF', 'S
     .cta-btns {
         display: flex;
         justify-content: center;
-        gap: 12px;
+        gap: 14px;
         flex-wrap: wrap;
         margin-bottom: var(--s8);
     }
 
     .cta-sub {
         font-family: var(--f-c);
-        font-size: 10.5px;
+        font-size: 11px;
         font-weight: 700;
-        letter-spacing: .12em;
+        letter-spacing: .14em;
         text-transform: uppercase;
-        color: rgba(26, 26, 16, .28);
+        color: rgba(26, 26, 16, .3);
     }
 
-    /* ── RESPONSIVE ───────────────────────────────────────── */
+    /* ── RESPONSIVE ── */
     @media(max-width:1100px) {
-        .about-wrap {
+
+        .about-wrap,
+        .feat-top,
+        .stats-top {
             grid-template-columns: 1fr;
-            gap: 48px;
         }
 
         .av {
             height: 380px;
-        }
-
-        .feat-top {
-            grid-template-columns: 1fr;
-            gap: var(--s8);
         }
 
         .feat-grid {
@@ -1614,51 +1688,36 @@ $brands = ['Netflix', 'Amazon Prime', 'Disney+', 'Dharma Productions', 'YRF', 'S
             grid-template-columns: repeat(2, 1fr);
         }
 
-        .stats-top {
-            grid-template-columns: 1fr;
-            gap: var(--s6);
-        }
-
         .testi-grid {
             grid-template-columns: 1fr;
         }
 
         .proc-row {
-            grid-template-columns: 60px 1fr;
+            grid-template-columns: 64px 1fr;
         }
 
         .proc-r {
             display: none;
         }
 
-        .proc-nn {
-            font-size: 50px;
-        }
-
         .hero-float-l,
-        .hero-float-r {
-            display: none;
-        }
-
-        .hero-vert-text {
+        .hero-float-r,
+        .hero-vert-r {
             display: none;
         }
 
         .hero-body {
-            padding-top: calc(var(--nav-h) + 56px);
+            padding-top: calc(var(--nav-h)+60px);
         }
     }
 
     @media(max-width:900px) {
         .svc-row {
-            grid-template-columns: 52px 1fr;
+            grid-template-columns: 56px 1fr;
         }
 
         .svc-ico,
-        .svc-arr {
-            display: none;
-        }
-
+        .svc-arr,
         .svc-d {
             display: none;
         }
@@ -1674,7 +1733,7 @@ $brands = ['Netflix', 'Amazon Prime', 'Disney+', 'Dharma Productions', 'YRF', 'S
         }
 
         .hs-cell {
-            padding: 16px 16px;
+            padding: 18px;
         }
 
         .about-stats {
@@ -1690,7 +1749,7 @@ $brands = ['Netflix', 'Amazon Prime', 'Disney+', 'Dharma Productions', 'YRF', 'S
         }
 
         .ccard.feat .c-img {
-            height: 240px;
+            height: 260px;
         }
 
         .stats-grid {
@@ -1706,46 +1765,36 @@ $brands = ['Netflix', 'Amazon Prime', 'Disney+', 'Dharma Productions', 'YRF', 'S
         }
 
         .proc-l {
-            padding: 20px var(--s6);
+            padding: 22px var(--s6);
         }
 
         .proc-nn {
-            font-size: 38px;
+            font-size: 42px;
         }
     }
 
     @media(max-width:540px) {
-        .hero-btns {
-            flex-direction: column;
-            align-items: center;
-        }
 
+        .hero-btns,
         .cta-btns {
             flex-direction: column;
             align-items: center;
         }
 
         .hero-h1 {
-            font-size: clamp(56px, 17vw, 120px);
-        }
-
-        .feat-grid {
-            border: 2px solid var(--ink);
-        }
-
-        .testi-grid {
-            border: 2px solid var(--ink);
+            font-size: clamp(60px, 17vw, 120px);
         }
     }
 </style>
 
-<!-- ─── §1 HERO ─────────────────────────────────────── -->
+<!-- ─── HERO ─────────────────────────────────────────────────── -->
 <section class="hero" aria-labelledby="h-hero">
     <div class="h-glow hg1" aria-hidden="true"></div>
     <div class="h-glow hg2" aria-hidden="true"></div>
     <div class="h-glow hg3" aria-hidden="true"></div>
+    <div class="h-glow hg4" aria-hidden="true"></div>
 
-    <!-- Floating LEFT: spin badge + scroll cue -->
+    <!-- Floating LEFT -->
     <div class="hero-float-l" aria-hidden="true">
         <div class="spin-badge">
             <div class="spin-badge-ring">
@@ -1755,15 +1804,29 @@ $brands = ['Netflix', 'Amazon Prime', 'Disney+', 'Dharma Productions', 'YRF', 'S
                 </div>
             </div>
         </div>
-        <!-- <div class="hero-scroll" style="margin-top:var(--s8)">
+        <div class="hero-chip">
+            <div class="hero-chip-dot"></div>
+            <div>
+                <div class="hero-chip-txt">Campaigns</div>
+                <div class="hero-chip-val">300+</div>
+            </div>
+        </div>
+        <div class="hero-chip" style="animation-delay:3s">
+            <div class="hero-chip-dot" style="background:var(--olive-l)"></div>
+            <div>
+                <div class="hero-chip-txt">Creators</div>
+                <div class="hero-chip-val">10K+</div>
+            </div>
+        </div>
+        <!-- <div class="hero-scroll-cue" style="margin-top:var(--s8)">
             <div class="hero-scroll-line"></div>
-            <span class="hero-scroll-t">Scroll Down</span>
+            <span class="hero-scroll-t">Scroll</span>
         </div> -->
     </div>
 
-    <!-- CENTER body -->
+    <!-- CENTER -->
     <div class="hero-body">
-        <div class="hero-eye">India&#8217;s Premier Cinema Marketing Studio</div>
+        <div class="hero-eye">India's Premier Cinema Marketing Studio</div>
         <h1 class="hero-h1" id="h-hero">
             <span class="line-solid">WHERE</span>
             <span class="line-outline">CINEMA</span>
@@ -1774,32 +1837,37 @@ $brands = ['Netflix', 'Amazon Prime', 'Disney+', 'Dharma Productions', 'YRF', 'S
         </p>
         <div class="hero-btns">
             <a href="#hp-camp" class="btn btn-amber btn-lg">Explore Our Work</a>
-            <a href="<?= base_url('contact') ?>" class="btn btn-ol-lt btn-lg">Reserve a Table</a>
+            <a href="<?= base_url('contact') ?>" class="btn btn-ol-lt btn-lg">Start a Campaign</a>
         </div>
     </div>
 
-    <!-- Floating RIGHT: stat cards -->
+    <!-- Floating RIGHT -->
     <div class="hero-float-r" aria-hidden="true">
         <div class="hfc">
             <div class="hfc-n" style="color:var(--amber)">300+</div>
             <div class="hfc-l">Campaigns</div>
         </div>
-        <div style="height:2px;background:rgba(242,234,216,.07)"></div>
+        <div class="hfc-div"></div>
         <div class="hfc">
             <div class="hfc-n" style="color:var(--olive-l)">12M+</div>
             <div class="hfc-l">People Reached</div>
         </div>
-        <div style="height:2px;background:rgba(242,234,216,.07)"></div>
+        <div class="hfc-div"></div>
         <div class="hfc">
             <div class="hfc-n" style="color:var(--cream)">70+</div>
             <div class="hfc-l">Screenings</div>
         </div>
+        <div class="hfc-div"></div>
+        <div class="hfc">
+            <div class="hfc-n" style="color:var(--amber-3)">150+</div>
+            <div class="hfc-l">Films Promoted</div>
+        </div>
     </div>
 
-    <!-- Vertical decorative label -->
-    <!-- <div class="hero-vert-text" aria-hidden="true">Cinema &middot; Culture &middot; Commerce</div> -->
+    <!-- Vertical right label -->
+    <!-- <div class="hero-vert-r" aria-hidden="true">Cinema · Culture · Commerce</div> -->
 
-    <!-- STATS BAR -->
+    <!-- Stats bar -->
     <!-- <div class="hero-stats" aria-label="Key metrics">
         <?php foreach (
             [
@@ -1817,10 +1885,10 @@ $brands = ['Netflix', 'Amazon Prime', 'Disney+', 'Dharma Productions', 'YRF', 'S
     </div> -->
 </section>
 
-<!-- ─── §2 TICKER ────────────────────────────────────── -->
+<!-- ─── TICKER ─────────────────────────────────────────────── -->
 <div class="ticker" aria-hidden="true">
     <div class="mq-wrap">
-        <div class="mq-track mq-l" style="--d:30s">
+        <div class="mq-track mq-l" style="--d:32s">
             <?php $tw = ['WHERE CINEMA MEETS CULTURE', 'INFLUENCER MARKETING', 'FILM PROMOTIONS', 'MEME MARKETING', 'VIDEO PRODUCTION', 'CELEBRITY ENDORSEMENTS', 'OTT STRATEGY', 'ON-GROUND ACTIVATIONS'];
             foreach (array_merge($tw, $tw) as $w): ?>
                 <span class="tk-w"><?= htmlspecialchars($w) ?></span><span class="tk-sep">&#8725;</span>
@@ -1829,10 +1897,10 @@ $brands = ['Netflix', 'Amazon Prime', 'Disney+', 'Dharma Productions', 'YRF', 'S
     </div>
 </div>
 
-<!-- ─── §3 BRANDS ────────────────────────────────────── -->
+<!-- ─── BRANDS ─────────────────────────────────────────────── -->
 <div class="brands" aria-label="Brand partners">
     <div class="mq-wrap">
-        <div class="mq-track mq-l" style="--d:38s">
+        <div class="mq-track mq-l" style="--d:40s">
             <?php foreach (array_merge($brands, $brands) as $b): ?>
                 <span class="brand-chip"><?= htmlspecialchars($b) ?></span>
             <?php endforeach; ?>
@@ -1840,11 +1908,11 @@ $brands = ['Netflix', 'Amazon Prime', 'Disney+', 'Dharma Productions', 'YRF', 'S
     </div>
 </div>
 
-<!-- ─── §4 ABOUT ─────────────────────────────────────── -->
+<!-- ─── ABOUT ─────────────────────────────────────────────── -->
 <section class="about" aria-labelledby="h-about">
     <div class="about-wrap">
         <div>
-            <p class="s-lbl rv" style="color:var(--amber);margin-bottom:14px">Who We Are</p>
+            <p class="s-lbl rv" style="color:var(--amber);margin-bottom:16px">Who We Are</p>
             <h2 id="h-about" class="about-h rv d1">CRAFTING<br><span class="ul">CINEMATIC</span><br>IMPACT</h2>
             <p class="about-body rv d2">
                 <?= htmlspecialchars($settings['about_text'] ?? 'The Cine Caffe is a premium cinema marketing studio driving high-impact campaigns for brands and production houses across entertainment, culture, and commerce.') ?>
@@ -1876,7 +1944,7 @@ $brands = ['Netflix', 'Amazon Prime', 'Disney+', 'Dharma Productions', 'YRF', 'S
                 <div class="av-facts">
                     <?php foreach ([['film', 'End-to-End Campaign Management'], ['globe', '10,000+ Creator Network'], ['pin', 'Pan-India Coverage'], ['zap', '24–48h Response Time'], ['award', '300+ Successful Campaigns'], ['play', '32% of All OTT Releases']] as $f): ?>
                         <div class="av-fact">
-                            <?= svg($f[0], 15, 15, 'rgba(242,234,216,.4)', 1.7) ?>
+                            <?= svg($f[0], 16, 16, 'rgba(242,234,216,.4)', 1.7) ?>
                             <span class="av-ft"><?= htmlspecialchars($f[1]) ?></span>
                         </div>
                     <?php endforeach; ?>
@@ -1886,22 +1954,22 @@ $brands = ['Netflix', 'Amazon Prime', 'Disney+', 'Dharma Productions', 'YRF', 'S
     </div>
 </section>
 
-<!-- ─── §5 FEATURE CARDS ─────────────────────────────── -->
+<!-- ─── FEATURES ─────────────────────────────────────────── -->
 <section class="features">
     <div class="feat-wrap">
         <div class="feat-top">
             <div class="rv sl">
-                <p class="s-lbl" style="color:var(--olive);margin-bottom:12px">Our Strengths</p>
-                <h2 style="font-family:var(--f-d);font-size:clamp(40px,7vw,88px);line-height:.88;letter-spacing:.02em">
+                <p class="s-lbl" style="color:var(--olive);margin-bottom:14px">Our Strengths</p>
+                <h2 style="font-family:var(--f-d);font-size:clamp(44px,7vw,92px);line-height:.88;letter-spacing:.02em">
                     WHY <span style="color:var(--amber)">CHOOSE US</span></h2>
             </div>
             <p class="feat-sub rv sr">A refined studio crafting authentic campaigns that move audiences and build
-                lasting brand authority.</p>
+                lasting brand authority across India's entertainment landscape.</p>
         </div>
         <div class="feat-grid rv ss d2">
             <?php foreach ($feats as $i => $fc): ?>
                 <div class="fc rv d<?= $i + 1 ?>">
-                    <div class="fc-ico"><?= svg($fc[0], 18, 18, 'rgba(242,234,216,.4)', 1.7) ?></div>
+                    <div class="fc-ico"><?= svg($fc[0], 19, 19, 'rgba(242,234,216,.4)', 1.7) ?></div>
                     <div class="fc-t"><?= htmlspecialchars($fc[1]) ?></div>
                     <p class="fc-d"><?= htmlspecialchars($fc[2]) ?></p>
                 </div>
@@ -1910,12 +1978,12 @@ $brands = ['Netflix', 'Amazon Prime', 'Disney+', 'Dharma Productions', 'YRF', 'S
     </div>
 </section>
 
-<!-- ─── §6 SERVICES ──────────────────────────────────── -->
+<!-- ─── SERVICES ─────────────────────────────────────────── -->
 <section class="services" aria-labelledby="h-svc">
     <div class="svc-wrap">
         <div class="svc-hdr">
             <div class="rv">
-                <p class="s-lbl" style="color:rgba(242,234,216,.26);margin-bottom:12px">What We Do</p>
+                <p class="s-lbl" style="color:rgba(242,234,216,.28);margin-bottom:14px">What We Do</p>
                 <h2 id="h-svc" class="svc-h">OUR <span>SERVICES</span></h2>
             </div>
             <a href="<?= base_url('contact') ?>" class="btn btn-ol-lt rv" style="align-self:flex-end">Work With Us</a>
@@ -1936,12 +2004,12 @@ $brands = ['Netflix', 'Amazon Prime', 'Disney+', 'Dharma Productions', 'YRF', 'S
     </div>
 </section>
 
-<!-- ─── §7 CAMPAIGNS ─────────────────────────────────── -->
+<!-- ─── CAMPAIGNS ─────────────────────────────────────────── -->
 <section class="campaigns" id="hp-camp" aria-labelledby="h-camp">
     <div class="camp-wrap">
         <div class="camp-hdr">
             <div class="rv sl">
-                <p class="s-lbl" style="color:var(--olive);margin-bottom:12px">Case Studies</p>
+                <p class="s-lbl" style="color:var(--olive);margin-bottom:14px">Case Studies</p>
                 <h2 id="h-camp" class="camp-h">SIGNATURE <span>CAMPAIGNS</span></h2>
             </div>
             <a href="<?= base_url('work') ?>" class="camp-see rv sr">View All Work
@@ -1951,21 +2019,20 @@ $brands = ['Netflix', 'Amazon Prime', 'Disney+', 'Dharma Productions', 'YRF', 'S
             <?php if (empty($posts)): ?>
                 <div class="camp-empty">
                     <p class="camp-empty-h">Coming Soon</p>
-                    <p style="font-size:13px;color:rgba(242,234,216,.16)">Great campaigns in the making &mdash; check back
-                        soon.</p>
+                    <p style="font-size:14px;color:rgba(242,234,216,.18)">Great campaigns in the making — check back soon.
+                    </p>
                 </div>
                 <?php else: foreach ($posts as $i => $p):
                     $feat = ($i === 0);
-                    $cls = $feat ? 'feat' : 'sm';
-                ?>
+                    $cls = $feat ? 'feat' : 'sm'; ?>
                     <a href="<?= base_url('post/' . $p['slug']) ?>" class="ccard <?= $cls ?>">
                         <?php if (!empty($p['image'])): ?>
-                            <div class="c-img" style="height:<?= $feat ? '340px' : '200px' ?>">
+                            <div class="c-img" style="height:<?= $feat ? '360px' : '210px' ?>">
                                 <img src="<?= base_url('assets/images/uploads/' . $p['image']) ?>"
                                     alt="<?= htmlspecialchars($p['title']) ?>" loading="lazy">
                             </div>
                         <?php else: ?>
-                            <div class="c-img c-ph" style="height:<?= $feat ? '340px' : '200px' ?>"><span>Cine</span></div>
+                            <div class="c-img c-ph" style="height:<?= $feat ? '360px' : '210px' ?>"><span>Cine</span></div>
                         <?php endif; ?>
                         <div class="c-body">
                             <span class="c-auth"><?= htmlspecialchars($p['author']) ?></span>
@@ -1980,13 +2047,13 @@ $brands = ['Netflix', 'Amazon Prime', 'Disney+', 'Dharma Productions', 'YRF', 'S
     </div>
 </section>
 
-<!-- ─── §8 STATS COUNTER ─────────────────────────────── -->
+<!-- ─── STATS ─────────────────────────────────────────────── -->
 <section class="stats-sec" aria-label="Studio statistics">
     <div class="stats-inner">
         <div class="stats-top">
             <h2 class="stats-h rv sl">NUMBERS THAT<br><span>SPEAK</span></h2>
-            <p class="stats-sub rv sr">Measurable results that prove cultural impact at scale &mdash; campaign after
-                campaign.</p>
+            <p class="stats-sub rv sr">Measurable results that prove cultural impact at scale — campaign after campaign,
+                release after release.</p>
         </div>
         <div class="stats-grid rv ss d1">
             <?php foreach ([['300', 'Campaigns Delivered', '+'], ['12', 'Million People Reached', 'M+'], ['32', 'Of All OTT Releases', '%'], ['70', 'Influencer Screenings', '+']] as $i => $st): ?>
@@ -2000,39 +2067,43 @@ $brands = ['Netflix', 'Amazon Prime', 'Disney+', 'Dharma Productions', 'YRF', 'S
     </div>
 </section>
 
-<!-- ─── §9 TESTIMONIALS ──────────────────────────────── -->
+<!-- ─── TESTIMONIALS ─────────────────────────────────────── -->
 <section class="testi" aria-labelledby="h-testi">
     <div class="testi-wrap">
         <div class="testi-hdr">
             <div class="rv sl">
-                <p class="s-lbl" style="color:var(--olive-d);margin-bottom:12px">Client Love</p>
+                <p class="s-lbl" style="color:var(--olive-d);margin-bottom:14px">Client Love</p>
                 <h2 id="h-testi" class="testi-h">WHAT CLIENTS <em>Say</em></h2>
             </div>
         </div>
         <div class="testi-grid rv ss">
             <?php foreach ($testi as $i => $t): ?>
                 <div class="tcard rv d<?= $i + 1 ?>">
-                    <div class="tcard-qi"><?= svg('quote', 26, 26, 'var(--amber-2)', 1.4) ?></div>
+                    <div class="tcard-qi"><?= svg('quote', 28, 28, 'var(--amber-2)', 1.4) ?></div>
                     <div class="tcard-stars">
-                        <?php for ($s = 0; $s < 5; $s++): ?><span><?= svg('star', 11, 11, 'var(--amber)', 1.5) ?></span><?php endfor; ?>
+                        <?php for ($s = 0; $s < 5; $s++): ?><span><?= svg('star', 12, 12, 'var(--amber)', 1.5) ?></span><?php endfor; ?>
                     </div>
                     <blockquote class="tcard-q"><?= htmlspecialchars($t[0]) ?></blockquote>
-                    <cite class="tcard-name"><?= $t[1] ?></cite>
+                    <div class="tcard-author">
+                        <cite class="tcard-name"><?= $t[1] ?></cite>
+                        <span class="tcard-role"><?= $t[2] ?></span>
+                    </div>
                 </div>
             <?php endforeach; ?>
         </div>
     </div>
 </section>
 
-<!-- ─── §10 PROCESS ──────────────────────────────────── -->
+<!-- ─── PROCESS ──────────────────────────────────────────── -->
 <section class="process" aria-labelledby="h-proc">
     <div class="proc-wrap">
         <div class="proc-hdr">
             <div class="rv">
-                <p class="s-lbl" style="color:rgba(242,234,216,.24);margin-bottom:12px">How We Work</p>
+                <p class="s-lbl" style="color:rgba(242,234,216,.26);margin-bottom:14px">How We Work</p>
                 <h2 id="h-proc" class="proc-h">OUR <span>PROCESS</span></h2>
             </div>
-            <p class="proc-sub rv d2">A refined four-act framework that transforms brands into cultural icons.</p>
+            <p class="proc-sub rv d2">A refined four-act framework that transforms brands into cultural icons —
+                consistently.</p>
         </div>
         <ul class="proc-rows">
             <?php foreach ($procs as $i => $p): ?>
@@ -2054,11 +2125,11 @@ $brands = ['Netflix', 'Amazon Prime', 'Disney+', 'Dharma Productions', 'YRF', 'S
     </div>
 </section>
 
-<!-- ─── §11 CTA ───────────────────────────────────────── -->
+<!-- ─── CTA ──────────────────────────────────────────────── -->
 <section class="cta-sec" aria-label="Call to action">
     <div class="cta-ghost" aria-hidden="true">Extraordinary</div>
     <div class="cta-inner">
-        <p class="s-lbl rv" style="color:var(--olive);justify-content:center;margin:0 auto 16px">Ready to Begin?</p>
+        <p class="s-lbl rv" style="color:var(--olive);justify-content:center;margin:0 auto 18px">Ready to Begin?</p>
         <h2 class="cta-h rv d1">LET&#8217;S CREATE<br>SOMETHING <span>EXTRAORDINARY</span></h2>
         <div class="cta-btns rv d2">
             <a href="<?= base_url('contact') ?>" class="btn btn-ink btn-lg">Start a Campaign</a>
@@ -2074,7 +2145,6 @@ $brands = ['Netflix', 'Amazon Prime', 'Disney+', 'Dharma Productions', 'YRF', 'S
 
 <script>
     (function() {
-        /* campaign grid responsive */
         function fixCamp() {
             var f = document.querySelector('.ccard.feat'),
                 sm = document.querySelectorAll('.ccard.sm');
@@ -2089,7 +2159,6 @@ $brands = ['Netflix', 'Amazon Prime', 'Disney+', 'Dharma Productions', 'YRF', 'S
         window.addEventListener('resize', fixCamp, {
             passive: true
         });
-        /* smooth anchor scroll */
         document.querySelectorAll('a[href^="#"]').forEach(function(a) {
             a.addEventListener('click', function(e) {
                 var t = document.querySelector(this.getAttribute('href'));
