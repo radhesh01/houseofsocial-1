@@ -1,8 +1,8 @@
 <?php defined('BASEPATH') or exit('No direct script access allowed');
 
 // ── Change base_url to match your server ─────────────────
-$config['base_url'] = 'http://localhost/thecinecaffe/';
-// https: //thecinecaffe.com/
+$config['base_url'] = 'http://localhost/houseofsocial/';
+// https: //houseofsocial.io/
 
 $config['index_page'] = '';
 $config['uri_protocol'] = 'AUTO';

@@ -38,7 +38,7 @@ class Admin_model extends CI_Model
             $this->db->insert($this->table, [
                 'username'   => 'admin',
                 'password'   => password_hash('admin123', PASSWORD_DEFAULT),
-                'email'      => 'admin@thecinecaffe.com',
+                'email'      => 'admin@houseofsocial.com',
                 'created_at' => date('Y-m-d H:i:s'),
             ]);
             return TRUE;

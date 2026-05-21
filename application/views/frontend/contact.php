@@ -514,13 +514,13 @@
     <!-- INFO STRIP -->
     <div class="ct-strip">
         <div class="ct-strip-inner">
-            <a href="mailto:<?= htmlspecialchars($settings['site_email'] ?? 'contact@thecinecaffe.com') ?>"
+            <a href="mailto:<?= htmlspecialchars($settings['site_email'] ?? 'contact@houseofsocial.com') ?>"
                 class="ct-strip-cell rv d1">
                 <div class="ct-strip-icon">&#9993;</div>
                 <div>
                     <div class="ct-strip-label">Email Us</div>
                     <div class="ct-strip-val">
-                        <?= htmlspecialchars($settings['site_email'] ?? 'contact@thecinecaffe.com') ?></div>
+                        <?= htmlspecialchars($settings['site_email'] ?? 'contact@houseofsocial.com') ?></div>
                 </div>
             </a>
             <a href="tel:<?= htmlspecialchars($settings['site_phone'] ?? '') ?>" class="ct-strip-cell rv d2">

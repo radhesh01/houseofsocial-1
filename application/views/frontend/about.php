@@ -1,515 +1,678 @@
 <?php defined('BASEPATH') or exit('No direct script access allowed'); ?>
-
 <style>
-    /* ================================================================
-   ABOUT PAGE
-================================================================ */
-
-    .ab-hero {
-        background: var(--olive-dk);
-        padding: 160px var(--px) 80px;
-        position: relative;
+    /* ============================================================
+   ABOUT — HOUSEOFSOCIAL
+============================================================ */
+    .ab-open {
+        min-height: 100svh;
+        background: var(--bg);
+        display: flex;
+        flex-direction: column;
         overflow: hidden;
-        z-index: 1;
-        min-height: 56vh;
+        position: relative;
+    }
+
+    .ab-open-grid {
+        position: absolute;
+        inset: 0;
+        pointer-events: none;
+        background-image: linear-gradient(rgba(245, 242, 238, .018) 1px, transparent 1px),
+            linear-gradient(90deg, rgba(245, 242, 238, .018) 1px, transparent 1px);
+        background-size: 80px 80px;
+    }
+
+    .ab-open-glow {
+        position: absolute;
+        top: -200px;
+        right: -200px;
+        width: 700px;
+        height: 700px;
+        background: radial-gradient(circle, rgba(255, 77, 0, .1) 0%, transparent 60%);
+        filter: blur(80px);
+        pointer-events: none;
+    }
+
+    /* top nav spacer + big statement */
+    .ab-open-body {
+        flex: 1;
         display: flex;
         flex-direction: column;
         justify-content: flex-end;
+        padding: calc(var(--nav)+80px) var(--px) 0;
+        max-width: var(--max);
+        margin: 0 auto;
+        width: 100%;
+        position: relative;
+        z-index: 2;
     }
 
-    .ab-hero-glow {
+    .ab-big-h {
+        font-family: var(--fh);
+        font-size: clamp(72px, 14vw, 200px);
+        font-weight: 800;
+        letter-spacing: -.05em;
+        line-height: .82;
+        color: var(--w);
+        opacity: 0;
+        animation: aUp 1s var(--ease) .2s forwards;
+    }
+
+    .ab-big-h .blk {
+        display: block
+    }
+
+    .ab-big-h .orange {
+        color: var(--o)
+    }
+
+    .ab-big-h .stroke {
+        color: transparent;
+        -webkit-text-stroke: 2px rgba(245, 242, 238, .2)
+    }
+
+    .ab-open-bottom {
+        border-top: 1px solid var(--border);
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        margin-top: 60px;
+        opacity: 0;
+        animation: aUp .8s var(--ease) .6s forwards;
+    }
+
+    .ab-open-bl {
+        padding: 32px 0 32px var(--px);
+        border-right: 1px solid var(--border);
+    }
+
+    .ab-open-br {
+        padding: 32px var(--px) 32px 40px
+    }
+
+    .ab-open-sub {
+        font-size: clamp(15px, 1.5vw, 18px);
+        color: var(--w50);
+        line-height: 1.8
+    }
+
+    /* ── MANIFESTO SECTION ── */
+    .ab-manifest {
+        background: var(--bg);
+        padding: var(--sec) var(--px);
+        border-top: 1px solid var(--border);
+    }
+
+    .ab-manifest-inner {
+        max-width: var(--max);
+        margin: 0 auto
+    }
+
+    .ab-manifest-row {
+        display: grid;
+        grid-template-columns: 200px 1fr;
+        gap: 64px;
+        align-items: start;
+        padding: 56px 0;
+        border-top: 1px solid var(--border);
+    }
+
+    .ab-manifest-row:first-child {
+        border-top: none
+    }
+
+    .ab-manifest-label {
+        font-family: var(--fh);
+        font-size: clamp(44px, 5vw, 64px);
+        font-weight: 800;
+        letter-spacing: -.03em;
+        color: var(--w08);
+        line-height: 1;
+        transition: color .4s;
+        cursor: default;
+    }
+
+    .ab-manifest-row:hover .ab-manifest-label {
+        color: var(--o)
+    }
+
+    .ab-manifest-content {}
+
+    .ab-manifest-title {
+        font-family: var(--fh);
+        font-size: clamp(28px, 3.5vw, 48px);
+        font-weight: 800;
+        letter-spacing: -.03em;
+        color: var(--w);
+        margin-bottom: 20px;
+        transition: color .2s;
+    }
+
+    .ab-manifest-row:hover .ab-manifest-title {
+        color: var(--w80)
+    }
+
+    .ab-manifest-body {
+        font-size: 15px;
+        color: var(--w50);
+        line-height: 1.9;
+        max-width: 640px
+    }
+
+    /* ── CAPABILITIES GRID: 2-col asymm ── */
+    .ab-caps {
+        background: var(--bg1);
+        border-top: 1px solid var(--border);
+        padding: var(--sec) var(--px);
+    }
+
+    .ab-caps-inner {
+        max-width: var(--max);
+        margin: 0 auto
+    }
+
+    .ab-caps-top {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 60px;
+        margin-bottom: 64px;
+        align-items: end;
+    }
+
+    .ab-caps-h {
+        font-family: var(--fh);
+        font-size: clamp(48px, 7vw, 96px);
+        font-weight: 800;
+        letter-spacing: -.04em;
+        line-height: .9;
+        color: var(--w);
+    }
+
+    .ab-caps-h em {
+        font-style: normal;
+        color: var(--o)
+    }
+
+    .ab-caps-body {
+        font-size: 15px;
+        color: var(--w50);
+        line-height: 1.85;
+        max-width: 400px
+    }
+
+    .ab-caps-grid {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 2px;
+        border: 1px solid var(--border);
+        overflow: hidden;
+    }
+
+    .ab-cap-card {
+        background: var(--bg2);
+        padding: 40px 32px;
+        position: relative;
+        overflow: hidden;
+        cursor: default;
+        transition: background .3s;
+    }
+
+    .ab-cap-card::after {
+        content: '';
         position: absolute;
-        border-radius: 50%;
-        filter: blur(110px);
-        pointer-events: none;
-        z-index: 0;
+        left: 0;
+        top: 0;
+        bottom: 0;
+        width: 2px;
+        background: var(--o);
+        transform: scaleY(0);
+        transform-origin: top;
+        transition: transform .4s var(--ease);
     }
 
-    .ab-g1 {
-        width: 480px;
-        height: 480px;
-        background: rgba(212, 146, 10, .09);
-        top: -130px;
-        right: -90px;
+    .ab-cap-card:hover {
+        background: var(--bg3)
     }
 
-    .ab-g2 {
-        width: 300px;
-        height: 300px;
-        background: rgba(107, 122, 85, .18);
-        bottom: 8%;
-        left: -70px;
+    .ab-cap-card:hover::after {
+        transform: scaleY(1)
     }
 
-    .ab-hero-bg {
+    .ab-cap-idx {
+        font-family: var(--fh);
+        font-size: 48px;
+        font-weight: 800;
+        color: var(--w04);
+        line-height: 1;
+        margin-bottom: 20px;
+    }
+
+    .ab-cap-title {
+        font-family: var(--fh);
+        font-size: 22px;
+        font-weight: 700;
+        color: var(--w);
+        margin-bottom: 14px;
+        transition: color .2s;
+    }
+
+    .ab-cap-card:hover .ab-cap-title {
+        color: var(--o)
+    }
+
+    .ab-cap-desc {
+        font-size: 13px;
+        color: var(--w20);
+        line-height: 1.8
+    }
+
+    /* ── NUMBERS FULL-BLEED ── */
+    .ab-nums {
+        background: var(--o);
+        padding: 80px var(--px);
+        overflow: hidden;
+        position: relative;
+    }
+
+    .ab-nums-ghost {
         position: absolute;
         top: 50%;
         left: 50%;
         transform: translate(-50%, -50%);
-        font-family: var(--f-d);
-        font-size: clamp(100px, 20vw, 300px);
-        letter-spacing: .02em;
-        line-height: 1;
+        font-family: var(--fh);
+        font-size: clamp(100px, 20vw, 280px);
+        font-weight: 800;
+        letter-spacing: -.05em;
         color: transparent;
-        -webkit-text-stroke: 1.5px rgba(242, 234, 216, .04);
+        -webkit-text-stroke: 1px rgba(255, 255, 255, .08);
         white-space: nowrap;
         pointer-events: none;
         user-select: none;
-        z-index: 0;
     }
 
-    .ab-hero-content {
+    .ab-nums-grid {
         position: relative;
-        z-index: 2;
-        max-width: var(--max);
-    }
-
-    .ab-h1 {
-        font-family: var(--f-d);
-        font-size: clamp(88px, 14vw, 210px);
-        line-height: .82;
-        letter-spacing: .02em;
-        color: var(--cream);
-        margin-bottom: 22px;
-    }
-
-    .ab-h1 span {
-        color: transparent;
-        -webkit-text-stroke: 2px rgba(242, 234, 216, .5);
-    }
-
-    .ab-hero-sub {
-        font-family: var(--f-c);
-        font-size: 13px;
-        font-weight: 700;
-        letter-spacing: .22em;
-        text-transform: uppercase;
-        color: rgba(242, 234, 216, .36);
-        max-width: 520px;
-        line-height: 1.8;
-    }
-
-    /* STATS STRIP */
-    .ab-strip {
-        background: var(--ink);
-        border-top: 2px solid var(--amber);
-    }
-
-    .ab-strip-inner {
+        z-index: 1;
         max-width: var(--max);
         margin: 0 auto;
         display: grid;
         grid-template-columns: repeat(4, 1fr);
+        gap: 2px;
     }
 
-    .ab-strip-cell {
-        padding: 28px var(--px);
-        border-right: 1px solid rgba(242, 234, 216, .07);
+    .ab-num-cell {
+        padding: 32px;
+        background: rgba(0, 0, 0, .14);
         text-align: center;
+        cursor: default;
+        transition: background .2s
     }
 
-    .ab-strip-cell:last-child {
-        border-right: none;
+    .ab-num-cell:hover {
+        background: rgba(0, 0, 0, .22)
     }
 
-    .ab-strip-n {
-        font-family: var(--f-d);
-        font-size: clamp(32px, 4vw, 52px);
+    .ab-num-n {
+        font-family: var(--fh);
+        font-size: clamp(48px, 7vw, 80px);
+        font-weight: 800;
+        letter-spacing: -.04em;
+        color: #fff;
+        display: block;
         line-height: 1;
-        color: var(--amber);
-        letter-spacing: .02em;
     }
 
-    .ab-strip-l {
-        font-family: var(--f-c);
-        font-size: 9px;
-        font-weight: 700;
-        letter-spacing: .22em;
+    .ab-num-l {
+        font-size: 10px;
+        font-weight: 600;
+        letter-spacing: .16em;
         text-transform: uppercase;
-        color: rgba(242, 234, 216, .3);
-        margin-top: 5px;
+        color: rgba(255, 255, 255, .6);
+        margin-top: 8px
     }
 
-    /* BODY */
-    .ab-body {
-        background: var(--cream);
-        padding: var(--sec-py) var(--px);
-    }
-
-    .ab-body-wrap {
-        max-width: var(--max);
-        margin: 0 auto;
-    }
-
-    .ab-grid {
-        display: grid;
-        grid-template-columns: 1fr 1.1fr;
-        gap: 80px;
-        align-items: flex-start;
-    }
-
-    .ab-title {
-        font-family: var(--f-d);
-        font-size: clamp(44px, 7vw, 96px);
-        line-height: .88;
-        letter-spacing: .02em;
-        color: var(--ink);
-    }
-
-    .ab-title span {
-        color: var(--olive);
-    }
-
-    .ab-subtitle {
-        font-family: var(--f-s);
-        font-style: italic;
-        font-size: 15px;
-        color: var(--muted);
-        max-width: 300px;
-        line-height: 1.82;
-        margin-top: 18px;
-    }
-
-    .ab-content p {
-        font-size: 15px;
-        line-height: 1.9;
-        color: var(--muted);
-        margin-bottom: 24px;
-    }
-
-    .ab-quote {
-        border-left: 4px solid var(--amber);
-        padding: 22px 26px;
-        margin: 34px 0;
-        background: rgba(212, 146, 10, .04);
-    }
-
-    .ab-quote p {
-        font-family: var(--f-s);
-        font-style: italic;
-        font-size: 20px;
-        color: var(--ink);
-        line-height: 1.7;
-        margin: 0;
-    }
-
-    /* VALUES */
+    /* ── VALUES ── */
     .ab-values {
-        background: var(--ink);
-        padding: var(--sec-py) var(--px);
+        background: var(--bg1);
+        border-top: 1px solid var(--border);
+        padding: var(--sec) var(--px);
     }
 
-    .ab-values-wrap {
+    .ab-values-inner {
         max-width: var(--max);
-        margin: 0 auto;
+        margin: 0 auto
     }
 
-    .ab-values-head {
-        margin-bottom: var(--s14);
+    .ab-values-h {
+        font-family: var(--fh);
+        font-size: clamp(48px, 7vw, 96px);
+        font-weight: 800;
+        letter-spacing: -.04em;
+        line-height: .9;
+        color: var(--w);
+        margin-bottom: 56px;
     }
 
-    .ab-values-head h2 {
-        font-family: var(--f-d);
-        font-size: clamp(44px, 7vw, 96px);
-        line-height: .88;
-        color: var(--cream);
+    .ab-values-h em {
+        font-style: normal;
+        color: var(--o)
     }
 
-    .ab-values-head h2 span {
-        color: var(--amber);
+    .ab-values-list {
+        border: 1px solid var(--border);
+        overflow: hidden
     }
 
-    .ab-values-grid {
+    .ab-val-row {
         display: grid;
-        grid-template-columns: repeat(3, 1fr);
-        gap: 3px;
-        border: 2px solid var(--cream);
+        grid-template-columns: 80px 1fr 1fr;
+        border-top: 1px solid var(--border);
+        min-height: 120px;
+        transition: background .2s;
+        cursor: default;
+        align-items: center;
     }
 
-    .ab-value {
-        background: var(--ink-2);
-        padding: 40px 32px;
+    .ab-val-row:first-child {
+        border-top: none
     }
 
-    .ab-value-num {
-        font-family: var(--f-d);
-        font-size: 46px;
-        color: rgba(242, 234, 216, .08);
-        margin-bottom: 12px;
+    .ab-val-row:hover {
+        background: var(--bg2)
     }
 
-    .ab-value-title {
-        font-family: var(--f-d);
-        font-size: 28px;
-        color: var(--cream);
-        margin-bottom: 12px;
+    .ab-val-row:hover .ab-val-n {
+        color: var(--o)
     }
 
-    .ab-value-desc {
-        font-size: 14px;
-        line-height: 1.8;
-        color: rgba(242, 234, 216, .38);
+    .ab-val-row:hover .ab-val-title {
+        color: var(--o)
     }
 
-    /* CTA */
+    .ab-val-n {
+        font-family: var(--fh);
+        font-size: clamp(32px, 4vw, 52px);
+        font-weight: 800;
+        letter-spacing: -.04em;
+        color: var(--w08);
+        padding: 0 0 0 32px;
+        border-right: 1px solid var(--border);
+        height: 100%;
+        display: flex;
+        align-items: center;
+        transition: color .3s;
+    }
+
+    .ab-val-title {
+        font-family: var(--fh);
+        font-size: clamp(22px, 2.5vw, 32px);
+        font-weight: 700;
+        color: var(--w);
+        padding: 0 32px;
+        letter-spacing: -.02em;
+        transition: color .2s;
+    }
+
+    .ab-val-desc {
+        font-size: 13px;
+        color: var(--w20);
+        line-height: 1.75;
+        padding-right: 32px
+    }
+
+    /* ── CTA ── */
     .ab-cta {
-        background: var(--amber);
-        padding: var(--s16) var(--px);
+        background: var(--bg);
+        padding: var(--sec) var(--px);
+        border-top: 1px solid var(--border);
         text-align: center;
+        position: relative;
+        overflow: hidden;
     }
 
-    .ab-cta h2 {
-        font-family: var(--f-d);
-        font-size: clamp(40px, 6vw, 84px);
+    .ab-cta-glow {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        width: 500px;
+        height: 300px;
+        pointer-events: none;
+        background: radial-gradient(ellipse, rgba(255, 77, 0, .1) 0%, transparent 65%);
+        filter: blur(70px);
+        z-index: 0;
+    }
+
+    .ab-cta-inner {
+        position: relative;
+        z-index: 1;
+        max-width: 900px;
+        margin: 0 auto
+    }
+
+    .ab-cta-h {
+        font-family: var(--fh);
+        font-size: clamp(52px, 9vw, 128px);
+        font-weight: 800;
+        letter-spacing: -.05em;
         line-height: .88;
-        color: var(--ink);
-        margin-bottom: var(--s10);
+        color: var(--w);
+        margin-bottom: 40px;
     }
 
-    .ab-cta h2 span {
-        color: var(--cream);
+    .ab-cta-h span {
+        color: var(--o)
     }
 
     /* RESPONSIVE */
     @media(max-width:1024px) {
-
-        .ab-grid {
-            grid-template-columns: 1fr;
-            gap: 48px;
+        .ab-open-bottom {
+            grid-template-columns: 1fr
         }
 
-        .ab-values-grid {
-            grid-template-columns: 1fr 1fr;
+        .ab-open-bl {
+            border-right: none;
+            border-bottom: 1px solid var(--border)
+        }
+
+        .ab-open-br {
+            padding-left: 0
+        }
+
+        .ab-caps-top {
+            grid-template-columns: 1fr
+        }
+
+        .ab-caps-grid {
+            grid-template-columns: 1fr 1fr
+        }
+
+        .ab-nums-grid {
+            grid-template-columns: 1fr 1fr
+        }
+
+        .ab-val-row {
+            grid-template-columns: 64px 1fr
+        }
+
+        .ab-val-desc {
+            display: none
+        }
+
+        .ab-manifest-row {
+            grid-template-columns: 120px 1fr;
+            gap: 32px
         }
     }
 
     @media(max-width:768px) {
-
-        .ab-hero {
-            padding-top: 120px;
-            min-height: auto;
+        .ab-big-h {
+            font-size: clamp(56px, 13vw, 100px)
         }
 
-        .ab-strip-inner {
-            grid-template-columns: 1fr 1fr;
+        .ab-caps-grid {
+            grid-template-columns: 1fr
         }
 
-        .ab-strip-cell {
-            border-bottom: 1px solid rgba(242, 234, 216, .07);
-        }
-
-        .ab-values-grid {
-            grid-template-columns: 1fr;
-        }
-
-        .ab-title {
-            font-size: clamp(44px, 10vw, 72px);
-        }
-
-        .ab-cta h2 {
-            font-size: clamp(54px, 14vw, 100px);
+        .ab-val-n {
+            font-size: clamp(28px, 6vw, 44px)
         }
     }
 
-    @media(max-width:600px) {
-
-        .ab-hero {
-            padding: 95px 18px 42px;
+    @media(max-width:480px) {
+        .ab-nums-grid {
+            grid-template-columns: 1fr
         }
 
-        .ab-h1 {
-            font-size: 52px;
-            line-height: .9;
+        .ab-manifest-row {
+            grid-template-columns: 1fr
         }
 
-        .ab-hero-sub {
-            font-size: 11px;
-            letter-spacing: .16em;
-        }
-
-        /* .ab-strip-inner {
-            grid-template-columns: 1fr;
-        } */
-
-        .ab-strip-cell {
-            border-right: none;
-        }
-
-        .ab-value {
-            padding: 34px 22px;
+        .ab-manifest-label {
+            font-size: clamp(36px, 8vw, 52px);
+            margin-bottom: 12px
         }
     }
 </style>
 
-<!-- HERO -->
-<section class="ab-hero" aria-labelledby="ab-h1">
+<!-- OPEN ─────────────────────────────────────────────── -->
+<section class="ab-open" aria-labelledby="ab-main-h">
+    <div class="ab-open-grid" aria-hidden="true"></div>
+    <div class="ab-open-glow" aria-hidden="true"></div>
 
-    <div class="ab-hero-glow ab-g1"></div>
-    <div class="ab-hero-glow ab-g2"></div>
-
-    <div class="ab-hero-bg">ABOUT</div>
-
-    <div class="ab-hero-content">
-
-        <p class="s-lbl rv" style="color:rgba(242,234,216,.36);margin-bottom:20px">
-            About Us
-        </p>
-
-        <h1 id="ab-h1" class="ab-h1 rv d1">
-            WHO<br><span>WE ARE</span>
+    <div class="ab-open-body">
+        <h1 id="ab-main-h" class="ab-big-h">
+            <span class="blk">Culture</span>
+            <span class="blk orange">Is Our</span>
+            <span class="blk stroke">Business</span>
         </h1>
-
-        <p class="ab-hero-sub rv d2">
-            INDIA'S MOST TRUSTED CINEMA MARKETING STUDIO — CRAFTING CULTURAL CAMPAIGNS THAT DRIVE REAL IMPACT.
-        </p>
-
+        <div class="ab-open-bottom">
+            <div class="ab-open-bl">
+                <p class="lbl" style="margin-bottom:14px">Who we are</p>
+                <p class="ab-open-sub">India's most internet-native creative agency. We live on the timeline, think in
+                    memes, and execute at cinematic scale.</p>
+            </div>
+            <div class="ab-open-br">
+                <p style="font-size:14px;color:var(--w20);line-height:1.8;margin-bottom:24px">Founded on a simple
+                    belief: internet culture is the most powerful force in modern marketing.</p>
+                <a href="<?= base_url('contact') ?>" class="btn-os">Let's build together →</a>
+            </div>
+        </div>
     </div>
-
 </section>
 
-<!-- STATS -->
-<div class="ab-strip">
-    <div class="ab-strip-inner">
+<!-- MANIFESTO ──────────────────────────────────────────── -->
+<section class="ab-manifest" aria-labelledby="ab-manif-h">
+    <div class="ab-manifest-inner">
+        <p class="lbl rv" style="margin-bottom:48px">Our beliefs</p>
 
-        <?php foreach ([['300+', 'Campaigns'], ['32%', 'OTT Releases'], ['12M+', 'People Reached'], ['150+', 'Films Promoted']] as $i => $s): ?>
-
-            <div class="ab-strip-cell rv d<?= $i + 1 ?>">
-                <div class="ab-strip-n"><?= $s[0] ?></div>
-                <div class="ab-strip-l"><?= $s[1] ?></div>
+        <?php $beliefs = [
+            ['01', 'We Think In Memes', 'Internet culture is not a channel — it\'s a language. We\'re fluent.'],
+            ['02', 'Speed Is A Creative Tool', 'The window for cultural relevance is measured in hours. We move fast without cutting corners.'],
+            ['03', 'Authenticity Beats Volume', 'One creator who genuinely loves your brand outperforms 100 who don\'t. Every single time.'],
+            ['04', 'Cinema Sets The Standard', 'Everything we produce — from a reel to a nationwide campaign — deserves cinematic care.'],
+            ['05', 'Data Informs, Culture Decides', 'Numbers tell us what happened. Culture tells us what will.'],
+        ];
+        foreach ($beliefs as $i => $b): ?>
+            <div class="ab-manifest-row rv d<?= ($i % 3) + 1 ?>">
+                <div class="ab-manifest-label"><?= $b[0] ?></div>
+                <div class="ab-manifest-content">
+                    <h2 class="ab-manifest-title"><?= htmlspecialchars($b[1]) ?></h2>
+                    <p class="ab-manifest-body"><?= htmlspecialchars($b[2]) ?></p>
+                </div>
             </div>
-
         <?php endforeach; ?>
-
     </div>
-</div>
+</section>
 
-<!-- BODY -->
-<section class="ab-body">
-
-    <div class="ab-body-wrap">
-
-        <div class="ab-grid">
-
+<!-- CAPABILITIES ─────────────────────────────────────── -->
+<section class="ab-caps" aria-labelledby="ab-caps-h">
+    <div class="ab-caps-inner">
+        <div class="ab-caps-top">
             <div>
-
-                <p class="s-lbl" style="color:var(--olive);margin-bottom:14px">
-                    Our Story
-                </p>
-
-                <h2 class="ab-title">
-                    CINEMA<br><span>MEETS CULTURE</span>
-                </h2>
-
-                <p class="ab-subtitle">
-                    We create campaigns that blend entertainment, internet culture, and audience psychology into
-                    unforgettable digital moments.
-                </p>
-
+                <p class="lbl rv" style="margin-bottom:16px">Our services</p>
+                <h2 id="ab-caps-h" class="ab-caps-h rv d1">What We<br><em>Actually Do</em></h2>
             </div>
-
-            <div class="ab-content">
-
-                <p>
-                    The Cine Caffe is India's premier cinema marketing studio, crafting authentic connections between
-                    brands and audiences to amplify reach, drive engagement, and spark meaningful cultural
-                    conversations.
-                </p>
-
-                <div class="ab-quote">
-                    <p>
-                        “We drive high-impact influencer and meme campaigns for brands and production houses — powering
-                        buzz for nearly 32% of OTT releases.”
-                    </p>
-                </div>
-
-                <p>
-                    Our ecosystem spans entertainment, culture, and commerce — from Bollywood to OTT, from nano creators
-                    to celebrity partnerships.
-                </p>
-
-                <p>
-                    <?= htmlspecialchars($settings['about_text'] ?? 'From strategy to execution, we handle everything — so you can focus on what matters most.') ?>
-                </p>
-
-            </div>
-
+            <p class="ab-caps-body rv d2">Eight disciplines. One vision: making culture move for brands and films across
+                India.</p>
         </div>
-
-    </div>
-
-</section>
-
-<!-- VALUES -->
-<section class="ab-values">
-
-    <div class="ab-values-wrap">
-
-        <div class="ab-values-head">
-
-            <p class="s-lbl" style="color:rgba(242,234,216,.3);margin-bottom:16px">
-                Our Values
-            </p>
-
-            <h2>
-                WHAT WE<br><span>STAND FOR</span>
-            </h2>
-
-        </div>
-
-        <div class="ab-values-grid">
-
-            <?php
-            $values = [
-                ['01', 'Authenticity', 'Every campaign feels native, genuine, and culturally relevant.'],
-                ['02', 'Speed', 'Rapid execution without compromising creative quality.'],
-                ['03', 'Impact', 'We create conversations, not just impressions.'],
-                ['04', 'Culture', 'Deep understanding of internet and entertainment culture.'],
-                ['05', 'Scale', 'From niche launches to nationwide campaigns.'],
-                ['06', 'Results', 'Everything we do is driven by measurable impact.']
-            ];
-            ?>
-
-            <?php foreach ($values as $v): ?>
-
-                <div class="ab-value">
-
-                    <div class="ab-value-num"><?= $v[0] ?></div>
-
-                    <h3 class="ab-value-title"><?= $v[1] ?></h3>
-
-                    <p class="ab-value-desc"><?= $v[2] ?></p>
-
+        <div class="ab-caps-grid rv sc">
+            <?php foreach (
+                [
+                    ['01', 'Influencer Marketing', 'Precision-matched campaigns from nano to celebrity tier.'],
+                    ['02', 'Meme Marketing', 'Native viral content engineered to spread organically.'],
+                    ['03', 'Film Promotions', 'End-to-end buzz creation for Bollywood and OTT.'],
+                    ['04', 'Video Production', 'OTT-grade films, reels, and brand content.'],
+                    ['05', 'Film Screenings', 'Influencer events with authentic pre-release energy.'],
+                    ['06', 'On-Ground Activations', 'Physical brand experiences anchored in digital culture.'],
+                    ['07', 'LinkedIn & X Strategy', 'Platform-native authority for studios and executives.'],
+                    ['08', 'Celebrity Endorsements', 'Star partnerships that unlock loyal, massive audiences.'],
+                    ['09', 'OTT Strategy', 'Data-driven streaming launch campaigns at scale.'],
+                ] as $i => $c
+            ): ?>
+                <div class="ab-cap-card rv d<?= ($i % 3) + 1 ?>">
+                    <div class="ab-cap-idx"><?= $c[0] ?></div>
+                    <h3 class="ab-cap-title"><?= htmlspecialchars($c[1]) ?></h3>
+                    <p class="ab-cap-desc"><?= htmlspecialchars($c[2]) ?></p>
                 </div>
-
             <?php endforeach; ?>
-
         </div>
-
     </div>
-
 </section>
 
-<!-- CTA -->
-<section class="ab-cta">
-
-    <p class="s-lbl rv" style="color:rgba(26,26,16,.5);justify-content:center;margin:0 auto 18px">
-        Ready To Collaborate?
-    </p>
-
-    <h2 class="rv d1">
-        LET'S BUILD<br><span>YOUR CAMPAIGN</span>
-    </h2>
-
-    <div style="display:flex;gap:14px;justify-content:center;flex-wrap:wrap;" class="rv d2">
-
-        <a href="<?= base_url('contact') ?>" class="btn btn-ink btn-lg">
-            Let's Talk
-        </a>
-
-        <a href="<?= base_url('work') ?>" class="btn btn-ol-dk">
-            View Work
-        </a>
-
+<!-- NUMBERS ──────────────────────────────────────────── -->
+<section class="ab-nums" aria-label="Stats">
+    <div class="ab-nums-ghost" aria-hidden="true">NUMBERS</div>
+    <div class="ab-nums-grid rv">
+        <?php foreach (
+            [
+                [$settings['stat_campaigns'] ?? '300', '+', 'Campaigns'],
+                ['32', '%', 'OTT Market Share'],
+                [$settings['stat_reach'] ?? '12', 'M+', 'People Reached'],
+                ['150', '+', 'Films Promoted'],
+            ] as $i => $n
+        ): ?>
+            <div class="ab-num-cell rv d<?= $i + 1 ?>">
+                <span class="ab-num-n"><?= htmlspecialchars($n[0] . $n[1]) ?></span>
+                <span class="ab-num-l"><?= htmlspecialchars($n[2]) ?></span>
+            </div>
+        <?php endforeach; ?>
     </div>
+</section>
 
+<!-- VALUES ───────────────────────────────────────────── -->
+<section class="ab-values" aria-labelledby="ab-val-h">
+    <div class="ab-values-inner">
+        <p class="lbl rv" style="margin-bottom:20px">What we stand for</p>
+        <h2 id="ab-val-h" class="ab-values-h rv d1">Our <em>Values</em></h2>
+        <div class="ab-values-list rv">
+            <?php foreach (
+                [
+                    ['01', 'Authenticity', 'Every campaign feels native, genuine, and culturally embedded.'],
+                    ['02', 'Speed', 'Rapid execution without compromising on creative quality. Ever.'],
+                    ['03', 'Impact', 'We create lasting conversations, not vanishing impressions.'],
+                    ['04', 'Culture', 'Deep fluency in internet culture, meme economics, and social behavior.'],
+                    ['05', 'Scale', 'From niche product launches to nationwide cultural moments.'],
+                    ['06', 'Results', 'Everything we do is driven by measurable, real-world outcomes.'],
+                ] as $i => $v
+            ): ?>
+                <div class="ab-val-row">
+                    <div class="ab-val-n"><?= $v[0] ?></div>
+                    <div class="ab-val-title"><?= htmlspecialchars($v[1]) ?></div>
+                    <div class="ab-val-desc"><?= htmlspecialchars($v[2]) ?></div>
+                </div>
+            <?php endforeach; ?>
+        </div>
+    </div>
+</section>
+
+<!-- CTA ─────────────────────────────────────────────── -->
+<section class="ab-cta" aria-label="CTA">
+    <div class="ab-cta-glow" aria-hidden="true"></div>
+    <div class="ab-cta-inner">
+        <p class="lbl rv" style="justify-content:center;margin:0 auto 20px">Work with us</p>
+        <h2 class="ab-cta-h rv d1">Build Your<br><span>Campaign Now</span></h2>
+        <div style="display:flex;gap:14px;justify-content:center;flex-wrap:wrap" class="rv d2">
+            <a href="<?= base_url('contact') ?>" class="btn-os btn-os-lg mag-wrap" data-mag>Start a campaign →</a>
+            <a href="<?= base_url('work') ?>" class="btn-ghost">See our work</a>
+        </div>
+    </div>
 </section>

@@ -6,7 +6,7 @@
 </div>
 
 <?php if ($flash): ?>
-<div class="flash-msg"><i class="fa fa-circle-check"></i> <?= htmlspecialchars($flash) ?></div>
+    <div class="flash-msg"><i class="fa fa-circle-check"></i> <?= htmlspecialchars($flash) ?></div>
 <?php endif; ?>
 
 <?php echo form_open_multipart('admin/settings/update'); ?>
@@ -28,12 +28,12 @@
         <div>
             <label>Website Logo</label>
             <?php if (!empty($settings['site_logo']['setting_value'])): ?>
-            <div style="margin-bottom:10px;">
-                <img src="<?= base_url('assets/images/uploads/' . $settings['site_logo']['setting_value']) ?>"
-                    alt="Logo"
-                    style="max-height:56px;background:#111;padding:8px;border-radius:8px;object-fit:contain;">
-                <p style="font-size:11px;color:var(--muted);margin-top:4px;">Upload to replace</p>
-            </div>
+                <div style="margin-bottom:10px;">
+                    <img src="<?= base_url('assets/images/uploads/' . $settings['site_logo']['setting_value']) ?>"
+                        alt="Logo"
+                        style="max-height:56px;background:#111;padding:8px;border-radius:8px;object-fit:contain;">
+                    <p style="font-size:11px;color:var(--muted);margin-top:4px;">Upload to replace</p>
+                </div>
             <?php endif; ?>
             <input type="file" name="site_logo" accept="image/*">
         </div>
