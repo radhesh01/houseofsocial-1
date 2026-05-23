@@ -1,67 +1,65 @@
 <?php defined('BASEPATH') or exit('No direct script access allowed'); ?>
 <style>
-/* ============================================================
-   HOUSEOFSOCIAL — HOME v3
-   HERO: centred cinematic + intentional floating UI
-   SERVICES: featured-first asymmetric layout
-   PROOF: full-bleed metric-dominant section
-============================================================ */
+/* ================================================================
+   HOME PAGE — HouseOfSocial
+   Sections: Hero → Ticker → Brands → Statement → Services
+           → Work → Proof → Testimonials → CTA
+================================================================ */
 
 /* ── HERO ── */
-.hh {
+.h-hero {
     position: relative;
     min-height: 100svh;
     overflow: hidden;
-    background: var(--bg);
+    background: var(--s0);
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
 }
 
-/* atmospheric background layers */
-.hh-bg {
+.h-hero-bg {
     position: absolute;
     inset: 0;
     pointer-events: none;
     z-index: 0;
     background:
-        radial-gradient(ellipse 55% 50% at 50% 35%, rgba(255, 77, 0, .07) 0%, transparent 65%),
-        radial-gradient(ellipse 30% 40% at 20% 70%, rgba(255, 225, 53, .035) 0%, transparent 60%),
-        radial-gradient(ellipse 25% 35% at 80% 20%, rgba(255, 77, 0, .05) 0%, transparent 60%);
+        radial-gradient(ellipse 60% 55% at 50% 30%, rgba(255, 60, 0, .07) 0%, transparent 65%),
+        radial-gradient(ellipse 35% 45% at 15% 75%, rgba(200, 241, 53, .025) 0%, transparent 60%),
+        radial-gradient(ellipse 28% 38% at 85% 18%, rgba(255, 60, 0, .04) 0%, transparent 60%);
 }
 
-.hh-grid {
+.h-hero-grid {
     position: absolute;
     inset: 0;
     pointer-events: none;
     z-index: 0;
     background-image:
-        linear-gradient(rgba(245, 242, 238, .016) 1px, transparent 1px),
-        linear-gradient(90deg, rgba(245, 242, 238, .016) 1px, transparent 1px);
-    background-size: 72px 72px;
-    -webkit-mask-image: radial-gradient(ellipse 85% 90% at 50% 50%, #000 40%, transparent 100%);
-    mask-image: radial-gradient(ellipse 85% 90% at 50% 50%, #000 40%, transparent 100%);
+        linear-gradient(rgba(244, 241, 236, .015) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(244, 241, 236, .015) 1px, transparent 1px);
+    background-size: 80px 80px;
+    -webkit-mask-image: radial-gradient(ellipse 90% 90% at 50% 50%, #000 30%, transparent 100%);
+    mask-image: radial-gradient(ellipse 90% 90% at 50% 50%, #000 30%, transparent 100%);
 }
 
-/* subtle scanline at very top */
-.hh-topline {
+/* fine top line */
+.h-hero-topline {
     position: absolute;
     top: 0;
     left: 0;
     right: 0;
     height: 1px;
-    background: linear-gradient(90deg, transparent, var(--o), transparent);
     z-index: 2;
-    opacity: .4;
+    background: linear-gradient(90deg, transparent, var(--flame), transparent);
+    opacity: .35;
 }
 
-/* ── CENTER COPY ── */
-.hh-center {
+/* Center content */
+.h-hero-center {
     position: relative;
     z-index: 3;
     text-align: center;
-    padding: calc(var(--nav)+20px) clamp(16px, 6vw, 120px) 0;
+    padding: calc(var(--navH) + 24px) var(--px) 0;
     max-width: 1100px;
     width: 100%;
     display: flex;
@@ -69,91 +67,80 @@
     align-items: center;
 }
 
-.hh-eyebrow {
+.h-eyebrow {
     display: inline-flex;
     align-items: center;
     gap: 10px;
     font-size: 11px;
     font-weight: 600;
-    letter-spacing: .20em;
+    letter-spacing: .22em;
     text-transform: uppercase;
-    color: var(--o);
-    margin-bottom: 36px;
+    color: var(--flame);
+    margin-bottom: 32px;
     opacity: 0;
-    animation: aUp .6s var(--ease) .1s forwards;
+    animation: heroUp .6s var(--ease) .1s forwards;
 }
 
-.hh-eydot {
+.h-eyebrow-dot {
     width: 5px;
     height: 5px;
     border-radius: 50%;
-    background: var(--o);
-    box-shadow: 0 0 8px var(--o);
-    animation: pdot 2s ease-in-out infinite
+    background: var(--flame);
+    box-shadow: 0 0 8px var(--flame);
+    animation: blink 2.2s ease-in-out infinite;
 }
 
-@keyframes pdot {
-
-    0%,
-    100% {
-        box-shadow: 0 0 0 0 rgba(255, 77, 0, .6)
-    }
-
-    50% {
-        box-shadow: 0 0 0 6px rgba(255, 77, 0, 0)
-    }
-}
-
-.hh-h {
-    font-family: var(--fh);
-    font-size: clamp(64px, 10.5vw, 168px);
-    font-weight: 800;
-    line-height: .84;
-    letter-spacing: -.05em;
-    color: var(--w);
+.h-headline {
+    font-family: var(--fDisplay);
+    font-size: clamp(56px, 9.5vw, 152px);
+    font-weight: 700;
+    line-height: .86;
+    letter-spacing: -.04em;
+    color: var(--paper);
     opacity: 0;
-    animation: aUp 1s var(--ease) .25s forwards;
+    animation: heroUp 1.1s var(--ease) .22s forwards;
 }
 
-.hh-h .row-o {
-    color: var(--o);
-    display: block
+.h-headline .row-accent {
+    color: var(--flame);
+    display: block;
 }
 
-.hh-h .row-s {
+.h-headline .row-stroke {
     display: block;
     color: transparent;
-    -webkit-text-stroke: 1.5px rgba(245, 242, 238, .2);
+    -webkit-text-stroke: 1.5px rgba(244, 241, 236, .18);
 }
 
-.hh-h .row-w {
-    display: block
+.h-headline .row-lime {
+    color: var(--lime);
+    display: block;
 }
 
-.hh-sub {
+.h-sub {
     font-size: clamp(15px, 1.5vw, 18px);
-    color: var(--w50);
-    line-height: 1.75;
+    color: var(--ghost4);
+    line-height: 1.78;
     max-width: 480px;
     margin-top: 28px;
     opacity: 0;
-    animation: aUp .7s var(--ease) .6s forwards;
+    animation: heroUp .8s var(--ease) .55s forwards;
 }
 
-.hh-btns {
+.h-btns {
     display: flex;
-    gap: 12px;
+    gap: 14px;
     flex-wrap: wrap;
     justify-content: center;
     margin-top: 40px;
     opacity: 0;
-    animation: aUp .6s var(--ease) .8s forwards;
+    animation: heroUp .7s var(--ease) .75s forwards;
 }
 
-/* ── SCROLL INDICATOR ── */
-.hh-scroll {
+/* Scroll indicator */
+.h-scroll-cue {
     position: absolute;
-    bottom: 32px;
+    bottom: 28px;
     left: 50%;
     transform: translateX(-50%);
     z-index: 3;
@@ -162,170 +149,153 @@
     align-items: center;
     gap: 8px;
     opacity: 0;
-    animation: aUp .6s var(--ease) 1.3s forwards;
+    animation: heroUp .6s var(--ease) 1.2s forwards;
 }
 
-.hh-scroll-line {
+.h-scroll-line {
     width: 1px;
-    height: 48px;
-    background: linear-gradient(var(--o), transparent);
-    animation: scroll-pulse 2s ease-in-out infinite;
+    height: 52px;
+    background: linear-gradient(var(--flame), transparent);
+    animation: scrollPulse 2.2s ease-in-out infinite;
 }
 
-@keyframes scroll-pulse {
+@keyframes scrollPulse {
 
     0%,
     100% {
-        height: 48px;
+        height: 52px;
         opacity: 1
     }
 
     50% {
         height: 28px;
-        opacity: .4
+        opacity: .3
     }
 }
 
-.hh-scroll-txt {
+.h-scroll-txt {
     font-size: 9px;
     font-weight: 700;
-    letter-spacing: .20em;
+    letter-spacing: .22em;
     text-transform: uppercase;
-    color: var(--w20);
+    color: var(--ghost3);
 }
 
-/* ── FLOATING OBJECTS: LEFT ── */
-.hh-float-l {
+/* Floating panels — hidden below 1280px */
+.h-float-l,
+.h-float-r {
     position: absolute;
-    left: clamp(12px, 3.5vw, 64px);
-    top: 50%;
-    transform: translateY(-45%);
     z-index: 3;
     display: flex;
     flex-direction: column;
     gap: 10px;
     opacity: 0;
-    animation: aUp .9s var(--ease) .9s forwards;
+    animation: heroUp 1s var(--ease) .9s forwards;
 }
 
-/* Metric card — left top */
-.fl-metric {
-    background: rgba(15, 15, 15, .88);
-    border: 1px solid rgba(255, 77, 0, .25);
-    backdrop-filter: blur(20px);
+.h-float-l {
+    left: clamp(14px, 3vw, 60px);
+    top: 50%;
+    transform: translateY(-42%);
+}
+
+.h-float-r {
+    right: clamp(14px, 3vw, 60px);
+    top: 50%;
+    transform: translateY(-42%);
+}
+
+.fl-card {
+    background: rgba(13, 13, 19, .88);
+    border: 1px solid var(--b2);
+    backdrop-filter: blur(18px);
     padding: 18px 20px;
-    animation: flt-a 7s ease-in-out 1s infinite;
     min-width: 148px;
 }
 
-.fl-m-label {
+.fl-card.float-a {
+    animation: floatA 7s ease-in-out 1s infinite;
+}
+
+.fl-card.float-b {
+    animation: floatB 9s ease-in-out 2s infinite;
+}
+
+.fl-label {
     font-size: 9px;
     font-weight: 700;
-    letter-spacing: .18em;
+    letter-spacing: .2em;
     text-transform: uppercase;
-    color: var(--w20);
-    margin-bottom: 6px
+    color: var(--ghost3);
+    margin-bottom: 7px;
 }
 
-.fl-m-val {
-    font-family: var(--fh);
-    font-size: 32px;
-    font-weight: 800;
+.fl-val {
+    font-family: var(--fDisplay);
+    font-size: 30px;
+    font-weight: 700;
     letter-spacing: -.03em;
-    color: var(--o);
-    line-height: 1
+    color: var(--flame);
+    line-height: 1;
 }
 
-.fl-m-sub {
-    font-size: 10px;
-    color: var(--w20);
-    margin-top: 4px
+.fl-val.lime {
+    color: var(--lime);
 }
 
-/* bar chart mini */
+.fl-note {
+    font-size: 11px;
+    color: var(--ghost3);
+    margin-top: 5px;
+}
+
 .fl-bars {
     display: flex;
     align-items: flex-end;
     gap: 3px;
-    margin-top: 10px;
-    height: 28px
+    margin-top: 12px;
+    height: 28px;
 }
 
 .fl-bar {
     flex: 1;
     border-radius: 1px;
-    background: var(--o);
-    opacity: .25;
+    background: var(--flame);
+    opacity: .22;
     transition: opacity .3s;
 }
 
-.fl-bar:nth-child(4) {
-    opacity: .7
-}
-
 .fl-bar:nth-child(5) {
-    opacity: .9
+    opacity: .7;
 }
 
 .fl-bar:nth-child(6) {
     opacity: 1;
-    background: var(--o)
 }
 
-.fl-metric:hover .fl-bar {
-    opacity: .4
-}
-
-.fl-metric:hover .fl-bar:nth-child(5) {
-    opacity: .75
-}
-
-.fl-metric:hover .fl-bar:nth-child(6) {
-    opacity: 1
-}
-
-/* process indicator */
-.fl-process {
-    background: rgba(10, 10, 10, .9);
-    border: 1px solid var(--border2);
-    backdrop-filter: blur(16px);
-    padding: 14px 18px;
-    animation: flt-b 9s ease-in-out 2s infinite;
-    min-width: 148px;
-}
-
-.fl-p-title {
-    font-size: 9px;
-    font-weight: 700;
-    letter-spacing: .18em;
-    text-transform: uppercase;
-    color: var(--w20);
-    margin-bottom: 10px
-}
-
-.fl-p-steps {
+.fl-steps {
     display: flex;
     flex-direction: column;
-    gap: 6px
+    gap: 7px;
 }
 
-.fl-p-step {
+.fl-step {
     display: flex;
     align-items: center;
-    gap: 8px;
+    gap: 9px;
     font-size: 11px;
-    color: var(--w30)
+    color: var(--ghost3);
 }
 
-.fl-p-step.done {
-    color: var(--w60)
+.fl-step.done {
+    color: var(--ghost5);
 }
 
 .fl-step-dot {
     width: 16px;
     height: 16px;
     border-radius: 50%;
-    border: 1px solid var(--border2);
+    border: 1px solid var(--b2);
     display: flex;
     align-items: center;
     justify-content: center;
@@ -333,51 +303,42 @@
     font-size: 8px;
 }
 
-.fl-p-step.done .fl-step-dot {
-    background: var(--o);
-    border-color: var(--o);
-    color: #fff
+.fl-step.done .fl-step-dot {
+    background: var(--flame);
+    border-color: var(--flame);
+    color: #fff;
 }
 
-.fl-p-step.active .fl-step-dot {
-    border-color: var(--o);
-    color: var(--o)
+.fl-step.active .fl-step-dot {
+    border-color: var(--lime);
+    color: var(--lime);
 }
 
-/* ── FLOATING OBJECTS: RIGHT ── */
-.hh-float-r {
-    position: absolute;
-    right: clamp(12px, 3.5vw, 64px);
-    top: 50%;
-    transform: translateY(-45%);
-    z-index: 3;
-    display: flex;
-    flex-direction: column;
-    gap: 3px;
-    opacity: 0;
-    animation: aUp .9s var(--ease) 1s forwards;
+.fr-stat-tower {
+    background: rgba(13, 13, 19, .85);
+    border: 1px solid var(--b1);
+    backdrop-filter: blur(16px);
 }
 
-/* stat tower */
 .fr-stat {
-    background: rgba(15, 15, 15, .85);
-    border: 1px solid var(--border);
-    backdrop-filter: blur(18px);
     padding: 18px 22px;
-    min-width: 140px;
-    transition: border-color .2s, background .2s;
+    min-width: 136px;
+    transition: background .2s;
     cursor: default;
 }
 
 .fr-stat:hover {
-    border-color: rgba(255, 77, 0, .35);
-    background: rgba(25, 25, 25, .9)
+    background: rgba(255, 60, 0, .04);
+}
+
+.fr-stat+.fr-stat {
+    border-top: 1px solid var(--b1);
 }
 
 .fr-stat-n {
-    font-family: var(--fh);
-    font-size: 30px;
-    font-weight: 800;
+    font-family: var(--fDisplay);
+    font-size: 28px;
+    font-weight: 700;
     letter-spacing: -.03em;
     line-height: 1;
 }
@@ -385,72 +346,20 @@
 .fr-stat-l {
     font-size: 9px;
     font-weight: 700;
-    letter-spacing: .16em;
+    letter-spacing: .18em;
     text-transform: uppercase;
-    color: var(--w20);
-    margin-top: 5px
+    color: var(--ghost3);
+    margin-top: 5px;
 }
 
-.fr-divider {
-    height: 1px;
-    background: var(--border)
-}
-
-/* rotating badge */
-.fr-badge {
-    position: relative;
-    width: 110px;
-    height: 110px;
-    align-self: center;
-    margin: 8px 0;
-    animation: flt-a 6s ease-in-out 1.5s infinite;
-}
-
-.fr-badge-ring {
-    width: 100%;
-    height: 100%;
-    border: 1px solid rgba(255, 77, 0, .3);
-    border-radius: 50%;
-    animation: spin-cw 20s linear infinite;
-}
-
-.fr-badge-inner {
-    position: absolute;
-    inset: 0;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    animation: spin-cw 20s linear infinite reverse;
-}
-
-.fr-badge-n {
-    font-family: var(--fh);
-    font-size: 24px;
-    font-weight: 800;
-    color: var(--o);
-    line-height: 1
-}
-
-.fr-badge-l {
-    font-size: 8px;
-    font-weight: 700;
-    letter-spacing: .14em;
-    text-transform: uppercase;
-    color: var(--w20);
-    margin-top: 3px;
-    text-align: center
-}
-
-/* live indicator bottom-right */
 .fr-live {
-    background: rgba(10, 10, 10, .9);
-    border: 1px solid var(--border);
-    padding: 10px 16px;
+    background: rgba(10, 10, 14, .9);
+    border: 1px solid var(--b1);
+    padding: 11px 16px;
     display: flex;
     align-items: center;
-    gap: 8px;
-    animation: flt-b 8s ease-in-out 3s infinite;
+    gap: 9px;
+    animation: floatA 6s ease-in-out 2s infinite;
 }
 
 .fr-live-dot {
@@ -459,51 +368,21 @@
     border-radius: 50%;
     background: #22c55e;
     box-shadow: 0 0 8px #22c55e;
-    animation: pdot 1.5s ease-in-out infinite
+    animation: blink 1.6s ease-in-out infinite;
 }
 
 .fr-live-txt {
     font-size: 10px;
     font-weight: 600;
-    letter-spacing: .10em;
+    letter-spacing: .12em;
     text-transform: uppercase;
-    color: var(--w30)
+    color: var(--ghost3);
 }
 
-@keyframes flt-a {
-
-    0%,
-    100% {
-        transform: translateY(0)
-    }
-
-    50% {
-        transform: translateY(-12px)
-    }
-}
-
-@keyframes flt-b {
-
-    0%,
-    100% {
-        transform: translateY(0)
-    }
-
-    50% {
-        transform: translateY(10px)
-    }
-}
-
-@keyframes spin-cw {
-    to {
-        transform: rotate(360deg)
-    }
-}
-
-@keyframes aUp {
+@keyframes heroUp {
     from {
         opacity: 0;
-        transform: translateY(28px)
+        transform: translateY(26px)
     }
 
     to {
@@ -512,64 +391,186 @@
     }
 }
 
-/* ── TICKER ── */
-.hh-ticker {
-    background: var(--o);
-    padding: 13px 0;
-    overflow: hidden
+@media (max-width:1279px) {
+
+    .h-float-l,
+    .h-float-r {
+        display: none;
+    }
 }
 
-.hh-ti {
-    font-family: var(--fh);
-    font-size: clamp(18px, 2.2vw, 26px);
+@media (max-width:640px) {
+    .h-btns {
+        flex-direction: column;
+        width: 100%;
+    }
+
+    .h-btns .btn-primary,
+    .h-btns .btn-outline {
+        width: 100%;
+        justify-content: center;
+    }
+}
+
+/* ── TICKER ── */
+.h-ticker {
+    background: var(--flame);
+    padding: 14px 0;
+    overflow: hidden;
+}
+
+.h-ticker-word {
+    font-family: var(--fDisplay);
+    font-size: clamp(16px, 2.2vw, 26px);
     font-weight: 700;
     color: #fff;
     white-space: nowrap;
-    padding: 0 26px;
-    display: inline-block
+    padding: 0 28px;
+    display: inline-block;
+    letter-spacing: .04em;
 }
 
-.hh-sep {
-    opacity: .4;
-    padding: 0 2px
+.h-ticker-sep {
+    opacity: .45;
+    padding: 0 2px;
 }
 
-/* ── BRANDS ── */
-.hh-brands {
-    background: var(--bg2);
-    border-bottom: 1px solid var(--border);
-    padding: 20px 0
+/* ── BRAND STRIP ── */
+.h-brands {
+    background: var(--s1);
+    border-bottom: 1px solid var(--b1);
+    padding: 22px 0;
 }
 
-.hh-brand {
+.h-brand-pill {
     font-size: 11px;
     font-weight: 600;
-    letter-spacing: .08em;
+    letter-spacing: .1em;
     text-transform: uppercase;
-    color: var(--w20);
+    color: var(--ghost3);
     white-space: nowrap;
-    padding: 6px 22px;
-    margin: 0 4px;
-    border: 1px solid var(--border);
+    padding: 7px 22px;
+    margin: 0 5px;
+    border: 1px solid var(--b1);
     display: inline-block;
-    cursor: default;
-    transition: border-color .2s, color .2s
+    transition: border-color .2s, color .2s;
 }
 
-.hh-brand:hover {
-    border-color: var(--o);
-    color: var(--w)
+.h-brand-pill:hover {
+    border-color: var(--flame);
+    color: var(--paper);
+}
+
+/* ── STATEMENT ── */
+.h-stmt {
+    background: var(--s1);
+    border-top: 1px solid var(--b1);
+    padding: var(--sec) var(--px);
+}
+
+.h-stmt-inner {
+    max-width: var(--maxW);
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0;
+    border: 1px solid var(--b1);
+}
+
+.h-stmt-left {
+    padding: clamp(36px, 5vw, 72px);
+    border-right: 1px solid var(--b1);
+}
+
+.h-stmt-right {
+    padding: clamp(36px, 5vw, 72px);
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+.h-stmt-headline {
+    font-family: var(--fDisplay);
+    font-size: clamp(40px, 5.5vw, 76px);
+    font-weight: 700;
+    letter-spacing: -.04em;
+    line-height: .88;
+    color: var(--paper);
+    margin-top: 18px;
+}
+
+.h-stmt-headline em {
+    font-style: normal;
+    color: var(--flame);
+}
+
+.h-stmt-body {
+    font-size: clamp(14px, 1.4vw, 16px);
+    color: var(--ghost4);
+    line-height: 1.88;
+    max-width: 460px;
+}
+
+.h-stat-row {
+    display: flex;
+    gap: 2px;
+    margin-top: 32px;
+}
+
+.h-stat-cell {
+    flex: 1;
+    padding: 18px;
+    background: var(--s2);
+    border: 1px solid var(--b1);
+    text-align: center;
+    cursor: default;
+    transition: background .2s, border-color .2s;
+}
+
+.h-stat-cell:hover {
+    background: var(--s3);
+    border-color: rgba(255, 60, 0, .2);
+}
+
+.h-stat-n {
+    font-family: var(--fDisplay);
+    font-size: clamp(22px, 2.8vw, 34px);
+    font-weight: 700;
+    letter-spacing: -.03em;
+    color: var(--flame);
+    display: block;
+    line-height: 1;
+}
+
+.h-stat-l {
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: .14em;
+    text-transform: uppercase;
+    color: var(--ghost3);
+    margin-top: 6px;
+    display: block;
+}
+
+@media (max-width:768px) {
+    .h-stmt-inner {
+        grid-template-columns: 1fr;
+    }
+
+    .h-stmt-left {
+        border-right: none;
+        border-bottom: 1px solid var(--b1);
+    }
 }
 
 /* ── SERVICES ── */
-/* Featured first: 2 large blocks, then a 3-col grid below */
-.hs-svc {
-    background: var(--bg1);
-    border-top: 1px solid var(--border);
+.h-svc {
+    background: var(--s0);
+    border-top: 1px solid var(--b1);
 }
 
-.hs-svc-hdr {
-    max-width: var(--max);
+.h-svc-hdr {
+    max-width: var(--maxW);
     margin: 0 auto;
     padding: var(--sec) var(--px) 56px;
     display: flex;
@@ -579,573 +580,275 @@
     gap: 24px;
 }
 
-.hs-svc-h {
-    font-family: var(--fh);
-    font-size: clamp(48px, 7vw, 96px);
-    font-weight: 800;
+.h-svc-headline {
+    font-family: var(--fDisplay);
+    font-size: clamp(44px, 6.5vw, 88px);
+    font-weight: 700;
     letter-spacing: -.04em;
     line-height: .88;
-    color: var(--w);
+    color: var(--paper);
 }
 
-.hs-svc-h em {
+.h-svc-headline em {
     font-style: normal;
-    color: var(--o)
+    color: var(--flame);
 }
 
-/* FEATURED ROW: two large unequal blocks */
-.hs-feat-row {
+/* Featured 2-col */
+.h-feat-row {
     display: grid;
     grid-template-columns: 1.4fr 1fr;
     gap: 2px;
-    border-top: 1px solid var(--border);
-    border-bottom: 1px solid var(--border);
+    border-top: 1px solid var(--b1);
+    border-bottom: 1px solid var(--b1);
 }
 
-.hs-feat {
+.h-feat {
     position: relative;
-    background: var(--bg2);
-    padding: clamp(40px, 5vw, 72px) clamp(32px, 4vw, 64px);
+    background: var(--s1);
+    padding: clamp(36px, 5vw, 72px) clamp(28px, 4vw, 60px);
     overflow: hidden;
     cursor: default;
     transition: background .3s;
     display: flex;
     flex-direction: column;
     justify-content: flex-end;
-    min-height: 340px;
+    min-height: 320px;
 }
 
-.hs-feat::before {
+.h-feat::before {
     content: '';
     position: absolute;
     inset: 0;
-    background: radial-gradient(ellipse 60% 70% at 80% 20%, rgba(255, 77, 0, .06), transparent 65%);
+    background: radial-gradient(ellipse 55% 60% at 80% 15%, rgba(255, 60, 0, .06), transparent 65%);
     opacity: 0;
     transition: opacity .5s;
 }
 
-.hs-feat:hover {
-    background: var(--bg3)
+.h-feat:hover {
+    background: var(--s2);
 }
 
-.hs-feat:hover::before {
-    opacity: 1
+.h-feat:hover::before {
+    opacity: 1;
 }
 
-.hs-feat-bg-txt {
+.h-feat-ghost {
     position: absolute;
-    bottom: -20px;
-    right: -10px;
-    font-family: var(--fh);
-    font-size: clamp(80px, 12vw, 160px);
-    font-weight: 800;
+    bottom: -18px;
+    right: -8px;
+    font-family: var(--fDisplay);
+    font-size: clamp(72px, 11vw, 150px);
+    font-weight: 700;
     color: transparent;
-    -webkit-text-stroke: 1px var(--w04);
+    -webkit-text-stroke: 1px var(--ghost2);
     pointer-events: none;
     user-select: none;
     line-height: 1;
     letter-spacing: -.05em;
-    transition: color .4s;
+    transition: -webkit-text-stroke-color .4s;
 }
 
-.hs-feat:hover .hs-feat-bg-txt {
-    -webkit-text-stroke-color: rgba(255, 77, 0, .1)
+.h-feat:hover .h-feat-ghost {
+    -webkit-text-stroke-color: rgba(255, 60, 0, .1);
 }
 
-.hs-feat-num {
-    font-family: var(--fh);
-    font-size: 13px;
+.h-feat-num {
+    font-family: var(--fDisplay);
+    font-size: 12px;
     font-weight: 700;
-    letter-spacing: .12em;
-    color: var(--o);
+    letter-spacing: .14em;
+    color: var(--flame);
     margin-bottom: 20px;
 }
 
-.hs-feat-title {
-    font-family: var(--fh);
-    font-size: clamp(32px, 3.8vw, 52px);
-    font-weight: 800;
+.h-feat-title {
+    font-family: var(--fDisplay);
+    font-size: clamp(28px, 3.5vw, 48px);
+    font-weight: 700;
     letter-spacing: -.03em;
-    color: var(--w);
+    color: var(--paper);
     line-height: .95;
     margin-bottom: 16px;
     transition: color .2s;
 }
 
-.hs-feat:hover .hs-feat-title {
-    color: var(--w80)
+.h-feat:hover .h-feat-title {
+    color: var(--chalk);
 }
 
-.hs-feat-desc {
+.h-feat-desc {
     font-size: 14px;
-    color: var(--w30);
-    line-height: 1.75;
-    max-width: 380px;
+    color: var(--ghost3);
+    line-height: 1.72;
+    max-width: 360px;
     margin-bottom: 28px;
 }
 
-.hs-feat-arrow {
+.h-feat-arr {
     display: inline-flex;
     align-items: center;
     justify-content: center;
     width: 44px;
     height: 44px;
-    border: 1px solid var(--border2);
-    color: var(--w30);
+    border: 1px solid var(--b2);
+    color: var(--ghost3);
     font-size: 18px;
     transition: background .2s, border-color .2s, color .2s, transform .3s var(--ease);
 }
 
-.hs-feat:hover .hs-feat-arrow {
-    background: var(--o);
-    border-color: var(--o);
+.h-feat:hover .h-feat-arr {
+    background: var(--flame);
+    border-color: var(--flame);
     color: #fff;
     transform: rotate(-45deg);
 }
 
-/* SECONDARY GRID: tight 3-col */
-.hs-grid {
+/* Service grid 3-col */
+.h-svc-grid {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
     gap: 2px;
-    border-bottom: 1px solid var(--border);
+    border-bottom: 1px solid var(--b1);
 }
 
-.hs-item {
-    background: var(--bg2);
-    padding: 32px 28px;
-    border-top: none;
+.h-svc-item {
+    background: var(--s1);
+    padding: 30px 26px;
     position: relative;
     overflow: hidden;
     cursor: default;
     transition: background .2s;
 }
 
-.hs-item::after {
+.h-svc-item::after {
     content: '';
     position: absolute;
     bottom: 0;
     left: 0;
     right: 0;
     height: 2px;
-    background: var(--o);
+    background: var(--flame);
     transform: scaleX(0);
     transform-origin: left;
     transition: transform .4s var(--ease);
 }
 
-.hs-item:hover {
-    background: var(--bg3)
+.h-svc-item:hover {
+    background: var(--s2);
 }
 
-.hs-item:hover::after {
-    transform: scaleX(1)
+.h-svc-item:hover::after {
+    transform: scaleX(1);
 }
 
-.hs-item:hover .hs-item-title {
-    color: var(--o)
+.h-svc-item:hover .h-svc-item-title {
+    color: var(--flame);
 }
 
-.hs-item-n {
-    font-family: var(--fh);
+.h-svc-item-n {
+    font-family: var(--fDisplay);
     font-size: 11px;
     font-weight: 700;
-    letter-spacing: .12em;
-    color: var(--o);
+    letter-spacing: .14em;
+    color: var(--flame);
     opacity: .6;
-    margin-bottom: 14px
+    margin-bottom: 14px;
 }
 
-.hs-item-title {
-    font-family: var(--fh);
-    font-size: clamp(18px, 2vw, 24px);
+.h-svc-item-title {
+    font-family: var(--fDisplay);
+    font-size: clamp(17px, 1.9vw, 22px);
     font-weight: 700;
     letter-spacing: -.02em;
-    color: var(--w);
+    color: var(--paper);
     margin-bottom: 10px;
-    transition: color .2s
+    transition: color .2s;
 }
 
-.hs-item-desc {
+.h-svc-item-desc {
     font-size: 13px;
-    color: var(--w20);
-    line-height: 1.7
+    color: var(--ghost3);
+    line-height: 1.72;
 }
 
-.hs-svc-cta {
-    max-width: var(--max);
+.h-svc-cta {
+    max-width: var(--maxW);
     margin: 0 auto;
-    padding: 40px var(--px)
+    padding: 40px var(--px);
 }
 
-/* ── PROOF SECTION ── */
-/* Full-bleed dark, counters dominate visually */
-.hp-proof {
-    background: var(--bg);
-    border-top: 1px solid var(--border);
-    overflow: hidden;
-    position: relative;
+@media (max-width:900px) {
+    .h-feat-row {
+        grid-template-columns: 1fr;
+    }
+
+    .h-svc-grid {
+        grid-template-columns: 1fr 1fr;
+    }
 }
 
-/* orange accent strip */
-.hp-proof-strip {
-    height: 3px;
-    background: linear-gradient(90deg, var(--o), var(--y), var(--o))
-}
-
-.hp-proof-top {
-    max-width: var(--max);
-    margin: 0 auto;
-    padding: var(--sec) var(--px) 0;
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 80px;
-    align-items: end;
-    border-bottom: 1px solid var(--border);
-    padding-bottom: 56px;
-}
-
-.hp-proof-h {
-    font-family: var(--fh);
-    font-size: clamp(48px, 7.5vw, 100px);
-    font-weight: 800;
-    letter-spacing: -.05em;
-    line-height: .86;
-    color: var(--w);
-}
-
-.hp-proof-h em {
-    font-style: normal;
-    color: var(--o)
-}
-
-.hp-proof-sub {
-    font-size: 15px;
-    color: var(--w30);
-    line-height: 1.85;
-    max-width: 400px;
-    padding-bottom: 4px;
-}
-
-/* Big counter row — numbers as the hero visual */
-.hp-counters {
-    display: grid;
-    grid-template-columns: repeat(4, 1fr);
-    border-bottom: 1px solid var(--border);
-    overflow: hidden;
-}
-
-.hp-counter-cell {
-    padding: clamp(32px, 5vw, 64px) clamp(24px, 3.5vw, 48px);
-    border-right: 1px solid var(--border);
-    transition: background .25s;
-    cursor: default;
-    position: relative;
-    overflow: hidden;
-}
-
-.hp-counter-cell:last-child {
-    border-right: none
-}
-
-.hp-counter-cell:hover {
-    background: rgba(255, 77, 0, .04)
-}
-
-.hp-counter-cell::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    height: 2px;
-    background: var(--o);
-    transform: scaleX(0);
-    transform-origin: left;
-    transition: transform .5s var(--ease);
-}
-
-.hp-counter-cell:hover::before {
-    transform: scaleX(1)
-}
-
-.hp-c-n {
-    font-family: var(--fh);
-    font-size: clamp(52px, 7vw, 88px);
-    font-weight: 800;
-    letter-spacing: -.05em;
-    color: var(--o);
-    line-height: 1;
-    display: block;
-}
-
-.hp-c-l {
-    font-size: 12px;
-    font-weight: 600;
-    letter-spacing: .14em;
-    text-transform: uppercase;
-    color: var(--w30);
-    margin-top: 10px;
-    display: block;
-}
-
-.hp-c-sub {
-    font-size: 12px;
-    color: var(--w20);
-    margin-top: 6px;
-    line-height: 1.6
-}
-
-/* Metrics strip with mini stat cards */
-.hp-metrics {
-    max-width: var(--max);
-    margin: 0 auto;
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 2px;
-    border-bottom: 1px solid var(--border);
-    overflow: hidden;
-}
-
-.hp-metric-card {
-    background: var(--bg1);
-    padding: 32px 36px;
-    position: relative;
-    overflow: hidden;
-    cursor: default;
-    transition: background .2s;
-}
-
-.hp-metric-card:hover {
-    background: var(--bg2)
-}
-
-.hp-metric-card::after {
-    content: '';
-    position: absolute;
-    left: 0;
-    top: 0;
-    bottom: 0;
-    width: 2px;
-    background: var(--o);
-    transform: scaleY(0);
-    transform-origin: top;
-    transition: transform .4s var(--ease);
-}
-
-.hp-metric-card:hover::after {
-    transform: scaleY(1)
-}
-
-.hp-mc-icon {
-    width: 36px;
-    height: 36px;
-    border: 1px solid var(--border2);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    margin-bottom: 16px;
-    color: var(--o);
-    font-size: 16px;
-}
-
-.hp-mc-val {
-    font-family: var(--fh);
-    font-size: 32px;
-    font-weight: 800;
-    letter-spacing: -.03em;
-    color: var(--w);
-    line-height: 1;
-    margin-bottom: 8px
-}
-
-.hp-mc-label {
-    font-size: 11px;
-    font-weight: 600;
-    letter-spacing: .14em;
-    text-transform: uppercase;
-    color: var(--w20)
-}
-
-.hp-mc-desc {
-    font-size: 12px;
-    color: var(--w20);
-    margin-top: 6px;
-    line-height: 1.65
-}
-
-/* Testimonial strip — two-col editorial layout */
-.hp-testi {
-    max-width: var(--max);
-    margin: 0 auto;
-    padding: var(--sec) var(--px);
-    display: grid;
-    grid-template-columns: 280px 1fr;
-    gap: 80px;
-    align-items: start;
-}
-
-.hp-testi-label {
-    position: sticky;
-    top: calc(var(--nav) + 24px)
-}
-
-.hp-testi-lh {
-    font-family: var(--fh);
-    font-size: clamp(36px, 4.5vw, 56px);
-    font-weight: 800;
-    letter-spacing: -.04em;
-    line-height: .9;
-    color: var(--w);
-    margin-top: 16px;
-}
-
-.hp-testi-lh em {
-    font-style: normal;
-    color: var(--o)
-}
-
-.hp-testi-cards {
-    display: flex;
-    flex-direction: column;
-    gap: 2px
-}
-
-.hp-tc {
-    background: var(--bg2);
-    padding: 40px 40px;
-    border: 1px solid var(--border);
-    position: relative;
-    overflow: hidden;
-    transition: background .3s, border-color .3s;
-}
-
-.hp-tc:hover {
-    background: var(--bg3);
-    border-color: rgba(255, 77, 0, .2)
-}
-
-.hp-tc::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    height: 1px;
-    background: linear-gradient(90deg, var(--o), transparent);
-    opacity: 0;
-    transition: opacity .4s;
-}
-
-.hp-tc:hover::before {
-    opacity: 1
-}
-
-.hp-tc-q {
-    font-family: var(--fh);
-    font-size: 44px;
-    font-weight: 800;
-    color: var(--o);
-    opacity: .12;
-    line-height: .7;
-    margin-bottom: 14px;
-    user-select: none;
-}
-
-.hp-tc-body {
-    font-size: 15px;
-    color: var(--w60);
-    line-height: 1.85;
-    font-style: italic;
-    margin-bottom: 24px;
-}
-
-.hp-tc-footer {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    flex-wrap: wrap;
-    gap: 8px
-}
-
-.hp-tc-name {
-    font-family: var(--fh);
-    font-size: 16px;
-    font-weight: 700;
-    color: var(--w)
-}
-
-.hp-tc-role {
-    font-size: 12px;
-    color: var(--w20);
-    margin-top: 2px
-}
-
-.hp-tc-tag {
-    font-size: 10px;
-    font-weight: 600;
-    letter-spacing: .14em;
-    text-transform: uppercase;
-    color: var(--o);
-    border: 1px solid rgba(255, 77, 0, .3);
-    padding: 4px 12px;
+@media (max-width:540px) {
+    .h-svc-grid {
+        grid-template-columns: 1fr;
+    }
 }
 
 /* ── WORK GRID ── */
-.hw-work {
-    background: var(--bg);
-    border-top: 1px solid var(--border);
-    padding: var(--sec) var(--px)
+.h-work {
+    background: var(--s0);
+    border-top: 1px solid var(--b1);
+    padding: var(--sec) var(--px);
 }
 
-.hw-work-inner {
-    max-width: var(--max);
-    margin: 0 auto
+.h-work-inner {
+    max-width: var(--maxW);
+    margin: 0 auto;
 }
 
-.hw-top {
+.h-work-top {
     display: flex;
     align-items: flex-end;
     justify-content: space-between;
-    margin-bottom: 56px;
     flex-wrap: wrap;
     gap: 24px;
+    margin-bottom: 52px;
 }
 
-.hw-h {
-    font-family: var(--fh);
-    font-size: clamp(48px, 7vw, 96px);
-    font-weight: 800;
+.h-work-headline {
+    font-family: var(--fDisplay);
+    font-size: clamp(44px, 6.5vw, 88px);
+    font-weight: 700;
     letter-spacing: -.04em;
     line-height: .88;
-    color: var(--w);
+    color: var(--paper);
 }
 
-.hw-h span {
-    color: var(--o)
+.h-work-headline span {
+    color: var(--flame);
 }
 
-.hw-all {
+.h-all-link {
     font-size: 13px;
     font-weight: 600;
-    color: var(--w50);
+    color: var(--ghost4);
     display: inline-flex;
     align-items: center;
     gap: 8px;
-    border-bottom: 1px solid var(--border);
+    border-bottom: 1px solid var(--b2);
     padding-bottom: 2px;
-    transition: color .2s, border-color .2s;
     align-self: flex-end;
-    margin-bottom: 5px;
+    margin-bottom: 6px;
+    transition: color .2s, border-color .2s;
 }
 
-.hw-all:hover {
-    color: var(--o);
-    border-color: var(--o)
+.h-all-link:hover {
+    color: var(--flame);
+    border-color: var(--flame);
 }
 
-/* Experimental: staggered grid, no column uniformity */
-.hw-grid {
+/* 12-col work grid */
+.h-work-grid {
     display: grid;
     grid-template-columns: repeat(12, 1fr);
     gap: 2px;
@@ -1154,13 +857,9 @@
 .wc {
     position: relative;
     overflow: hidden;
-    background: var(--bg2);
+    background: var(--s1);
     display: block;
-    transition: background .3s
-}
-
-.wc:hover {
-    background: var(--bg3)
+    transition: background .3s;
 }
 
 .wc::after {
@@ -1170,194 +869,537 @@
     left: 0;
     right: 0;
     height: 2px;
-    background: var(--o);
+    background: var(--flame);
     transform: scaleX(0);
     transform-origin: left;
-    transition: transform .45s var(--ease)
+    transition: transform .45s var(--ease);
+}
+
+.wc:hover {
+    background: var(--s2);
 }
 
 .wc:hover::after {
-    transform: scaleX(1)
+    transform: scaleX(1);
 }
 
 .wc-A {
-    grid-column: 1/8
+    grid-column: 1/8;
 }
 
 .wc-B {
-    grid-column: 8/13
+    grid-column: 8/13;
 }
 
 .wc-C {
-    grid-column: 1/5
+    grid-column: 1/5;
 }
 
 .wc-D {
-    grid-column: 5/9
+    grid-column: 5/9;
 }
 
 .wc-E {
-    grid-column: 9/13
+    grid-column: 9/13;
 }
 
 .wc-img {
     overflow: hidden;
-    position: relative
+    position: relative;
 }
 
 .wc-img img {
     width: 100%;
     height: 100%;
     object-fit: cover;
-    filter: brightness(.38) saturate(.5);
-    transition: transform .9s var(--ease), filter .9s
+    filter: brightness(.36) saturate(.5);
+    transition: transform .85s var(--ease), filter .85s;
 }
 
 .wc:hover .wc-img img {
-    transform: scale(1.05);
-    filter: brightness(.56) saturate(.8)
+    transform: scale(1.04);
+    filter: brightness(.54) saturate(.8);
 }
 
 .wc-img::after {
     content: '';
     position: absolute;
     inset: 0;
-    background: linear-gradient(to top, rgba(10, 10, 10, .97) 0%, transparent 55%);
+    background: linear-gradient(to top, rgba(8, 8, 12, .96) 0%, transparent 55%);
 }
 
-.wc-A .wc-img {
-    height: 400px
-}
-
+.wc-A .wc-img,
 .wc-B .wc-img {
-    height: 400px
+    height: 380px;
 }
 
 .wc-C .wc-img,
 .wc-D .wc-img,
 .wc-E .wc-img {
-    height: 260px
+    height: 240px;
 }
 
 .wc-ph {
     display: flex;
     align-items: center;
     justify-content: center;
-    background: var(--bg3)
+    background: var(--s2);
 }
 
 .wc-ph span {
-    font-family: var(--fh);
-    font-size: 52px;
-    font-weight: 800;
-    color: var(--w04)
+    font-family: var(--fDisplay);
+    font-size: 48px;
+    font-weight: 700;
+    color: var(--ghost2);
 }
 
 .wc-body {
-    padding: 22px 24px 28px
+    padding: 20px 22px 28px;
 }
 
 .wc-A .wc-body {
-    padding: 26px 32px 36px
+    padding: 26px 28px 36px;
 }
 
 .wc-tag {
     font-size: 9px;
     font-weight: 700;
-    letter-spacing: .2em;
+    letter-spacing: .22em;
     text-transform: uppercase;
-    color: var(--o);
+    color: var(--flame);
     opacity: .8;
     margin-bottom: 8px;
-    display: block
+    display: block;
 }
 
 .wc-title {
-    font-family: var(--fh);
-    font-size: clamp(18px, 2vw, 26px);
+    font-family: var(--fDisplay);
+    font-size: clamp(17px, 1.9vw, 25px);
     font-weight: 700;
-    letter-spacing: -.025em;
-    color: var(--w);
+    letter-spacing: -.02em;
+    color: var(--paper);
     line-height: 1.1;
     margin-bottom: 8px;
-    transition: color .2s
+    transition: color .2s;
 }
 
 .wc-A .wc-title {
-    font-size: clamp(22px, 2.8vw, 34px)
+    font-size: clamp(20px, 2.8vw, 32px);
 }
 
 .wc:hover .wc-title {
-    color: var(--o)
+    color: var(--flame);
 }
 
 .wc-desc {
     font-size: 12px;
-    color: var(--w20);
-    line-height: 1.6;
+    color: var(--ghost3);
+    line-height: 1.65;
     overflow: hidden;
     display: -webkit-box;
     -webkit-line-clamp: 2;
-    -webkit-box-orient: vertical
+    -webkit-box-orient: vertical;
 }
 
 .wc-cta {
     display: inline-flex;
     align-items: center;
-    gap: 5px;
+    gap: 6px;
     margin-top: 12px;
     font-size: 10px;
     font-weight: 600;
-    letter-spacing: .16em;
+    letter-spacing: .18em;
     text-transform: uppercase;
-    color: var(--w20);
-    transition: color .2s, gap .2s
+    color: var(--ghost3);
+    transition: color .2s, gap .2s;
 }
 
 .wc:hover .wc-cta {
-    color: var(--o);
-    gap: 10px
+    color: var(--flame);
+    gap: 10px;
 }
 
 .wc-empty {
     grid-column: 1/13;
     padding: 80px;
     text-align: center;
-    background: var(--bg2)
+    background: var(--s1);
 }
 
 .wc-empty h3 {
-    font-family: var(--fh);
+    font-family: var(--fDisplay);
     font-size: 40px;
-    font-weight: 800;
-    color: var(--w08)
+    font-weight: 700;
+    color: var(--ghost2);
 }
 
-/* ── CTA ── */
-.h-bigcta {
-    background: var(--bg2);
-    border-top: 1px solid var(--border);
+/* ── PROOF ── */
+.h-proof {
+    background: var(--s0);
+    border-top: 1px solid var(--b1);
+    overflow: hidden;
+    position: relative;
+}
+
+.h-proof-strip {
+    height: 3px;
+    background: linear-gradient(90deg, var(--flame), var(--lime), var(--flame));
+}
+
+.h-proof-top {
+    max-width: var(--maxW);
+    margin: 0 auto;
+    padding: var(--sec) var(--px) 0;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 72px;
+    align-items: end;
+    border-bottom: 1px solid var(--b1);
+    padding-bottom: 52px;
+}
+
+.h-proof-headline {
+    font-family: var(--fDisplay);
+    font-size: clamp(44px, 6.5vw, 88px);
+    font-weight: 700;
+    letter-spacing: -.05em;
+    line-height: .86;
+    color: var(--paper);
+}
+
+.h-proof-headline em {
+    font-style: normal;
+    color: var(--flame);
+}
+
+.h-proof-sub {
+    font-size: 15px;
+    color: var(--ghost3);
+    line-height: 1.88;
+    max-width: 400px;
+}
+
+/* Counter row */
+.h-counters {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    border-bottom: 1px solid var(--b1);
+    overflow: hidden;
+}
+
+.h-counter {
+    padding: clamp(28px, 4.5vw, 60px) clamp(22px, 3vw, 44px);
+    border-right: 1px solid var(--b1);
+    cursor: default;
+    transition: background .2s;
+    position: relative;
+    overflow: hidden;
+}
+
+.h-counter:last-child {
+    border-right: none;
+}
+
+.h-counter:hover {
+    background: rgba(255, 60, 0, .03);
+}
+
+.h-counter::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 2px;
+    background: var(--flame);
+    transform: scaleX(0);
+    transform-origin: left;
+    transition: transform .5s var(--ease);
+}
+
+.h-counter:hover::before {
+    transform: scaleX(1);
+}
+
+.h-cnt-n {
+    font-family: var(--fDisplay);
+    font-size: clamp(44px, 6vw, 80px);
+    font-weight: 700;
+    letter-spacing: -.05em;
+    color: var(--flame);
+    line-height: 1;
+    display: block;
+}
+
+.h-cnt-l {
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: .16em;
+    text-transform: uppercase;
+    color: var(--ghost3);
+    margin-top: 10px;
+    display: block;
+}
+
+.h-cnt-s {
+    font-size: 12px;
+    color: var(--ghost3);
+    margin-top: 6px;
+    line-height: 1.65;
+}
+
+/* Metric cards */
+.h-metrics {
+    max-width: var(--maxW);
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 2px;
+    border-bottom: 1px solid var(--b1);
+    overflow: hidden;
+}
+
+.h-metric {
+    background: var(--s1);
+    padding: 30px 34px;
+    position: relative;
+    overflow: hidden;
+    cursor: default;
+    transition: background .2s;
+}
+
+.h-metric:hover {
+    background: var(--s2);
+}
+
+.h-metric::after {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 0;
+    bottom: 0;
+    width: 2px;
+    background: var(--flame);
+    transform: scaleY(0);
+    transform-origin: top;
+    transition: transform .4s var(--ease);
+}
+
+.h-metric:hover::after {
+    transform: scaleY(1);
+}
+
+.h-metric-icon {
+    width: 36px;
+    height: 36px;
+    border: 1px solid var(--b2);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 16px;
+    color: var(--flame);
+    font-size: 16px;
+}
+
+.h-metric-val {
+    font-family: var(--fDisplay);
+    font-size: 30px;
+    font-weight: 700;
+    letter-spacing: -.03em;
+    color: var(--paper);
+    line-height: 1;
+    margin-bottom: 8px;
+}
+
+.h-metric-label {
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: .16em;
+    text-transform: uppercase;
+    color: var(--ghost3);
+}
+
+.h-metric-desc {
+    font-size: 12px;
+    color: var(--ghost3);
+    margin-top: 7px;
+    line-height: 1.65;
+}
+
+@media (max-width:900px) {
+    .h-proof-top {
+        grid-template-columns: 1fr;
+        gap: 32px;
+    }
+
+    .h-counters {
+        grid-template-columns: 1fr 1fr;
+    }
+
+    .h-metrics {
+        grid-template-columns: 1fr;
+    }
+}
+
+@media (max-width:540px) {
+    .h-counters {
+        grid-template-columns: 1fr;
+    }
+}
+
+/* ── TESTIMONIALS ── */
+.h-testi {
+    max-width: var(--maxW);
+    margin: 0 auto;
+    padding: var(--sec) var(--px);
+    display: grid;
+    grid-template-columns: 260px 1fr;
+    gap: 72px;
+    align-items: start;
+}
+
+.h-testi-label {
+    position: sticky;
+    top: calc(var(--navH) + 24px);
+}
+
+.h-testi-headline {
+    font-family: var(--fDisplay);
+    font-size: clamp(34px, 4vw, 52px);
+    font-weight: 700;
+    letter-spacing: -.04em;
+    line-height: .9;
+    color: var(--paper);
+    margin-top: 16px;
+}
+
+.h-testi-headline em {
+    font-style: normal;
+    color: var(--flame);
+}
+
+.h-testi-cards {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+}
+
+.h-tc {
+    background: var(--s1);
+    padding: 36px 40px;
+    border: 1px solid var(--b1);
+    position: relative;
+    overflow: hidden;
+    transition: background .3s, border-color .3s;
+}
+
+.h-tc:hover {
+    background: var(--s2);
+    border-color: rgba(255, 60, 0, .2);
+}
+
+.h-tc::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 1px;
+    background: linear-gradient(90deg, var(--flame), transparent);
+    opacity: 0;
+    transition: opacity .4s;
+}
+
+.h-tc:hover::before {
+    opacity: 1;
+}
+
+.h-tc-q {
+    font-family: var(--fDisplay);
+    font-size: 48px;
+    font-weight: 700;
+    color: var(--flame);
+    opacity: .12;
+    line-height: .7;
+    margin-bottom: 14px;
+    user-select: none;
+}
+
+.h-tc-body {
+    font-size: 15px;
+    color: var(--ghost4);
+    line-height: 1.88;
+    font-style: italic;
+    margin-bottom: 24px;
+}
+
+.h-tc-foot {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 8px;
+}
+
+.h-tc-name {
+    font-family: var(--fDisplay);
+    font-size: 16px;
+    font-weight: 700;
+    color: var(--paper);
+}
+
+.h-tc-role {
+    font-size: 12px;
+    color: var(--ghost3);
+    margin-top: 2px;
+}
+
+.h-tc-tag {
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: .16em;
+    text-transform: uppercase;
+    color: var(--flame);
+    border: 1px solid rgba(255, 60, 0, .3);
+    padding: 4px 12px;
+}
+
+@media (max-width:860px) {
+    .h-testi {
+        grid-template-columns: 1fr;
+        gap: 48px;
+    }
+
+    .h-testi-label {
+        position: static;
+    }
+}
+
+/* ── BIG CTA ── */
+.h-cta {
+    background: var(--s1);
+    border-top: 1px solid var(--b1);
     padding: var(--sec) var(--px);
     text-align: center;
     position: relative;
     overflow: hidden;
 }
 
-.h-bigcta-glow {
+.h-cta-glow {
     position: absolute;
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
     width: 700px;
     height: 400px;
-    background: radial-gradient(ellipse, rgba(255, 77, 0, .09) 0%, transparent 65%);
+    background: radial-gradient(ellipse, rgba(255, 60, 0, .08) 0%, transparent 65%);
     filter: blur(80px);
     pointer-events: none;
     z-index: 0;
-    animation: blob-p 10s ease-in-out infinite;
+    animation: glowPulse 10s ease-in-out infinite;
 }
 
-@keyframes blob-p {
+@keyframes glowPulse {
 
     0%,
     100% {
@@ -1365,249 +1407,156 @@
     }
 
     50% {
-        transform: translate(-50%, -50%) scale(1.15)
+        transform: translate(-50%, -50%) scale(1.2)
     }
 }
 
-.h-bigcta-ghost {
+.h-cta-ghost {
     position: absolute;
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
-    font-family: var(--fh);
-    font-size: clamp(90px, 18vw, 260px);
-    font-weight: 800;
+    font-family: var(--fDisplay);
+    font-size: clamp(80px, 16vw, 240px);
+    font-weight: 700;
     letter-spacing: -.05em;
     color: transparent;
-    -webkit-text-stroke: 1px var(--w04);
+    -webkit-text-stroke: 1px var(--ghost2);
     white-space: nowrap;
     pointer-events: none;
     user-select: none;
     z-index: 0;
 }
 
-.h-bigcta-inner {
+.h-cta-inner {
     position: relative;
     z-index: 1;
-    max-width: 920px;
-    margin: 0 auto
+    max-width: 900px;
+    margin: 0 auto;
 }
 
-.h-bigcta-h {
-    font-family: var(--fh);
-    font-size: clamp(52px, 9vw, 130px);
-    font-weight: 800;
+.h-cta-headline {
+    font-family: var(--fDisplay);
+    font-size: clamp(48px, 8vw, 120px);
+    font-weight: 700;
     letter-spacing: -.05em;
     line-height: .86;
-    color: var(--w);
-    margin-bottom: 40px;
+    color: var(--paper);
+    margin-bottom: 36px;
 }
 
-.h-bigcta-h em {
+.h-cta-headline em {
     font-style: normal;
-    color: var(--o)
+    color: var(--flame);
 }
 
-.h-bigcta-row {
+.h-cta-row {
     display: flex;
     justify-content: center;
     gap: 14px;
     flex-wrap: wrap;
-    margin-bottom: 24px
+    margin-bottom: 22px;
 }
 
-.h-bigcta-sub {
+.h-cta-sub {
     font-size: 13px;
-    color: var(--w20);
-    letter-spacing: .06em
+    color: var(--ghost3);
+    letter-spacing: .06em;
 }
 
-/* ── TICKER 2 ── */
-.hh-mq2 {
-    background: var(--bg1);
-    border-top: 1px solid var(--border);
-    border-bottom: 1px solid var(--border);
-    padding: 16px 0
+@media (max-width:540px) {
+    .h-cta-row {
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .h-cta-row .btn-primary,
+    .h-cta-row .btn-outline {
+        width: 100%;
+        max-width: 300px;
+        justify-content: center;
+    }
 }
 
-.hh-mq2i {
-    font-family: var(--fh);
-    font-size: clamp(14px, 1.8vw, 20px);
+/* ── SECOND TICKER ── */
+.h-ticker2 {
+    background: var(--s1);
+    border-top: 1px solid var(--b1);
+    border-bottom: 1px solid var(--b1);
+    padding: 16px 0;
+}
+
+.h-ticker2-word {
+    font-family: var(--fDisplay);
+    font-size: clamp(13px, 1.7vw, 19px);
     font-weight: 700;
-    color: var(--w20);
+    color: var(--ghost3);
     white-space: nowrap;
     padding: 0 28px;
     display: inline-block;
-    letter-spacing: .04em
+    letter-spacing: .04em;
 }
 
-.hh-mq2s {
-    color: var(--o)
-}
-
-/* ── RESPONSIVE ── */
-@media(max-width:1200px) {
-
-    .hh-float-l,
-    .hh-float-r {
-        display: none
-    }
-
-    .hp-testi {
-        grid-template-columns: 1fr;
-        gap: 48px
-    }
-
-    .hp-testi-label {
-        position: static
-    }
-
-    .hw-grid .wc-A {
-        grid-column: 1/13
-    }
-
-    .hw-grid .wc-B {
-        grid-column: 1/13
-    }
-
-    .hw-grid .wc-C,
-    .hw-grid .wc-D,
-    .hw-grid .wc-E {
-        grid-column: span 4
-    }
-}
-
-@media(max-width:900px) {
-    .hs-feat-row {
-        grid-template-columns: 1fr
-    }
-
-    .hs-grid {
-        grid-template-columns: 1fr 1fr
-    }
-
-    .hp-counters {
-        grid-template-columns: 1fr 1fr
-    }
-
-    .hp-metrics {
-        grid-template-columns: 1fr
-    }
-
-    .hp-proof-top {
-        grid-template-columns: 1fr;
-        gap: 32px
-    }
-
-    .hw-grid .wc-C,
-    .hw-grid .wc-D,
-    .hw-grid .wc-E {
-        grid-column: span 6
-    }
-}
-
-@media(max-width:640px) {
-    .hh-h {
-        font-size: clamp(52px, 13vw, 88px)
-    }
-
-    .hh-btns {
-        flex-direction: column;
-        width: 100%
-    }
-
-    .hh-btns .btn-os,
-    .hh-btns .btn-ghost {
-        width: 100%;
-        justify-content: center
-    }
-
-    .hs-grid {
-        grid-template-columns: 1fr
-    }
-
-    .hp-counters {
-        grid-template-columns: 1fr
-    }
-
-    .hw-grid .wc-C,
-    .hw-grid .wc-D,
-    .hw-grid .wc-E {
-        grid-column: 1/13
-    }
-
-    .h-bigcta-row {
-        flex-direction: column;
-        align-items: center
-    }
-
-    .h-bigcta-row .btn-os,
-    .h-bigcta-row .btn-ghost {
-        width: 100%;
-        max-width: 320px;
-        justify-content: center
-    }
+.h-ticker2-sep {
+    color: var(--flame);
 }
 </style>
 
-<!-- ── HERO ─────────────────────────────────────────────────── -->
-<section class="hh" aria-labelledby="hh-h">
-    <div class="hh-bg" aria-hidden="true"></div>
-    <div class="hh-grid" aria-hidden="true"></div>
-    <div class="hh-topline" aria-hidden="true"></div>
+<!-- ═══ HERO ═══════════════════════════════════════════════════════ -->
+<section class="h-hero" aria-labelledby="h-headline">
+    <div class="h-hero-bg" aria-hidden="true"></div>
+    <div class="h-hero-grid" aria-hidden="true"></div>
+    <div class="h-hero-topline" aria-hidden="true"></div>
 
     <!-- CENTER -->
-    <div class="hh-center">
-        <div class="hh-eyebrow">
-            <span class="hh-eydot"></span>
+    <div class="h-hero-center">
+        <div class="h-eyebrow">
+            <span class="h-eyebrow-dot"></span>
             Internet-native creative agency
         </div>
-        <h1 class="hh-h" id="hh-h">
-            <span class="row-w">We Build</span>
-            <span class="row-o">Campaigns</span>
-            <span class="row-s">That Hit</span>
+        <h1 class="h-headline" id="h-headline">
+            <span class="row-accent">We Make</span>
+            <span>Brands</span>
+            <span class="row-stroke">Belong</span>
         </h1>
-        <p class="hh-sub">
-            <?= htmlspecialchars($settings['hero_subtext'] ?? 'Meme culture. Cinematic storytelling. Influencer precision. We craft campaigns the internet genuinely cares about.') ?>
+        <p class="h-sub">
+            <?= htmlspecialchars($settings['hero_subtext'] ?? 'Most agencies help brands post online. We help them become part of the conversation — through strategy, creators, memes, and storytelling that actually lands.') ?>
         </p>
-        <div class="hh-btns">
-            <a href="#hw-work" class="btn-os btn-os-lg mag-wrap" data-mag>See the work</a>
-            <a href="<?= base_url('contact') ?>" class="btn-ghost">Let's talk →</a>
+        <div class="h-btns">
+            <a href="#h-work" class="btn-primary lg">See the work</a>
+            <a href="<?= base_url('contact') ?>" class="btn-outline">Let's talk &rarr;</a>
         </div>
     </div>
 
     <!-- FLOATING LEFT -->
-    <div class="hh-float-l" aria-hidden="true">
-        <!-- Metric card with mini bar chart -->
-        <div class="fl-metric">
-            <div class="fl-m-label">Campaign Reach</div>
-            <div class="fl-m-val">12M<span style="font-size:.5em;color:var(--w20)">+</span></div>
-            <div class="fl-m-sub">Across all verticals</div>
+    <div class="h-float-l" aria-hidden="true">
+        <div class="fl-card float-a">
+            <div class="fl-label">Campaign Reach</div>
+            <div class="fl-val">12M<span style="font-size:.5em;color:var(--ghost3)">+</span></div>
+            <div class="fl-note">Across all verticals</div>
             <div class="fl-bars">
-                <div class="fl-bar" style="height:35%"></div>
-                <div class="fl-bar" style="height:55%"></div>
-                <div class="fl-bar" style="height:40%"></div>
-                <div class="fl-bar" style="height:70%"></div>
-                <div class="fl-bar" style="height:85%"></div>
+                <div class="fl-bar" style="height:32%"></div>
+                <div class="fl-bar" style="height:50%"></div>
+                <div class="fl-bar" style="height:42%"></div>
+                <div class="fl-bar" style="height:68%"></div>
+                <div class="fl-bar" style="height:88%"></div>
                 <div class="fl-bar" style="height:100%"></div>
             </div>
         </div>
-        <!-- Process indicator -->
-        <div class="fl-process">
-            <div class="fl-p-title">Campaign Flow</div>
-            <div class="fl-p-steps">
-                <div class="fl-p-step done">
+        <div class="fl-card float-b">
+            <div class="fl-label">Process</div>
+            <div class="fl-steps">
+                <div class="fl-step done">
                     <div class="fl-step-dot">✓</div><span>Strategy</span>
                 </div>
-                <div class="fl-p-step done">
+                <div class="fl-step done">
                     <div class="fl-step-dot">✓</div><span>Creators</span>
                 </div>
-                <div class="fl-p-step active">
-                    <div class="fl-step-dot"
-                        style="background:var(--o);border-color:var(--o);width:16px;height:16px;border-radius:50%;animation:pdot 1.4s ease-in-out infinite">
-                        ●</div><span style="color:var(--w60)">Launch</span>
+                <div class="fl-step active">
+                    <div class="fl-step-dot" style="border-color:var(--lime);animation:blink 1.4s ease-in-out infinite">
+                        ●</div><span style="color:var(--ghost5)">Launch</span>
                 </div>
-                <div class="fl-p-step">
+                <div class="fl-step">
                     <div class="fl-step-dot"></div><span>Scale</span>
                 </div>
             </div>
@@ -1615,208 +1564,163 @@
     </div>
 
     <!-- FLOATING RIGHT -->
-    <div class="hh-float-r" aria-hidden="true">
-        <!-- Rotating badge -->
-        <div class="fr-badge">
-            <div class="fr-badge-ring"></div>
-            <div class="fr-badge-inner">
-                <div class="fr-badge-n">32%</div>
-                <div class="fr-badge-l">OTT<br>Share</div>
+    <div class="h-float-r" aria-hidden="true">
+        <div class="fr-stat-tower" style="animation:floatA 8s ease-in-out .5s infinite">
+            <div class="fr-stat">
+                <div class="fr-stat-n" style="color:var(--flame)">300<span
+                        style="font-size:.5em;color:var(--ghost3)">+</span></div>
+                <div class="fr-stat-l">Campaigns</div>
+            </div>
+            <div class="fr-stat">
+                <div class="fr-stat-n" style="color:var(--lime)">10K<span
+                        style="font-size:.5em;color:var(--ghost3)">+</span></div>
+                <div class="fr-stat-l">Creators</div>
             </div>
         </div>
-        <!-- Stat tower -->
-        <div class="fr-stat" style="animation:flt-a 8s ease-in-out 0.5s infinite">
-            <div class="fr-stat-n" style="color:var(--o)">300<span style="font-size:.55em;color:var(--w20)">+</span>
-            </div>
-            <div class="fr-stat-l">Campaigns</div>
-        </div>
-        <div class="fr-divider"></div>
-        <div class="fr-stat" style="animation:flt-b 9s ease-in-out 1s infinite">
-            <div class="fr-stat-n" style="color:var(--y)">10K<span style="font-size:.55em;color:var(--w20)">+</span>
-            </div>
-            <div class="fr-stat-l">Creators</div>
-        </div>
-        <div class="fr-divider"></div>
-        <!-- Live badge -->
         <div class="fr-live">
             <span class="fr-live-dot"></span>
-            <span class="fr-live-txt">Active Now</span>
+            <span class="fr-live-txt">Campaigns live now</span>
         </div>
     </div>
 
     <!-- SCROLL CUE -->
-    <div class="hh-scroll" aria-hidden="true">
-        <div class="hh-scroll-line"></div>
-        <span class="hh-scroll-txt">Scroll</span>
+    <div class="h-scroll-cue" aria-hidden="true">
+        <div class="h-scroll-line"></div>
+        <span class="h-scroll-txt">Scroll</span>
     </div>
 </section>
 
-<!-- ── TICKER ───────────────────────────────────────────────── -->
-<div class="hh-ticker" aria-hidden="true">
+<!-- ═══ TICKER ══════════════════════════════════════════════════════ -->
+<div class="h-ticker" aria-hidden="true">
     <div class="mq-wrap">
         <div class="mq-track mq-l" style="--d:28s">
-            <?php foreach (
-                array_merge(
-                    ['INFLUENCER MARKETING', 'MEME CULTURE', 'FILM PROMOTIONS', 'OTT STRATEGY', 'VIDEO PRODUCTION', 'CELEBRITY CAMPAIGNS', 'SOCIAL INTELLIGENCE', 'CINEMATIC BRAND WORK'],
-                    ['INFLUENCER MARKETING', 'MEME CULTURE', 'FILM PROMOTIONS', 'OTT STRATEGY', 'VIDEO PRODUCTION', 'CELEBRITY CAMPAIGNS', 'SOCIAL INTELLIGENCE', 'CINEMATIC BRAND WORK']
-                ) as $w
-            ): ?>
-            <span class="hh-ti"><?= htmlspecialchars($w) ?></span><span class="hh-sep">✦</span>
+            <?php foreach (array_merge(['INFLUENCER MARKETING', 'MEME CULTURE', 'BRAND STRATEGY', 'VIRAL CAMPAIGNS', 'CONTENT CREATION', 'REDDIT MARKETING', 'UGC CONTENT', 'LINKEDIN GROWTH', 'TWITTER TRENDING', 'PERFORMANCE MARKETING'], ['INFLUENCER MARKETING', 'MEME CULTURE', 'BRAND STRATEGY', 'VIRAL CAMPAIGNS', 'CONTENT CREATION', 'REDDIT MARKETING', 'UGC CONTENT', 'LINKEDIN GROWTH', 'TWITTER TRENDING', 'PERFORMANCE MARKETING']) as $w): ?>
+            <span class="h-ticker-word"><?= htmlspecialchars($w) ?></span><span class="h-ticker-sep">✦</span>
             <?php endforeach; ?>
         </div>
     </div>
 </div>
 
-<!-- ── BRANDS ───────────────────────────────────────────────── -->
-<?php $brands = ['Netflix', 'Amazon Prime', 'Disney+', 'Dharma', 'YRF', 'Sony Pictures', 'T-Series', 'Warner Bros', 'Zee5', 'JioCinema', 'Maddock', 'boAt', 'Myntra', 'OnePlus', 'Fastrack', 'Viacom18']; ?>
-<div class="hh-brands" aria-label="Partners">
+<!-- ═══ BRAND STRIP ══════════════════════════════════════════════════ -->
+<?php $brands = ['Netflix', 'Amazon Prime', 'Disney+', 'Dharma', 'YRF', 'Sony Pictures', 'T-Series', 'boAt', 'Myntra', 'OnePlus', 'Fastrack', 'Viacom18', 'Zee5', 'JioCinema', 'Maddock']; ?>
+<div class="h-brands" aria-label="Clients and partners">
     <div class="mq-wrap">
-        <div class="mq-track mq-l" style="--d:44s">
+        <div class="mq-track mq-l" style="--d:46s">
             <?php foreach (array_merge($brands, $brands) as $b): ?>
-            <span class="hh-brand"><?= htmlspecialchars($b) ?></span>
+            <span class="h-brand-pill"><?= htmlspecialchars($b) ?></span>
             <?php endforeach; ?>
         </div>
     </div>
 </div>
 
-<!-- ── STATEMENT ────────────────────────────────────────────── -->
-<section style="background:var(--bg1);border-top:1px solid var(--border)">
-    <div style="max-width:var(--max);margin:0 auto;padding:var(--sec) var(--px);
-    display:grid;grid-template-columns:1fr 1fr;gap:0;border-bottom:1px solid var(--border)" class="stmt-grid">
-        <div style="border-right:1px solid var(--border);padding-right:clamp(28px,4vw,72px);padding-bottom:40px">
-            <p class="lbl rv" style="margin-bottom:24px">Who we are</p>
-            <h2 style="font-family:var(--fh);font-size:clamp(38px,5.5vw,72px);font-weight:800;
-        letter-spacing:-.04em;line-height:.9;color:var(--w)" class="rv d1">
-                Culture<br>Doesn't<br><span style="color:var(--o)">Wait</span>
+<!-- ═══ STATEMENT ══════════════════════════════════════════════════ -->
+<section class="h-stmt">
+    <div class="h-stmt-inner">
+        <div class="h-stmt-left">
+            <span class="s-label rv">Who we are</span>
+            <h2 class="h-stmt-headline rv d1">
+                Stop Posting.<br>
+                <em>Start Belonging.</em>
             </h2>
         </div>
-        <div style="padding-left:clamp(28px,4vw,72px);display:flex;flex-direction:column;
-      justify-content:space-between;padding-bottom:40px">
-            <p style="font-size:16px;color:var(--w50);line-height:1.85;max-width:460px;margin-bottom:32px"
-                class="rv d2">
-                <?= htmlspecialchars($settings['about_text'] ?? 'HouseOfSocial is India\'s most internet-native creative agency. We live on the timeline, think in memes, and execute at cinematic scale. We\'ve powered 32% of all OTT releases — not because we got lucky, but because we genuinely understand how culture moves.') ?>
+        <div class="h-stmt-right">
+            <p class="h-stmt-body rv d2">
+                <?= htmlspecialchars($settings['about_text'] ?? 'India\'s brands are going digital — but most agencies helping them still think like it\'s 2016. House Of Social was built by people who grew up online, understand how attention actually works, and know the difference between a brand that\'s on social media and a brand that IS social media. We don\'t just help brands post online. We help them become part of the conversation.') ?>
             </p>
-            <div style="display:flex;gap:2px" class="rv d3">
+            <div class="h-stat-row rv d3">
                 <?php foreach (
                     [
                         [$settings['stat_campaigns'] ?? '300', '+', 'Campaigns', 'data-count="300" data-suffix="+"'],
-                        ['32', '%', 'OTT', 'data-count="32" data-suffix="%"'],
+                        ['32', '%', 'OTT Share', 'data-count="32" data-suffix="%"'],
                         ['12', 'M+', 'Reached', 'data-count="12" data-suffix="M+"'],
-                    ] as $n
+                    ] as $s
                 ): ?>
-                <div style="flex:1;padding:20px;background:var(--bg2);border:1px solid var(--border);text-align:center;cursor:default;transition:background .2s,border-color .2s"
-                    onmouseenter="this.style.background='var(--bg3)';this.style.borderColor='rgba(255,77,0,.3)'"
-                    onmouseleave="this.style.background='var(--bg2)';this.style.borderColor='var(--border)'">
-                    <span style="font-family:var(--fh);font-size:clamp(24px,3vw,36px);font-weight:800;
-            letter-spacing:-.03em;color:var(--o);display:block;line-height:1"
-                        <?= $n[3] ?>><?= htmlspecialchars($n[0] . $n[1]) ?></span>
-                    <span style="font-size:10px;font-weight:600;letter-spacing:.12em;text-transform:uppercase;
-            color:var(--w20);margin-top:6px;display:block"><?= htmlspecialchars($n[2]) ?></span>
+                <div class="h-stat-cell">
+                    <span class="h-stat-n" <?= $s[3] ?>><?= htmlspecialchars($s[0] . $s[1]) ?></span>
+                    <span class="h-stat-l"><?= htmlspecialchars($s[2]) ?></span>
                 </div>
                 <?php endforeach; ?>
             </div>
         </div>
     </div>
 </section>
-<style>
-@media(max-width:768px) {
-    .stmt-grid {
-        grid-template-columns: 1fr !important
-    }
-}
 
-.stmt-grid>div:first-child {
-    border-right: none !important;
-    border-bottom: 1px solid var(--border);
-    padding-right: 0 !important;
-    padding-bottom: 40px
-}
-
-@media(min-width:769px) {
-    .stmt-grid>div:first-child {
-        border-right: 1px solid var(--border) !important;
-        border-bottom: none
-    }
-}
-</style>
-
-<!-- ── SERVICES ─────────────────────────────────────────────── -->
-<section class="hs-svc" aria-labelledby="hs-svc-h">
-    <div class="hs-svc-hdr">
+<!-- ═══ SERVICES ══════════════════════════════════════════════════ -->
+<section class="h-svc" aria-labelledby="h-svc-h">
+    <div class="h-svc-hdr">
         <div>
-            <p class="lbl rv" style="margin-bottom:16px">What we do</p>
-            <h2 id="hs-svc-h" class="hs-svc-h rv d1">Services<br><em>That Move</em></h2>
+            <span class="s-label rv" style="margin-bottom:18px">What we do</span>
+            <h2 id="h-svc-h" class="h-svc-headline rv d1">Services<br><em>Built for Now</em></h2>
         </div>
-        <a href="<?= base_url('contact') ?>" class="btn-os rv" style="align-self:flex-end">Work with us →</a>
+        <a href="<?= base_url('contact') ?>" class="btn-outline rv">Work with us &rarr;</a>
     </div>
 
-    <!-- FEATURED: 2 large blocks -->
-    <div class="hs-feat-row rv sc">
-        <div class="hs-feat">
-            <div class="hs-feat-bg-txt">INFLUENCE</div>
-            <div class="hs-feat-num">01</div>
-            <h3 class="hs-feat-title">Influencer<br>Marketing</h3>
-            <p class="hs-feat-desc">Precision-matched creator partnerships — nano to celebrity tier — engineered for
-                authentic reach and real conversion. Not spray and pray.</p>
-            <div class="hs-feat-arrow">↗</div>
+    <div class="h-feat-row rv sc">
+        <div class="h-feat">
+            <div class="h-feat-ghost">INFLUENCE</div>
+            <div class="h-feat-num">01</div>
+            <h3 class="h-feat-title">Influencer<br>Marketing</h3>
+            <p class="h-feat-desc">Precision-matched creator partnerships — nano to celebrity tier — engineered for
+                authentic reach. Not spray and pray. Real people, real communities, real results.</p>
+            <div class="h-feat-arr">↗</div>
         </div>
-        <div class="hs-feat">
-            <div class="hs-feat-bg-txt">MEME</div>
-            <div class="hs-feat-num">02</div>
-            <h3 class="hs-feat-title">Meme<br>Marketing</h3>
-            <p class="hs-feat-desc">Culture-native content crafted to spread because it belongs there. Not because it
-                was placed there. We speak internet fluently.</p>
-            <div class="hs-feat-arrow">↗</div>
+        <div class="h-feat">
+            <div class="h-feat-ghost">MEME</div>
+            <div class="h-feat-num">02</div>
+            <h3 class="h-feat-title">Meme<br>Marketing</h3>
+            <p class="h-feat-desc">Culture-native content crafted to spread because it belongs there — not because it
+                was placed there. We speak the internet fluently.</p>
+            <div class="h-feat-arr">↗</div>
         </div>
     </div>
 
-    <!-- SECONDARY GRID: remaining services -->
-    <div class="hs-grid rv">
+    <div class="h-svc-grid rv">
         <?php $svcs = [
-            ['03', 'Film Promotions', 'End-to-end buzz for Bollywood, Hollywood, and OTT. We fill seats and drive streams.'],
-            ['04', 'Video Production', 'OTT-grade quality. Brand films, reels, web series — concept to delivery.'],
-            ['05', 'Film Screenings', 'Curated influencer events that build authentic pre-release cultural heat.'],
-            ['06', 'On-Ground Activations', 'Physical brand moments anchored in digital culture and real audience memory.'],
-            ['07', 'LinkedIn & X Strategy', 'Platform-native authority campaigns for studios and executive voices.'],
-            ['08', 'Celebrity Endorsements', 'Curated star partnerships that unlock millions of loyal, engaged followers.'],
+            ['03', 'Reddit Marketing',   'Community-first conversations that build genuine brand presence where real opinions live.'],
+            ['04', 'LinkedIn Marketing', 'Platform-native authority campaigns for brand voices that industry actually listens to.'],
+            ['05', 'Twitter/X Trending', 'Engineered cultural moments that get your brand into the national conversation.'],
+            ['06', 'UGC Content',        'Authentic creator-generated assets that convert because they look and feel earned.'],
+            ['07', 'Viral Marketing',    'Strategic campaigns designed with the mechanics of sharing — psychology meets creativity.'],
+            ['08', 'Performance Mktg',   'Data-driven paid campaigns that amplify organic wins and turn attention into revenue.'],
+            ['09', 'Content Production', 'OTT-grade creative: brand films, reels, web series — concept through delivery.'],
+            ['10', 'Brand Strategy',     'Deep positioning work that answers one question: what do you want to be remembered for?'],
+            ['11', 'On-Ground Promos',   'Physical brand activations anchored in digital culture. The moment that becomes the post.'],
         ];
-        foreach ($svcs as $svc): ?>
-        <div class="hs-item">
-            <div class="hs-item-n"><?= $svc[0] ?></div>
-            <h3 class="hs-item-title"><?= htmlspecialchars($svc[1]) ?></h3>
-            <p class="hs-item-desc"><?= htmlspecialchars($svc[2]) ?></p>
+        foreach ($svcs as $s): ?>
+        <div class="h-svc-item">
+            <div class="h-svc-item-n"><?= $s[0] ?></div>
+            <h3 class="h-svc-item-title"><?= htmlspecialchars($s[1]) ?></h3>
+            <p class="h-svc-item-desc"><?= htmlspecialchars($s[2]) ?></p>
         </div>
         <?php endforeach; ?>
     </div>
-    <div class="hs-svc-cta rv">
-        <a href="<?= base_url('contact') ?>" class="btn-ghost">View all services →</a>
+    <div class="h-svc-cta rv">
+        <a href="<?= base_url('contact') ?>" class="btn-outline">View all services &rarr;</a>
     </div>
 </section>
 
-<!-- ── SELECTED WORK ─────────────────────────────────────────── -->
-<section class="hw-work" id="hw-work" aria-labelledby="hw-h">
-    <div class="hw-work-inner">
-        <div class="hw-top">
+<!-- ═══ WORK ══════════════════════════════════════════════════════ -->
+<section class="h-work" id="h-work" aria-labelledby="h-work-h">
+    <div class="h-work-inner">
+        <div class="h-work-top">
             <div>
-                <p class="lbl rv" style="margin-bottom:16px">Selected work</p>
-                <h2 id="hw-h" class="hw-h rv d1">
-                    Work That<br><span>Hit Culture</span>
-                </h2>
+                <span class="s-label rv" style="margin-bottom:16px">Selected work</span>
+                <h2 id="h-work-h" class="h-work-headline rv d1">Work That<br><span>Hit Culture</span></h2>
             </div>
-            <a href="<?= base_url('work') ?>" class="hw-all rv sr">All projects →</a>
+            <a href="<?= base_url('work') ?>" class="h-all-link rv sr">All projects &rarr;</a>
         </div>
-        <div class="hw-grid rv sc">
+        <div class="h-work-grid rv sc" id="h-wg">
             <?php if (empty($posts)): ?>
             <div class="wc-empty">
                 <h3>Great work incoming.</h3>
             </div>
             <?php else:
-                $cls_map = ['wc-A', 'wc-B', 'wc-C', 'wc-D', 'wc-E'];
-                $img_h = ['400px', '400px', '260px', '260px', '260px'];
+                $cols = ['wc-A', 'wc-B', 'wc-C', 'wc-D', 'wc-E'];
+                $heights = ['380px', '380px', '240px', '240px', '240px'];
                 foreach ($posts as $i => $p):
                     if ($i >= 5) break;
-                    $c = $cls_map[$i];
-                    $h = $img_h[$i];
+                    $c = $cols[$i];
+                    $h = $heights[$i];
                 ?>
             <a href="<?= base_url('post/' . $p['slug']) ?>" class="wc <?= $c ?>">
                 <?php if (!empty($p['image'])): ?>
@@ -1830,8 +1734,8 @@
                 <div class="wc-body">
                     <span class="wc-tag"><?= htmlspecialchars($p['author']) ?></span>
                     <h3 class="wc-title"><?= htmlspecialchars($p['title']) ?></h3>
-                    <p class="wc-desc"><?= htmlspecialchars(mb_substr($p['description'], 0, 100)) ?>…</p>
-                    <span class="wc-cta">View Case →</span>
+                    <p class="wc-desc"><?= htmlspecialchars(mb_substr($p['description'], 0, 90)) ?>…</p>
+                    <span class="wc-cta">View Case &rarr;</span>
                 </div>
             </a>
             <?php endforeach;
@@ -1840,142 +1744,130 @@
     </div>
 </section>
 
-<!-- ── TICKER 2 ──────────────────────────────────────────────── -->
-<div class="hh-mq2" aria-hidden="true">
+<!-- ═══ SECOND TICKER ═══════════════════════════════════════════ -->
+<div class="h-ticker2" aria-hidden="true">
     <div class="mq-wrap">
-        <div class="mq-track mq-r" style="--d:32s">
-            <?php foreach (
-                array_merge(
-                    ['MEME MARKETING', 'OTT STRATEGY', 'CREATOR ECONOMY', 'SOCIAL INTELLIGENCE', 'DIGITAL CULTURE', 'CINEMATIC BRAND', 'VIRAL CONTENT', 'CULTURE FIRST'],
-                    ['MEME MARKETING', 'OTT STRATEGY', 'CREATOR ECONOMY', 'SOCIAL INTELLIGENCE', 'DIGITAL CULTURE', 'CINEMATIC BRAND', 'VIRAL CONTENT', 'CULTURE FIRST']
-                ) as $w
-            ): ?>
-            <span class="hh-mq2i"><?= htmlspecialchars($w) ?></span><span class="hh-mq2s"> ✦ </span>
+        <div class="mq-track mq-r" style="--d:34s">
+            <?php foreach (array_merge(['MEME MARKETING', 'OTT STRATEGY', 'CREATOR ECONOMY', 'SOCIAL INTELLIGENCE', 'DIGITAL CULTURE', 'BRAND STRATEGY', 'VIRAL CONTENT', 'CULTURE FIRST'], ['MEME MARKETING', 'OTT STRATEGY', 'CREATOR ECONOMY', 'SOCIAL INTELLIGENCE', 'DIGITAL CULTURE', 'BRAND STRATEGY', 'VIRAL CONTENT', 'CULTURE FIRST']) as $w): ?>
+            <span class="h-ticker2-word"><?= htmlspecialchars($w) ?></span><span class="h-ticker2-sep"> ✦ </span>
             <?php endforeach; ?>
         </div>
     </div>
 </div>
 
-<!-- ── PROOF ─────────────────────────────────────────────────── -->
-<section class="hp-proof" aria-labelledby="hp-proof-h">
-    <div class="hp-proof-strip" aria-hidden="true"></div>
-
-    <div class="hp-proof-top">
+<!-- ═══ PROOF ══════════════════════════════════════════════════ -->
+<section class="h-proof" aria-labelledby="h-proof-h">
+    <div class="h-proof-strip" aria-hidden="true"></div>
+    <div class="h-proof-top">
         <div>
-            <p class="lbl rv" style="margin-bottom:20px">The numbers</p>
-            <h2 id="hp-proof-h" class="hp-proof-h rv d1">Results<br>That<br><em>Speak</em></h2>
+            <span class="s-label rv" style="margin-bottom:18px">The numbers</span>
+            <h2 id="h-proof-h" class="h-proof-headline rv d1">Results<br>That<br><em>Speak</em></h2>
         </div>
-        <p class="hp-proof-sub rv d2">
-            Not metrics we made up. Real campaign outcomes from real budgets, real audiences, and real cultural moments
-            we built together with brands across India.
-        </p>
+        <p class="h-proof-sub rv d2">Not metrics we made up. Real outcomes from real budgets, real audiences, and
+            cultural moments we built together with brands across India.</p>
     </div>
-
-    <!-- BIG COUNTERS -->
-    <div class="hp-counters rv">
+    <div class="h-counters rv">
         <?php foreach (
             [
-                [$settings['stat_campaigns'] ?? '300', '+', 'Campaigns Delivered', 'Every one tracked. Every one optimised.', 'data-count="300" data-suffix="+"'],
-                ['12', 'M+', 'People Reached', 'Across influencer, meme, and cinema channels.', 'data-count="12" data-suffix="M+"'],
-                ['32', '%', 'OTT Market Share', 'Nearly 1 in 3 streaming launches — we ran the campaign.', 'data-count="32" data-suffix="%"'],
-                ['70', '+', 'Influencer Screenings', 'Pre-release events that created genuine organic buzz.', 'data-count="70" data-suffix="+"'],
+                [$settings['stat_campaigns'] ?? '300', '+', 'Campaigns Delivered', 'Tracked, optimised, reported.', 'data-count="300" data-suffix="+"'],
+                ['12', 'M+', 'People Reached', 'Influencer, meme, and performance channels.', 'data-count="12" data-suffix="M+"'],
+                ['10', 'K+', 'Creator Network', 'Vetted across every niche and platform.', 'data-count="10" data-suffix="K+"'],
+                ['24', '-48h', 'Response Time', 'Because campaigns don\'t wait. Neither do we.', ''],
             ] as $c
         ): ?>
-        <div class="hp-counter-cell">
-            <span class="hp-c-n" <?= $c[4] ?>><?= htmlspecialchars($c[0] . $c[1]) ?></span>
-            <span class="hp-c-l"><?= htmlspecialchars($c[2]) ?></span>
-            <p class="hp-c-sub"><?= htmlspecialchars($c[3]) ?></p>
+        <div class="h-counter">
+            <span class="h-cnt-n" <?= $c[4] ?>><?= htmlspecialchars($c[0] . $c[1]) ?></span>
+            <span class="h-cnt-l"><?= htmlspecialchars($c[2]) ?></span>
+            <p class="h-cnt-s"><?= htmlspecialchars($c[3]) ?></p>
         </div>
         <?php endforeach; ?>
     </div>
-
-    <!-- METRIC CARDS -->
-    <div class="hp-metrics rv">
+    <div class="h-metrics rv">
         <?php foreach (
             [
-                ['✦', '10,000+', 'Creator Network', 'Vetted, categorised, precision-matched creators across every niche and platform.'],
-                ['→', '24–48h', 'Response Time', 'We reply fast because campaigns don\'t wait. Neither do we.'],
-                ['◎', '150+', 'Films Promoted', 'Bollywood, Hollywood, indie, OTT — we\'ve done it all.'],
+                ['✦', 'Visibility → Relevance', 'Culture Shift', 'We move brands from being seen to being remembered.'],
+                ['→', 'Content → Positioning', 'Brand Architecture', 'We don\'t fill calendars. We build brand identity.'],
+                ['◎', 'Attention → Revenue', 'Performance Layer', 'Every organic win amplified by precision paid media.'],
             ] as $i => $m
         ): ?>
-        <div class="hp-metric-card rv d<?= $i + 1 ?>">
-            <div class="hp-mc-icon"><?= $m[0] ?></div>
-            <div class="hp-mc-val"><?= htmlspecialchars($m[1]) ?></div>
-            <div class="hp-mc-label"><?= htmlspecialchars($m[2]) ?></div>
-            <p class="hp-mc-desc"><?= htmlspecialchars($m[3]) ?></p>
+        <div class="h-metric rv d<?= $i + 1 ?>">
+            <div class="h-metric-icon"><?= $m[0] ?></div>
+            <div class="h-metric-val"><?= htmlspecialchars($m[1]) ?></div>
+            <div class="h-metric-label"><?= htmlspecialchars($m[2]) ?></div>
+            <p class="h-metric-desc"><?= htmlspecialchars($m[3]) ?></p>
         </div>
         <?php endforeach; ?>
-    </div>
-
-    <!-- TESTIMONIALS: editorial two-col -->
-    <div class="hp-testi">
-        <div class="hp-testi-label">
-            <p class="lbl rv">Client love</p>
-            <h3 class="hp-testi-lh rv d1">What They<br><em>Say</em></h3>
-        </div>
-        <div class="hp-testi-cards">
-            <?php foreach (
-                [
-                    ['"Turned our OTT launch into a genuine cultural moment. 3M+ organic impressions in 72 hours — we genuinely did not expect that."', 'Priya S.', 'Marketing Head, Major OTT Platform', 'Film Promotion'],
-                    ['"Their meme strategy felt completely native — not paid. That level of cultural fluency is extraordinarily rare in any agency."', 'Rohit K.', 'Producer, Bollywood Production House', 'Meme Marketing'],
-                    ['"Flawless from brief to execution. Every single metric came in 40% above target. These people understand the internet."', 'Meera V.', 'Brand Manager, Consumer Electronics', 'Influencer Campaign'],
-                ] as $i => $t
-            ): ?>
-            <div class="hp-tc rv d<?= $i + 1 ?>">
-                <div class="hp-tc-q">"</div>
-                <p class="hp-tc-body"><?= htmlspecialchars($t[0]) ?></p>
-                <div class="hp-tc-footer">
-                    <div>
-                        <span class="hp-tc-name"><?= htmlspecialchars($t[1]) ?></span>
-                        <div class="hp-tc-role"><?= htmlspecialchars($t[2]) ?></div>
-                    </div>
-                    <span class="hp-tc-tag"><?= htmlspecialchars($t[3]) ?></span>
-                </div>
-            </div>
-            <?php endforeach; ?>
-        </div>
     </div>
 </section>
 
-<!-- ── BIG CTA ───────────────────────────────────────────────── -->
-<section class="h-bigcta" aria-label="CTA">
-    <div class="h-bigcta-glow" aria-hidden="true"></div>
-    <div class="h-bigcta-ghost" aria-hidden="true">Culture</div>
-    <div class="h-bigcta-inner">
-        <p class="lbl rv" style="justify-content:center;margin:0 auto 24px">Ready?</p>
-        <h2 class="h-bigcta-h rv d1">Build Something<br><em>Legendary</em></h2>
-        <div class="h-bigcta-row rv d2">
-            <a href="<?= base_url('contact') ?>" class="btn-os btn-os-lg mag-wrap" data-mag>Start a campaign</a>
-            <a href="mailto:<?= htmlspecialchars($settings['site_email'] ?? 'hello@houseofsocial.io') ?>"
-                class="btn-ghost">Email us directly</a>
+<!-- ═══ TESTIMONIALS ══════════════════════════════════════════ -->
+<div class="h-testi">
+    <div class="h-testi-label">
+        <span class="s-label rv">Client love</span>
+        <h3 class="h-testi-headline rv d1">What They<br><em>Say</em></h3>
+    </div>
+    <div class="h-testi-cards">
+        <?php foreach (
+            [
+                ['"Turned our OTT launch into a genuine cultural moment. 3M+ organic impressions in 72 hours. We genuinely did not expect that."', 'Priya S.', 'Marketing Head, OTT Platform', 'Influencer Campaign'],
+                ['"Their meme strategy felt completely native — not paid. That level of cultural fluency is extraordinarily rare in any agency."', 'Rohit K.', 'Producer, Bollywood Production House', 'Meme Marketing'],
+                ['"Flawless from brief to execution. Every metric came in 40% above target. These people understand the internet."', 'Meera V.', 'Brand Manager, Consumer Electronics', 'Full Campaign'],
+            ] as $i => $t
+        ): ?>
+        <div class="h-tc rv d<?= $i + 1 ?>">
+            <div class="h-tc-q">"</div>
+            <p class="h-tc-body"><?= htmlspecialchars($t[0]) ?></p>
+            <div class="h-tc-foot">
+                <div>
+                    <span class="h-tc-name"><?= htmlspecialchars($t[1]) ?></span>
+                    <div class="h-tc-role"><?= htmlspecialchars($t[2]) ?></div>
+                </div>
+                <span class="h-tc-tag"><?= htmlspecialchars($t[3]) ?></span>
+            </div>
         </div>
-        <p class="h-bigcta-sub rv d3">
-            <?= htmlspecialchars($settings['site_phone'] ?? '+91 9990802115') ?> &nbsp;·&nbsp;
+        <?php endforeach; ?>
+    </div>
+</div>
+
+<!-- ═══ CTA ══════════════════════════════════════════════════ -->
+<section class="h-cta" aria-label="CTA">
+    <div class="h-cta-glow" aria-hidden="true"></div>
+    <div class="h-cta-ghost" aria-hidden="true">Culture</div>
+    <div class="h-cta-inner">
+        <span class="s-label rv" style="justify-content:center;margin:0 auto 22px">Ready to start?</span>
+        <h2 class="h-cta-headline rv d1">Build Something<br><em>Legendary</em></h2>
+        <div class="h-cta-row rv d2">
+            <a href="<?= base_url('contact') ?>" class="btn-primary lg">Start a campaign</a>
+            <a href="mailto:<?= htmlspecialchars($settings['site_email'] ?? 'hello@houseofsocial.io') ?>"
+                class="btn-outline" data-no-wipe>Email us directly</a>
+        </div>
+        <p class="h-cta-sub rv d3">
+            <?= htmlspecialchars($settings['site_phone'] ?? '+91 9990802115') ?> &nbsp;&middot;&nbsp;
             <?= htmlspecialchars($settings['site_email'] ?? 'hello@houseofsocial.io') ?>
         </p>
     </div>
 </section>
 
 <script>
-/* tile grid responsiveness */
+/* Work grid column fix — responsive */
 (function() {
-    function fix() {
+    function fixCols() {
         var w = window.innerWidth;
         var map = {
-            'wc-A': w < 900 ? '1/-1' : w < 1200 ? '1/-1' : '1/8',
-            'wc-B': w < 900 ? '1/-1' : w < 1200 ? '1/-1' : '8/13',
-            'wc-C': w < 640 ? '1/-1' : w < 900 ? 'span 6' : w < 1200 ? 'span 4' : '1/5',
-            'wc-D': w < 640 ? '1/-1' : w < 900 ? 'span 6' : w < 1200 ? 'span 4' : '5/9',
-            'wc-E': w < 640 ? '1/-1' : w < 900 ? 'span 6' : w < 1200 ? 'span 4' : '9/13'
+            'wc-A': w < 900 ? '1/-1' : w < 1280 ? '1/-1' : '1/8',
+            'wc-B': w < 900 ? '1/-1' : w < 1280 ? '1/-1' : '8/13',
+            'wc-C': w < 600 ? '1/-1' : w < 900 ? 'span 6' : w < 1280 ? 'span 4' : '1/5',
+            'wc-D': w < 600 ? '1/-1' : w < 900 ? 'span 6' : w < 1280 ? 'span 4' : '5/9',
+            'wc-E': w < 600 ? '1/-1' : w < 900 ? 'span 6' : w < 1280 ? 'span 4' : '9/13'
         };
         Object.keys(map).forEach(function(k) {
             document.querySelectorAll('.' + k).forEach(function(el) {
-                el.style.gridColumn = map[k]
+                el.style.gridColumn = map[k];
             });
         });
     }
-    fix();
-    window.addEventListener('resize', fix, {
+    fixCols();
+    window.addEventListener('resize', fixCols, {
         passive: true
     });
 }());
