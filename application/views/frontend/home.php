@@ -1584,10 +1584,10 @@
     </div>
 
     <!-- SCROLL CUE -->
-    <div class="h-scroll-cue" aria-hidden="true">
+    <!-- <div class="h-scroll-cue" aria-hidden="true">
         <div class="h-scroll-line"></div>
         <span class="h-scroll-txt">Scroll</span>
-    </div>
+    </div> -->
 </section>
 
 <!-- ═══ TICKER ══════════════════════════════════════════════════════ -->

@@ -908,8 +908,7 @@
             <button id="a-menu-btn" onclick="aSidebarToggle()" aria-label="Toggle sidebar" aria-expanded="false">
                 <i class="fa fa-bars" id="a-ham-icon"></i>
             </button>
-            <span
-                class="a-top-title"><?= isset($site_title) ? htmlspecialchars($site_title) . ' — Admin' : 'HouseOfSocial Admin' ?></span>
+            <span class="a-top-title">House Of Social — Admin</span>
             <span class="a-top-date"><?= date('D, d M Y') ?></span>
         </header>
 
