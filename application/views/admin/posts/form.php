@@ -1,135 +1,121 @@
 <?php
 defined('BASEPATH') or exit('No direct script access allowed');
-
 $form_action = ($action === 'create')
     ? base_url('admin/posts/store')
     : base_url('admin/posts/update/' . $post['id']);
 ?>
-
 <style>
-.pf-wrap {
+.pf-layout {
     display: grid;
-    grid-template-columns: 1fr 280px;
+    grid-template-columns: 1fr 272px;
     gap: 18px;
     align-items: start;
     width: 100%;
 }
 
-.pf-wrap>* {
-    min-width: 0;
-}
-
-@media (max-width: 1100px) {
-    .pf-wrap {
-        grid-template-columns: 1fr 240px;
-    }
-}
-
-@media (max-width: 768px) {
-    .pf-wrap {
-        grid-template-columns: 1fr;
-    }
-}
-
 .pf-sidebar {
     position: sticky;
-    top: 72px;
+    top: calc(var(--topH) + 16px);
     display: flex;
     flex-direction: column;
     gap: 16px;
 }
 
-@media (max-width: 768px) {
+@media(max-width:1100px) {
+    .pf-layout {
+        grid-template-columns: 1fr 240px;
+    }
+}
+
+@media(max-width:768px) {
+    .pf-layout {
+        grid-template-columns: 1fr;
+    }
+
     .pf-sidebar {
         position: static;
     }
 }
 
 .ck.ck-editor__editable {
-    min-height: 340px !important;
+    min-height: 320px !important;
 }
 
-@media (max-width: 640px) {
+@media(max-width:640px) {
     .ck.ck-editor__editable {
-        min-height: 220px !important;
+        min-height: 200px !important;
     }
 }
 </style>
 
-<!-- Page header -->
-<div class="page-hdr">
+<!-- Header -->
+<div class="a-page-hdr">
     <div>
         <a href="<?= base_url('admin/posts') ?>"
-            style="font-size:12px;color:var(--muted);display:inline-flex;align-items:center;gap:6px;margin-bottom:8px;">
-            <i class="fa fa-arrow-left" style="font-size:10px;"></i> Back to Posts
+            style="font-size:12px;color:var(--g3);display:inline-flex;align-items:center;gap:6px;margin-bottom:7px">
+            <i class="fa fa-arrow-left" style="font-size:10px"></i> Back to Posts
         </a>
-        <div class="page-hdr-title"><?= ($action === 'create') ? 'Create New Post' : 'Edit Post' ?></div>
-        <div class="page-hdr-sub">
-            <?= ($action === 'create') ? 'Add a new campaign or article' : 'Update post details' ?>
+        <div class="a-page-title"><?= ($action === 'create') ? 'Create New Post' : 'Edit Post' ?></div>
+        <div class="a-page-sub"><?= ($action === 'create') ? 'Add a new campaign or article' : 'Update post details' ?>
         </div>
     </div>
 </div>
 
 <?php if (!empty($flash)): ?>
-<div class="flash-error"><i class="fa fa-triangle-exclamation"></i> <?= $flash ?></div>
+<div class="a-flash a-flash-err"><i class="fa fa-triangle-exclamation"></i> <?= $flash ?></div>
 <?php endif; ?>
-
 <?php if ($this->session->flashdata('upload_error')): ?>
-<div class="flash-error">
-    <i class="fa fa-triangle-exclamation"></i>
-    Cover image upload failed: <?= htmlspecialchars($this->session->flashdata('upload_error')) ?>
-</div>
+<div class="a-flash a-flash-err"><i class="fa fa-triangle-exclamation"></i> Cover image upload failed:
+    <?= htmlspecialchars($this->session->flashdata('upload_error')) ?></div>
 <?php endif; ?>
 
 <?php echo form_open_multipart($form_action, ['id' => 'cc-post-form']); ?>
 
-<div class="pf-wrap">
+<div class="pf-layout">
 
     <!-- LEFT: Main content -->
-    <div class="space-y">
+    <div class="a-space">
 
-        <div class="card card-pad space-y">
+        <!-- Title + Description -->
+        <div class="a-card a-card-pad a-space">
             <div>
-                <label>Post Title <span style="color:var(--gold)">*</span></label>
-                <input type="text" name="title" placeholder="e.g. The Kerala Story — Influencer Campaign"
+                <label class="a-label">Post Title <span style="color:var(--flame)">*</span></label>
+                <input type="text" name="title" class="a-input"
+                    placeholder="e.g. The Kerala Story — Influencer Campaign"
                     value="<?= set_value('title', $post['title'] ?? '') ?>">
-                <?= form_error('title', '<p style="color:var(--danger);font-size:11px;margin-top:4px;">', '</p>') ?>
+                <?= form_error('title', '<p style="color:var(--red);font-size:11px;margin-top:4px">', '</p>') ?>
             </div>
-
             <div>
-                <label>Short Description <span style="color:var(--gold)">*</span></label>
-                <textarea name="description" rows="3"
+                <label class="a-label">Short Description <span style="color:var(--flame)">*</span></label>
+                <textarea name="description" class="a-input" rows="3"
                     placeholder="Brief summary shown on the homepage card..."><?= set_value('description', $post['description'] ?? '') ?></textarea>
-                <?= form_error('description', '<p style="color:var(--danger);font-size:11px;margin-top:4px;">', '</p>') ?>
+                <?= form_error('description', '<p style="color:var(--red);font-size:11px;margin-top:4px">', '</p>') ?>
             </div>
         </div>
 
-        <!-- Rich editor -->
-        <div class="card card-pad">
-            <label style="margin-bottom:10px;">Full Content (Rich Editor)</label>
+        <!-- Rich Editor -->
+        <div class="a-card a-card-pad">
+            <label class="a-label" style="margin-bottom:10px">Full Content</label>
             <textarea name="content" id="cc-content-field"
-                style="display:none;"><?= set_value('content', $post['content'] ?? '') ?></textarea>
+                style="display:none"><?= set_value('content', $post['content'] ?? '') ?></textarea>
             <div id="cc-ck-editor"></div>
-            <p style="font-size:11px;color:var(--muted);margin-top:8px;">
-                Supports headings, bold, italic, lists, links, images, and tables.
-            </p>
+            <p style="font-size:11px;color:var(--g3);margin-top:8px">Supports headings, bold, italic, lists, links,
+                images, and tables.</p>
         </div>
 
     </div><!-- /left -->
 
-    <!-- RIGHT: Sidebar meta -->
+    <!-- RIGHT: Sidebar -->
     <div class="pf-sidebar">
 
-        <!-- Publish settings -->
-        <div class="card card-pad space-y">
-            <div
-                style="font-size:11px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:var(--ivory);">
-                Publish Settings
-            </div>
+        <!-- Publish -->
+        <div class="a-card a-card-pad a-space">
+            <div style="font-size:10px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--g4)">
+                Publish</div>
 
             <div>
-                <label>Status</label>
-                <select name="status">
+                <label class="a-label">Status</label>
+                <select name="status" class="a-input">
                     <option value="1" <?= (!isset($post) || $post['status'] == 1) ? 'selected' : '' ?>>✅ Active
                         (Visible)</option>
                     <option value="0" <?= (isset($post) && $post['status'] == 0) ? 'selected' : '' ?>>🔒 Hidden</option>
@@ -137,72 +123,63 @@ $form_action = ($action === 'create')
             </div>
 
             <div>
-                <label>Author <span style="color:var(--gold)">*</span></label>
-                <input type="text" name="author" placeholder="The Cine Caffe Team"
-                    value="<?= set_value('author', $post['author'] ?? 'The Cine Caffe Team') ?>">
-                <?= form_error('author', '<p style="color:var(--danger);font-size:11px;margin-top:4px;">', '</p>') ?>
+                <label class="a-label">Author <span style="color:var(--flame)">*</span></label>
+                <input type="text" name="author" class="a-input" placeholder="HouseOfSocial Team"
+                    value="<?= set_value('author', $post['author'] ?? 'HouseOfSocial Team') ?>">
+                <?= form_error('author', '<p style="color:var(--red);font-size:11px;margin-top:4px">', '</p>') ?>
             </div>
 
             <div>
-                <label>External Link <span
-                        style="color:var(--muted);font-size:10px;text-transform:none;letter-spacing:0;">(optional)</span></label>
-                <input type="url" name="external_link" placeholder="https://..."
+                <label class="a-label">External Link <span
+                        style="font-size:10px;color:var(--g3);text-transform:none;letter-spacing:0">(optional)</span></label>
+                <input type="url" name="external_link" class="a-input" placeholder="https://..."
                     value="<?= set_value('external_link', $post['external_link'] ?? '') ?>">
             </div>
 
-            <button type="submit" class="btn-primary" style="width:100%;justify-content:center;padding:12px;">
+            <button type="submit" class="a-btn-primary"
+                style="width:100%;justify-content:center;padding:12px;font-size:13.5px">
                 <i class="fa fa-<?= ($action === 'create') ? 'plus' : 'save' ?>"></i>
                 <?= ($action === 'create') ? 'Publish Post' : 'Update Post' ?>
             </button>
         </div>
 
-        <!-- Cover image -->
-        <div class="card card-pad space-y">
-            <div
-                style="font-size:11px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:var(--ivory);">
-                Cover Image
-            </div>
+        <!-- Cover Image -->
+        <div class="a-card a-card-pad a-space">
+            <div style="font-size:10px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--g4)">
+                Cover Image</div>
 
             <?php if (!empty($post['image'])): ?>
             <div>
                 <img src="<?= base_url('assets/images/uploads/' . $post['image']) ?>" alt="Current cover"
-                    style="width:100%;max-height:160px;object-fit:cover;border-radius:8px;">
-                <p style="font-size:11px;color:var(--muted);margin-top:6px;">Upload new to replace</p>
+                    style="width:100%;max-height:150px;object-fit:cover;border-radius:6px">
+                <p style="font-size:11px;color:var(--g3);margin-top:6px">Upload new to replace</p>
             </div>
             <?php endif; ?>
 
             <div>
-                <label>Upload Image</label>
-                <input type="file" name="image" id="cc-img-input" accept="image/jpeg,image/png,image/gif,image/webp">
-                <p style="font-size:11px;color:var(--muted);margin-top:4px;">JPG / PNG / WebP / GIF — max 5 MB</p>
+                <label class="a-label">Upload Image</label>
+                <input type="file" name="image" id="cc-img-input" class="a-input"
+                    accept="image/jpeg,image/png,image/gif,image/webp">
+                <p style="font-size:11px;color:var(--g3);margin-top:4px">JPG / PNG / WebP / GIF — max 5 MB</p>
             </div>
 
-            <div id="cc-img-preview" style="display:none;">
+            <div id="cc-img-preview" style="display:none">
                 <img id="cc-preview-img" src="" alt="Preview"
-                    style="width:100%;max-height:160px;object-fit:cover;border-radius:8px;">
-                <p style="font-size:11px;color:var(--muted);margin-top:6px;">Preview</p>
+                    style="width:100%;max-height:150px;object-fit:cover;border-radius:6px">
+                <p style="font-size:11px;color:var(--g3);margin-top:5px">Preview</p>
             </div>
         </div>
 
     </div><!-- /sidebar -->
-
-</div><!-- /pf-wrap -->
+</div><!-- /pf-layout -->
 
 <?php echo form_close(); ?>
 
-
 <!-- CKEditor 5 GPL -->
 <link rel="stylesheet" href="https://cdn.ckeditor.com/ckeditor5/43.3.1/ckeditor5.css">
-
 <script type="importmap">
-    {
-  "imports": {
-    "ckeditor5":  "https://cdn.ckeditor.com/ckeditor5/43.3.1/ckeditor5.js",
-    "ckeditor5/": "https://cdn.ckeditor.com/ckeditor5/43.3.1/"
-  }
-}
+    {"imports":{"ckeditor5":"https://cdn.ckeditor.com/ckeditor5/43.3.1/ckeditor5.js","ckeditor5/":"https://cdn.ckeditor.com/ckeditor5/43.3.1/"}}
 </script>
-
 <script type="module">
 import {
     ClassicEditor,
@@ -287,21 +264,18 @@ function CiUploadPlugin(editor) {
 
 ClassicEditor.create(document.getElementById('cc-ck-editor'), {
     licenseKey: 'GPL',
-    plugins: [
-        Essentials, Bold, Italic, Underline, Strikethrough,
-        Paragraph, Heading, Link, List, BlockQuote,
-        Table, TableToolbar,
-        Image, ImageUpload, ImageToolbar, ImageCaption, ImageStyle, ImageResize,
-        MediaEmbed, HorizontalLine, Indent, IndentBlock, Alignment,
-        FontSize, FontColor, Code, CodeBlock, CiUploadPlugin
+    plugins: [Essentials, Bold, Italic, Underline, Strikethrough, Paragraph, Heading, Link, List,
+        BlockQuote, Table, TableToolbar, Image, ImageUpload, ImageToolbar, ImageCaption, ImageStyle,
+        ImageResize, MediaEmbed, HorizontalLine, Indent, IndentBlock, Alignment, FontSize, FontColor,
+        Code, CodeBlock, CiUploadPlugin
     ],
     toolbar: {
-        items: [
-            'heading', '|', 'bold', 'italic', 'underline', 'strikethrough', '|',
-            'fontSize', 'fontColor', '|', 'alignment', '|',
-            'bulletedList', 'numberedList', 'outdent', 'indent', '|',
-            'link', 'uploadImage', 'mediaEmbed', 'insertTable', '|',
-            'blockQuote', 'horizontalLine', 'code', 'codeBlock', '|', 'undo', 'redo'
+        items: ['heading', '|', 'bold', 'italic', 'underline', 'strikethrough', '|', 'fontSize', 'fontColor',
+            '|',
+            'alignment', '|', 'bulletedList', 'numberedList', 'outdent', 'indent', '|', 'link',
+            'uploadImage',
+            'mediaEmbed', 'insertTable', '|', 'blockQuote', 'horizontalLine', 'code', 'codeBlock', '|',
+            'undo', 'redo'
         ],
         shouldNotGroupWhenFull: false
     },
@@ -328,7 +302,7 @@ ClassicEditor.create(document.getElementById('cc-ck-editor'), {
                 view: 'h3',
                 title: 'Heading 3',
                 class: 'ck-heading_heading3'
-            },
+            }
         ]
     },
     table: {
@@ -341,7 +315,6 @@ ClassicEditor.create(document.getElementById('cc-ck-editor'), {
     },
     initialData: document.getElementById('cc-content-field').value || '',
     placeholder: 'Start writing your post content here...'
-
 }).then(editor => {
     window._ccEditor = editor;
     document.getElementById('cc-post-form').addEventListener('submit', () => {
@@ -361,11 +334,11 @@ ClassicEditor.create(document.getElementById('cc-ck-editor'), {
 <script>
 document.getElementById('cc-img-input').addEventListener('change', function() {
     if (!this.files[0]) return;
-    var reader = new FileReader();
-    reader.onload = function(e) {
+    var r = new FileReader();
+    r.onload = function(e) {
         document.getElementById('cc-preview-img').src = e.target.result;
         document.getElementById('cc-img-preview').style.display = 'block';
     };
-    reader.readAsDataURL(this.files[0]);
+    r.readAsDataURL(this.files[0]);
 });
 </script>

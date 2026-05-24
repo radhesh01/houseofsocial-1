@@ -1,14 +1,13 @@
 <?php defined('BASEPATH') or exit('No direct script access allowed'); ?>
 <style>
 /* ================================================================
-   WORK PAGE
+   WORK PAGE — HouseOfSocial
 ================================================================ */
 .wk-hero {
-    background: var(--olive-dk);
-    padding: 160px var(--px) 80px;
+    background: var(--s0);
+    padding: calc(var(--navH) + 80px) var(--px) 72px;
     position: relative;
     overflow: hidden;
-    z-index: 1;
     min-height: 56vh;
     display: flex;
     flex-direction: column;
@@ -17,26 +16,14 @@
 
 .wk-hero-glow {
     position: absolute;
-    border-radius: 50%;
-    filter: blur(110px);
+    top: -180px;
+    right: -120px;
+    width: 580px;
+    height: 580px;
+    background: radial-gradient(circle, rgba(255, 60, 0, .08) 0%, transparent 60%);
+    filter: blur(90px);
     pointer-events: none;
     z-index: 0;
-}
-
-.wk-g1 {
-    width: 480px;
-    height: 480px;
-    background: rgba(212, 146, 10, .09);
-    top: -130px;
-    right: -90px;
-}
-
-.wk-g2 {
-    width: 300px;
-    height: 300px;
-    background: rgba(107, 122, 85, .18);
-    bottom: 8%;
-    left: -70px;
 }
 
 .wk-hero-bg {
@@ -44,12 +31,13 @@
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
-    font-family: var(--f-d);
-    font-size: clamp(100px, 20vw, 300px);
+    font-family: var(--fDisplay);
+    font-size: clamp(100px, 20vw, 310px);
+    font-weight: 700;
     letter-spacing: .02em;
     line-height: 1;
     color: transparent;
-    -webkit-text-stroke: 1.5px rgba(242, 234, 216, .04);
+    -webkit-text-stroke: 1.5px rgba(244, 241, 236, .03);
     white-space: nowrap;
     pointer-events: none;
     user-select: none;
@@ -59,83 +47,92 @@
 .wk-hero-content {
     position: relative;
     z-index: 2;
-    max-width: var(--max);
+    max-width: var(--maxW);
 }
 
 .wk-h1 {
-    font-family: var(--f-d);
-    font-size: clamp(88px, 14vw, 210px);
+    font-family: var(--fDisplay);
+    font-size: clamp(80px, 13vw, 200px);
+    font-weight: 700;
+    letter-spacing: -.05em;
     line-height: .82;
-    letter-spacing: .02em;
-    color: var(--cream);
-    margin-bottom: 22px;
+    color: var(--paper);
+    margin-bottom: 20px;
 }
 
-.wk-h1 span {
+.wk-h1 em {
+    font-style: normal;
     color: transparent;
-    -webkit-text-stroke: 2px rgba(242, 234, 216, .5);
+    -webkit-text-stroke: 2px rgba(244, 241, 236, .4);
 }
 
 .wk-hero-sub {
-    font-family: var(--f-c);
-    font-size: 13px;
-    font-weight: 700;
+    font-size: clamp(13px, 1.4vw, 16px);
+    font-weight: 500;
     letter-spacing: .22em;
     text-transform: uppercase;
-    color: rgba(242, 234, 216, .36);
-    max-width: 520px;
+    color: var(--ghost3);
+    max-width: 500px;
     line-height: 1.8;
 }
 
-/* counter strip */
+/* Stats strip */
 .wk-strip {
-    background: var(--ink);
-    border-top: 2px solid var(--amber);
+    background: var(--s1);
+    border-top: 2px solid var(--flame);
 }
 
 .wk-strip-inner {
-    max-width: var(--max);
+    max-width: var(--maxW);
     margin: 0 auto;
     display: grid;
     grid-template-columns: repeat(4, 1fr);
 }
 
-.wk-strip-cell {
-    padding: 28px var(--px);
-    border-right: 1px solid rgba(242, 234, 216, .07);
+.wk-stat {
+    padding: 26px var(--px);
+    border-right: 1px solid var(--b1);
     text-align: center;
+    cursor: default;
+    transition: background .2s;
 }
 
-.wk-strip-cell:last-child {
+.wk-stat:last-child {
     border-right: none;
 }
 
-.wk-strip-n {
-    font-family: var(--f-d);
-    font-size: clamp(32px, 4vw, 52px);
-    line-height: 1;
-    color: var(--amber);
-    letter-spacing: .02em;
+.wk-stat:hover {
+    background: rgba(255, 60, 0, .04);
 }
 
-.wk-strip-l {
-    font-family: var(--f-c);
-    font-size: 9px;
+.wk-stat-n {
+    font-family: var(--fDisplay);
+    font-size: clamp(28px, 3.5vw, 50px);
     font-weight: 700;
-    letter-spacing: .22em;
-    text-transform: uppercase;
-    color: rgba(242, 234, 216, .3);
-    margin-top: 5px;
+    letter-spacing: -.03em;
+    color: var(--flame);
+    line-height: 1;
+    display: block;
 }
 
-/* grid section */
+.wk-stat-l {
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: .2em;
+    text-transform: uppercase;
+    color: var(--ghost3);
+    margin-top: 6px;
+    display: block;
+}
+
+/* Grid section */
 .wk-grid-sec {
-    background: var(--cream);
-    padding: var(--sec-py) var(--px);
+    background: var(--paper);
+    padding: var(--sec) var(--px);
 }
 
 .wk-grid-wrap {
-    max-width: var(--max);
+    max-width: var(--maxW);
     margin: 0 auto;
 }
 
@@ -143,33 +140,35 @@
     display: flex;
     align-items: flex-end;
     justify-content: space-between;
-    margin-bottom: var(--s14);
+    margin-bottom: clamp(36px, 5vw, 64px);
     flex-wrap: wrap;
-    gap: var(--s6);
+    gap: 24px;
 }
 
 .wk-grid-h {
-    font-family: var(--f-d);
+    font-family: var(--fDisplay);
     font-size: clamp(44px, 7vw, 96px);
+    font-weight: 700;
+    letter-spacing: -.04em;
     line-height: .88;
-    letter-spacing: .02em;
     color: var(--ink);
 }
 
-.wk-grid-h span {
-    color: var(--olive);
+.wk-grid-h em {
+    font-style: normal;
+    color: var(--flame);
 }
 
 .wk-grid-sub {
-    font-family: var(--f-s);
-    font-style: italic;
-    font-size: 15px;
-    color: var(--muted);
-    max-width: 300px;
-    line-height: 1.82;
+    font-size: 14px;
+    color: rgba(8, 8, 12, .5);
+    max-width: 280px;
+    line-height: 1.78;
+    text-align: right;
+    align-self: flex-end;
 }
 
-/* the main grid */
+/* Cards grid */
 .wk-grid {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
@@ -181,14 +180,14 @@
 .wk-card {
     position: relative;
     overflow: hidden;
-    background: var(--ink-2);
+    background: var(--s2);
     display: block;
     text-decoration: none;
     transition: background .35s;
 }
 
 .wk-card:hover {
-    background: var(--ink-3);
+    background: var(--s3);
 }
 
 .wk-card::after {
@@ -198,7 +197,7 @@
     left: 0;
     right: 0;
     height: 3px;
-    background: var(--amber);
+    background: var(--flame);
     transform: scaleX(0);
     transform-origin: left;
     transition: transform .45s var(--ease);
@@ -209,7 +208,7 @@
 }
 
 .wk-card-img {
-    height: 240px;
+    height: 220px;
     overflow: hidden;
     position: relative;
 }
@@ -218,68 +217,69 @@
     width: 100%;
     height: 100%;
     object-fit: cover;
-    filter: brightness(.46) saturate(.65);
+    filter: brightness(.44) saturate(.55);
     transition: transform .8s var(--ease), filter .8s;
 }
 
 .wk-card:hover .wk-card-img img {
-    transform: scale(1.07);
-    filter: brightness(.66) saturate(1);
+    transform: scale(1.06);
+    filter: brightness(.62) saturate(.9);
 }
 
 .wk-card-img::after {
     content: '';
     position: absolute;
     inset: 0;
-    background: linear-gradient(to top, rgba(26, 26, 16, .95) 0%, transparent 55%);
+    background: linear-gradient(to top, rgba(8, 8, 12, .95) 0%, transparent 55%);
 }
 
 .wk-card-ph {
     display: flex;
     align-items: center;
     justify-content: center;
-    background: var(--ink);
+    background: var(--s3);
 }
 
 .wk-card-ph span {
-    font-family: var(--f-d);
+    font-family: var(--fDisplay);
     font-size: 52px;
-    color: rgba(242, 234, 216, .04);
+    font-weight: 700;
+    color: var(--ghost2);
 }
 
 .wk-card-body {
-    padding: 28px;
+    padding: 26px 28px 32px;
 }
 
-.wk-card-author {
-    font-family: var(--f-c);
+.wk-card-tag {
     font-size: 9px;
     font-weight: 700;
-    letter-spacing: .24em;
+    letter-spacing: .22em;
     text-transform: uppercase;
-    color: var(--amber);
-    opacity: .72;
-    margin-bottom: 10px;
+    color: var(--flame);
+    opacity: .8;
+    margin-bottom: 9px;
     display: block;
 }
 
 .wk-card-title {
-    font-family: var(--f-d);
-    font-size: clamp(22px, 2.5vw, 30px);
-    letter-spacing: .02em;
-    color: var(--cream);
-    margin-bottom: 10px;
+    font-family: var(--fDisplay);
+    font-size: clamp(20px, 2.4vw, 28px);
+    font-weight: 700;
+    letter-spacing: -.02em;
+    color: var(--paper);
     line-height: 1.1;
-    transition: color .28s;
+    margin-bottom: 10px;
+    transition: color .22s;
 }
 
 .wk-card:hover .wk-card-title {
-    color: var(--amber-2);
+    color: var(--flame);
 }
 
 .wk-card-desc {
-    font-size: 13.5px;
-    color: rgba(242, 234, 216, .34);
+    font-size: 13px;
+    color: var(--ghost3);
     line-height: 1.68;
     display: -webkit-box;
     -webkit-line-clamp: 2;
@@ -292,90 +292,92 @@
     align-items: center;
     gap: 7px;
     margin-top: 16px;
-    font-family: var(--f-c);
     font-size: 10px;
-    font-weight: 700;
+    font-weight: 600;
     letter-spacing: .2em;
     text-transform: uppercase;
-    color: rgba(242, 234, 216, .22);
-    transition: color .25s, gap .25s;
+    color: var(--ghost3);
+    transition: color .22s, gap .22s;
 }
 
 .wk-card:hover .wk-card-cta {
-    color: var(--amber-2);
+    color: var(--flame);
     gap: 12px;
 }
 
-/* empty state */
+/* Empty state */
 .wk-empty {
     grid-column: span 3;
-    padding: 88px;
+    padding: 80px;
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: 16px;
-    background: var(--ink-2);
+    gap: 14px;
+    background: var(--s2);
     text-align: center;
 }
 
 .wk-empty-h {
-    font-family: var(--f-d);
+    font-family: var(--fDisplay);
     font-size: 44px;
-    color: rgba(242, 234, 216, .15);
+    font-weight: 700;
+    color: var(--ghost3);
 }
 
 .wk-empty-p {
     font-size: 15px;
-    color: rgba(242, 234, 216, .22);
+    color: var(--ghost3);
 }
 
-/* CTA bottom */
+/* CTA */
 .wk-cta {
-    background: var(--ink);
-    border-top: 1px solid rgba(242, 234, 216, .07);
-    padding: var(--s16) var(--px);
+    background: var(--s0);
+    border-top: 1px solid var(--b1);
+    padding: var(--sec) var(--px);
     text-align: center;
 }
 
 .wk-cta-h {
-    font-family: var(--f-d);
+    font-family: var(--fDisplay);
     font-size: clamp(40px, 6vw, 84px);
+    font-weight: 700;
+    letter-spacing: -.04em;
     line-height: .88;
-    letter-spacing: .02em;
-    color: var(--cream);
-    margin-bottom: var(--s10);
+    color: var(--paper);
+    margin-bottom: var(--sec);
 }
 
-.wk-cta-h span {
-    color: var(--amber);
+.wk-cta-h em {
+    font-style: normal;
+    color: var(--flame);
 }
 
-@media(max-width:1024px) {
+@media (max-width:1024px) {
     .wk-grid {
         grid-template-columns: 1fr 1fr;
     }
 }
 
-@media(max-width:768px) {
-    .wk-hero {
-        padding-top: 120px;
-    }
-
+@media (max-width:768px) {
     .wk-strip-inner {
         grid-template-columns: 1fr 1fr;
     }
 
-    .wk-strip-cell {
-        border-bottom: 1px solid rgba(242, 234, 216, .07);
+    .wk-stat {
+        border-bottom: 1px solid var(--b1);
     }
 
     .wk-grid-hdr {
         flex-direction: column;
         align-items: flex-start;
     }
+
+    .wk-grid-sub {
+        text-align: left;
+    }
 }
 
-@media(max-width:600px) {
+@media (max-width:600px) {
     .wk-grid {
         grid-template-columns: 1fr;
     }
@@ -393,23 +395,23 @@
 
 <!-- HERO -->
 <section class="wk-hero" aria-labelledby="wk-h1">
-    <div class="wk-hero-glow wk-g1" aria-hidden="true"></div>
-    <div class="wk-hero-glow wk-g2" aria-hidden="true"></div>
+    <div class="wk-hero-glow" aria-hidden="true"></div>
     <div class="wk-hero-bg" aria-hidden="true">WORK</div>
     <div class="wk-hero-content">
-        <p class="s-lbl rv" style="color:rgba(242,234,216,.36);margin-bottom:20px">Portfolio</p>
-        <h1 id="wk-h1" class="wk-h1 rv d1">OUR<br><span>WORK</span></h1>
-        <p class="wk-hero-sub rv d2">300+ campaigns delivered across Bollywood, Hollywood, OTT, sports &amp; brands.</p>
+        <span class="s-label rv" style="color:var(--ghost3);margin-bottom:18px">Portfolio</span>
+        <h1 id="wk-h1" class="wk-h1 rv d1">Our<br><em>Work</em></h1>
+        <p class="wk-hero-sub rv d2">300+ campaigns delivered across influencer marketing, meme culture, OTT, sports
+            &amp; brands.</p>
     </div>
 </section>
 
-<!-- STATS STRIP -->
+<!-- STATS -->
 <div class="wk-strip">
     <div class="wk-strip-inner">
-        <?php foreach ([['300+', 'Campaigns'], ['32%', 'OTT Releases'], ['12M+', 'People Reached'], ['150+', 'Films Promoted']] as $i => $s): ?>
-        <div class="wk-strip-cell rv d<?= $i + 1 ?>">
-            <div class="wk-strip-n"><?= $s[0] ?></div>
-            <div class="wk-strip-l"><?= $s[1] ?></div>
+        <?php foreach ([['300+', 'Campaigns'], ['32%', 'OTT Releases'], ['12M+', 'People Reached'], ['150+', 'Brands']] as $i => $s): ?>
+        <div class="wk-stat rv d<?= $i + 1 ?>">
+            <span class="wk-stat-n"><?= $s[0] ?></span>
+            <span class="wk-stat-l"><?= $s[1] ?></span>
         </div>
         <?php endforeach; ?>
     </div>
@@ -420,14 +422,14 @@
     <div class="wk-grid-wrap">
         <div class="wk-grid-hdr">
             <div class="rv sl">
-                <p class="s-lbl" style="color:var(--olive);margin-bottom:14px">Case Studies</p>
-                <h2 class="wk-grid-h">ALL <span>WORK</span></h2>
+                <span class="s-label" style="color:var(--flame);margin-bottom:14px">Case Studies</span>
+                <h2 class="wk-grid-h">All <em>Work</em></h2>
             </div>
             <p class="wk-grid-sub rv sr">Every campaign crafted with cultural intelligence and executed to perfection.
             </p>
         </div>
 
-        <div class="wk-grid rv ss">
+        <div class="wk-grid rv sc">
             <?php if (empty($posts)): ?>
             <div class="wk-empty">
                 <p class="wk-empty-h">Coming Soon</p>
@@ -437,18 +439,16 @@
             <a href="<?= base_url('post/' . $post['slug']) ?>" class="wk-card"
                 aria-label="<?= htmlspecialchars($post['title']) ?>">
                 <?php if ($post['image']): ?>
-                <div class="wk-card-img">
-                    <img src="<?= base_url('assets/images/uploads/' . $post['image']) ?>"
-                        alt="<?= htmlspecialchars($post['title']) ?>" loading="lazy">
-                </div>
+                <div class="wk-card-img"><img src="<?= base_url('assets/images/uploads/' . $post['image']) ?>"
+                        alt="<?= htmlspecialchars($post['title']) ?>" loading="lazy"></div>
                 <?php else: ?>
-                <div class="wk-card-img wk-card-ph"><span>Cine</span></div>
+                <div class="wk-card-img wk-card-ph"><span>HOS</span></div>
                 <?php endif; ?>
                 <div class="wk-card-body">
-                    <span class="wk-card-author"><?= htmlspecialchars($post['author']) ?></span>
+                    <span class="wk-card-tag"><?= htmlspecialchars($post['author']) ?></span>
                     <h2 class="wk-card-title"><?= htmlspecialchars($post['title']) ?></h2>
                     <p class="wk-card-desc"><?= htmlspecialchars($post['description']) ?></p>
-                    <div class="wk-card-cta">View Campaign <span>&rarr;</span></div>
+                    <div class="wk-card-cta">View Campaign <span>→</span></div>
                 </div>
             </a>
             <?php endforeach;
@@ -459,11 +459,11 @@
 
 <!-- CTA -->
 <div class="wk-cta">
-    <p class="s-lbl rv" style="color:rgba(242,234,216,.26);justify-content:center;margin:0 auto 18px">Ready to be next?
-    </p>
-    <h2 class="wk-cta-h rv d1">START YOUR<br><span>CAMPAIGN</span></h2>
+    <span class="s-label rv" style="color:var(--ghost3);justify-content:center;margin:0 auto 18px">Ready to be
+        next?</span>
+    <h2 class="wk-cta-h rv d1">Start Your<br><em>Campaign</em></h2>
     <div style="display:flex;gap:14px;justify-content:center;flex-wrap:wrap;" class="rv d2">
-        <a href="<?= base_url('contact') ?>" class="btn btn-amber btn-lg">Let's Talk</a>
-        <a href="<?= base_url('about') ?>" class="btn btn-ol-lt">About Us</a>
+        <a href="<?= base_url('contact') ?>" class="btn-primary lg">Let's Talk</a>
+        <a href="<?= base_url('about') ?>" class="btn-outline">About Us</a>
     </div>
 </div>
