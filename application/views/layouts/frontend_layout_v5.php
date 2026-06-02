@@ -9,32 +9,59 @@
     $site_title = $s['site_title'] ?? 'HouseOfSocial';
     $site_desc  = $s['hero_subtext'] ?? 'Internet-native creative marketing agency.';
     $uri        = isset($data['_uri']) ? $data['_uri'] : uri_string();
-    $pg_title   = isset($data['page_title']) ? $data['page_title'] . ' — ' . $site_title : $site_title;
+    $pg_title   = isset($data['meta_title']) ? $data['meta_title'] : (isset($data['page_title']) ? $data['page_title'] . ' — ' . $site_title : $site_title . ' | Internet-Native Creative Agency');
+    $pg_desc    = isset($data['meta_desc']) ? $data['meta_desc'] : $site_desc;
     $logo_url   = (!empty($s['site_logo'])) ? base_url('assets/images/uploads/' . $s['site_logo']) : '';
+
+    // Load active services for navbar dropdown
+    $CI = &get_instance();
+    $nav_services = [];
+    if (isset($CI->Service_model)) {
+        $nav_services = $CI->Service_model->get_active();
+    } else {
+        $CI->load->model('Service_model');
+        $nav_services = $CI->Service_model->get_active();
+    }
     ?>
     <title><?= htmlspecialchars($pg_title) ?></title>
-    <meta name="description" content="<?= htmlspecialchars($site_desc) ?>">
+    <meta name="description" content="<?= htmlspecialchars($pg_desc) ?>">
     <meta property="og:title" content="<?= htmlspecialchars($pg_title) ?>">
-    <meta property="og:description" content="<?= htmlspecialchars($site_desc) ?>">
+    <meta property="og:description" content="<?= htmlspecialchars($pg_desc) ?>">
+    <meta property="og:type" content="website">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="<?= htmlspecialchars($pg_title) ?>">
+    <meta name="twitter:description" content="<?= htmlspecialchars($pg_desc) ?>">
     <link rel="canonical" href="<?= base_url(uri_string()) ?>">
+
+    <!-- Google Tag Manager -->
+    <script>
+        (function(w, d, s, l, i) {
+            w[l] = w[l] || [];
+            w[l].push({
+                'gtm.start': new Date().getTime(),
+                event: 'gtm.js'
+            });
+            var f = d.getElementsByTagName(s)[0],
+                j = d.createElement(s),
+                dl = l != 'dataLayer' ? '&l=' + l : '';
+            j.async = true;
+            j.src =
+                'https://www.googletagmanager.com/gtm.js?id=' + i + dl;
+            f.parentNode.insertBefore(j, f);
+        })(window, document, 'script', 'dataLayer', 'GTM-NNNSWTLX');
+    </script>
+    <!-- End Google Tag Manager -->
+
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link
-        href="https://fonts.googleapis.com/css2?family=Clash+Display:wght@400;500;600;700&family=Satoshi:wght@300;400;500;700&family=Editorial+New:ital@0;1&display=swap"
+        href="https://fonts.googleapis.com/css2?family=Clash+Display:wght@400;500;600;700&family=Satoshi:wght@300;400;500;700&display=swap"
         rel="stylesheet">
-    <!-- Fallback for Clash Display if not available via Google -->
     <link
         href="https://api.fontshare.com/v2/css?f[]=clash-display@400,500,600,700&f[]=satoshi@300,400,500,700&display=swap"
         rel="stylesheet">
     <style>
-        /* ================================================================
-   HOUSEOFSOCIAL — GLOBAL SYSTEM v5
-   Brand: Internet-native creative marketing agency
-   Aesthetic: Dark editorial × Human-crafted premium × Culture-first
-   Typography: Clash Display (display) + Satoshi (body)
-================================================================ */
         :root {
-            /* Brand */
             --ink: #08080C;
             --paper: #F4F1EC;
             --chalk: #E8E4DC;
@@ -44,44 +71,31 @@
             --ghost3: rgba(244, 241, 236, .24);
             --ghost4: rgba(244, 241, 236, .48);
             --ghost5: rgba(244, 241, 236, .72);
-
-            /* Accent — flame orange + electric lime */
             --flame: #FF3C00;
             --flame2: #FF6B35;
             --lime: #C8F135;
             --limeDim: rgba(200, 241, 53, .14);
             --limeMid: rgba(200, 241, 53, .35);
-
-            /* Surfaces */
             --s0: #08080C;
             --s1: #0D0D13;
             --s2: #121218;
             --s3: #181820;
             --s4: #1E1E28;
             --s5: #242430;
-
-            /* Borders */
             --b1: rgba(244, 241, 236, .06);
             --b2: rgba(244, 241, 236, .12);
             --b3: rgba(244, 241, 236, .22);
-
-            /* Typography */
             --fDisplay: 'Clash Display', 'Bebas Neue', Impact, sans-serif;
             --fBody: 'Satoshi', 'DM Sans', system-ui, sans-serif;
-
-            /* Layout */
             --navH: 64px;
             --px: clamp(18px, 5.5vw, 88px);
             --maxW: 1480px;
             --gap: clamp(8px, 1.5vw, 20px);
             --sec: clamp(72px, 10vw, 140px);
-
-            /* Easing */
             --ease: cubic-bezier(.19, 1, .22, 1);
             --ease2: cubic-bezier(.4, 0, .2, 1);
         }
 
-        /* ── RESET ── */
         *,
         *::before,
         *::after {
@@ -139,8 +153,7 @@
             background: var(--flame);
         }
 
-        /* ── CURSOR (hover devices only) ── */
-        @media (hover:hover) and (pointer:fine) {
+        @media(hover:hover) and (pointer:fine) {
             body {
                 cursor: none;
             }
@@ -186,7 +199,7 @@
             transform: translate(-50%, -50%) scale(0);
         }
 
-        @media (hover:none),
+        @media(hover:none),
         (pointer:coarse) {
 
             #g-dot,
@@ -195,7 +208,6 @@
             }
         }
 
-        /* ── NOISE OVERLAY ── */
         body::before {
             content: '';
             position: fixed;
@@ -207,7 +219,6 @@
             background-size: 180px;
         }
 
-        /* ── SCROLL PROGRESS ── */
         #g-prog {
             position: fixed;
             top: 0;
@@ -220,7 +231,6 @@
             pointer-events: none;
         }
 
-        /* ── PAGE WIPE ── */
         #g-wipe {
             position: fixed;
             inset: 0;
@@ -237,7 +247,6 @@
             }
         }
 
-        /* ── REVEAL ── */
         .rv {
             opacity: 0;
             transform: translateY(28px);
@@ -281,7 +290,6 @@
             transition-delay: .33s !important;
         }
 
-        /* ── MARQUEE ── */
         @keyframes mqL {
             from {
                 transform: translateX(0)
@@ -321,13 +329,12 @@
             animation: mqR var(--d, 38s) linear infinite;
         }
 
-        @media (hover:hover) {
+        @media(hover:hover) {
             .mq-track:hover {
                 animation-play-state: paused;
             }
         }
 
-        /* ── BUTTONS ── */
         .btn-primary {
             display: inline-flex;
             align-items: center;
@@ -401,7 +408,6 @@
             transform: translateY(-2px);
         }
 
-        /* ── SECTION LABEL ── */
         .s-label {
             display: inline-flex;
             align-items: center;
@@ -430,7 +436,6 @@
             background: var(--lime);
         }
 
-        /* ── GLOBAL ANIMATIONS ── */
         @keyframes floatA {
 
             0%,
@@ -473,10 +478,7 @@
             }
         }
 
-
-        /* =================================================================
-   NAV
-================================================================= */
+        /* ── NAV ── */
         #g-nav {
             position: fixed;
             top: 0;
@@ -499,7 +501,6 @@
             border-bottom: 1px solid var(--b1);
         }
 
-        /* Logo */
         .nav-logo {
             display: flex;
             align-items: center;
@@ -546,12 +547,11 @@
             display: block;
         }
 
-        /* Desktop links */
         .nav-links {
             display: flex;
             align-items: center;
             justify-content: center;
-            gap: 40px;
+            gap: 36px;
         }
 
         .nav-a {
@@ -585,7 +585,122 @@
             width: 100%;
         }
 
-        /* Right side */
+        /* Services dropdown */
+        .nav-dropdown {
+            position: relative;
+        }
+
+        .nav-dropdown-toggle {
+            font-size: 13.5px;
+            font-weight: 500;
+            letter-spacing: .02em;
+            color: var(--ghost4);
+            position: relative;
+            padding: 4px 0;
+            transition: color .2s;
+            cursor: pointer;
+            background: none;
+            border: none;
+            font-family: var(--fBody);
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .nav-dropdown-toggle::after {
+            content: '';
+            position: absolute;
+            bottom: -2px;
+            left: 0;
+            width: 0;
+            height: 1px;
+            background: var(--flame);
+            transition: width .32s var(--ease);
+        }
+
+        .nav-dropdown:hover .nav-dropdown-toggle {
+            color: var(--paper);
+        }
+
+        .nav-dropdown:hover .nav-dropdown-toggle::after {
+            width: 100%;
+        }
+
+        .nav-dropdown-arrow {
+            font-size: 9px;
+            transition: transform .2s;
+            display: inline-block;
+            opacity: .6;
+        }
+
+        .nav-dropdown:hover .nav-dropdown-arrow {
+            transform: rotate(180deg);
+        }
+
+        .nav-dropdown-menu {
+            position: absolute;
+            top: calc(100% + 16px);
+            left: 50%;
+            transform: translateX(-50%);
+            background: rgba(8, 8, 12, .98);
+            border: 1px solid var(--b2);
+            backdrop-filter: blur(24px);
+            -webkit-backdrop-filter: blur(24px);
+            min-width: 220px;
+            max-height: 0;
+            overflow: hidden;
+            opacity: 0;
+            transition: max-height .35s var(--ease), opacity .25s;
+            pointer-events: none;
+            z-index: 700;
+        }
+
+        .nav-dropdown:hover .nav-dropdown-menu {
+            max-height: 600px;
+            opacity: 1;
+            pointer-events: all;
+        }
+
+        .nav-dropdown-item {
+            display: block;
+            padding: 11px 18px;
+            font-size: 13px;
+            color: var(--ghost4);
+            transition: background .15s, color .15s;
+            border-bottom: 1px solid var(--b1);
+            white-space: nowrap;
+        }
+
+        .nav-dropdown-item:last-child {
+            border-bottom: none;
+        }
+
+        .nav-dropdown-item:hover {
+            background: rgba(255, 60, 0, .08);
+            color: var(--paper);
+        }
+
+        .nav-dropdown-item.on {
+            color: var(--flame);
+        }
+
+        .nav-dropdown-view-all {
+            display: block;
+            padding: 10px 18px;
+            font-size: 11px;
+            font-weight: 600;
+            letter-spacing: .14em;
+            text-transform: uppercase;
+            color: var(--flame);
+            text-align: center;
+            border-top: 1px solid var(--b1);
+            transition: background .15s;
+        }
+
+        .nav-dropdown-view-all:hover {
+            background: rgba(255, 60, 0, .08);
+        }
+
         .nav-right {
             display: flex;
             align-items: center;
@@ -609,7 +724,6 @@
             transform: translateY(-1px);
         }
 
-        /* Hamburger */
         .nav-ham {
             display: none;
             width: 40px;
@@ -637,9 +751,7 @@
             transition: transform .36s var(--ease), opacity .2s;
         }
 
-        /* =================================================================
-   FULLSCREEN MENU
-================================================================= */
+        /* ── FULLSCREEN MENU ── */
         #g-menu {
             position: fixed;
             inset: 0;
@@ -705,12 +817,12 @@
             justify-content: center;
             padding: var(--sec) var(--px);
             border-right: 1px solid var(--b1);
-            overflow: hidden;
+            overflow-y: auto;
         }
 
         .menu-link {
             font-family: var(--fDisplay);
-            font-size: clamp(52px, 9vw, 112px);
+            font-size: clamp(42px, 7vw, 96px);
             font-weight: 700;
             letter-spacing: -.04em;
             line-height: .88;
@@ -732,6 +844,40 @@
 
         .menu-link.accent:hover {
             color: var(--flame);
+        }
+
+        .menu-svc-group {
+            margin-top: 12px;
+            padding-left: 4px;
+        }
+
+        .menu-svc-label {
+            font-family: var(--fBody);
+            font-size: 9px;
+            font-weight: 700;
+            letter-spacing: .22em;
+            text-transform: uppercase;
+            color: var(--ghost3);
+            margin-bottom: 10px;
+            display: block;
+        }
+
+        .menu-svc-links {
+            display: flex;
+            flex-direction: column;
+            gap: 2px;
+        }
+
+        .menu-svc-lnk {
+            font-size: 15px;
+            color: var(--ghost3);
+            padding: 6px 0;
+            transition: color .2s, padding-left .2s;
+        }
+
+        .menu-svc-lnk:hover {
+            color: var(--flame);
+            padding-left: 8px;
         }
 
         .menu-meta {
@@ -775,9 +921,7 @@
             font-style: italic;
         }
 
-        /* =================================================================
-   FOOTER
-================================================================= */
+        /* ── FOOTER ── */
         #g-foot {
             background: var(--s1);
             border-top: 1px solid var(--b1);
@@ -936,15 +1080,25 @@
             animation: blink 2s ease-in-out infinite;
         }
 
+        /* ── RESPONSIVE ── */
+        @media(max-width:1079px) {
+            .nav-links {
+                gap: 24px;
+            }
 
-        /* ─── RESPONSIVE ──────────────────────────────────── */
-        @media (max-width:1079px) {
+            .nav-dropdown-menu {
+                left: 0;
+                transform: none;
+            }
+        }
+
+        @media(max-width:899px) {
             .nav-links {
                 display: none;
             }
         }
 
-        @media (max-width:767px) {
+        @media(max-width:767px) {
             :root {
                 --navH: 56px;
             }
@@ -979,7 +1133,7 @@
             }
         }
 
-        @media (max-width:479px) {
+        @media(max-width:479px) {
             :root {
                 --px: 16px;
                 --navH: 52px;
@@ -998,6 +1152,11 @@
 
 <body>
 
+    <!-- Google Tag Manager (noscript) -->
+    <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-NNNSWTLX" height="0" width="0"
+            style="display:none;visibility:hidden"></iframe></noscript>
+    <!-- End Google Tag Manager (noscript) -->
+
     <div id="g-wipe" aria-hidden="true"></div>
     <div id="g-prog" aria-hidden="true"></div>
     <div id="g-ring" aria-hidden="true"></div>
@@ -1005,7 +1164,6 @@
 
     <!-- ═══ NAV ══════════════════════════════════════════════════════ -->
     <nav id="g-nav" role="navigation" aria-label="Main navigation">
-        <!-- Logo -->
         <a href="<?= base_url() ?>" class="nav-logo" aria-label="<?= htmlspecialchars($site_title) ?> home">
             <?php if ($logo_url): ?>
                 <img src="<?= $logo_url ?>" alt="<?= htmlspecialchars($site_title) ?>"
@@ -1019,17 +1177,42 @@
             <?php endif; ?>
         </a>
 
-        <!-- Desktop links -->
         <div class="nav-links">
             <a href="<?= base_url() ?>" class="nav-a <?= ($uri === '' || $uri === '/') ? 'on' : '' ?>">Home</a>
             <a href="<?= base_url('about') ?>"
                 class="nav-a <?= strpos($uri, 'about') !== false ? 'on' : '' ?>">About</a>
             <a href="<?= base_url('work') ?>" class="nav-a <?= strpos($uri, 'work') !== false ? 'on' : '' ?>">Work</a>
+
+            <!-- Services dropdown -->
+            <?php if (!empty($nav_services)): ?>
+                <div class="nav-dropdown">
+                    <button class="nav-dropdown-toggle <?= strpos($uri, 'services') !== false ? 'on' : '' ?>"
+                        aria-haspopup="true" aria-expanded="false">
+                        Services <span class="nav-dropdown-arrow">▾</span>
+                    </button>
+                    <div class="nav-dropdown-menu" role="menu">
+                        <?php foreach ($nav_services as $nsvc): ?>
+                            <a href="<?= base_url('services/' . $nsvc['slug']) ?>"
+                                class="nav-dropdown-item <?= $uri === 'services/' . $nsvc['slug'] ? 'on' : '' ?>"
+                                role="menuitem">
+                                <?php if (!empty($nsvc['icon_emoji'])): ?><span
+                                        style="margin-right:8px"><?= htmlspecialchars($nsvc['icon_emoji']) ?></span><?php endif; ?>
+                                <?= htmlspecialchars($nsvc['title']) ?>
+                            </a>
+                        <?php endforeach; ?>
+                        <a href="<?= base_url('services') ?>" class="nav-dropdown-view-all">View All Services →</a>
+                    </div>
+                </div>
+            <?php else: ?>
+                <a href="<?= base_url('services') ?>"
+                    class="nav-a <?= strpos($uri, 'services') !== false ? 'on' : '' ?>">Services</a>
+            <?php endif; ?>
+
+            <a href="<?= base_url('blog') ?>" class="nav-a <?= strpos($uri, 'blog') !== false ? 'on' : '' ?>">Blog</a>
             <a href="<?= base_url('contact') ?>"
                 class="nav-a <?= strpos($uri, 'contact') !== false ? 'on' : '' ?>">Contact</a>
         </div>
 
-        <!-- Right -->
         <div class="nav-right">
             <a href="<?= base_url('contact') ?>" class="nav-pill">Let's talk &rarr;</a>
             <button class="nav-ham" id="g-ham" onclick="hosMenu()" aria-label="Open menu" aria-expanded="false"
@@ -1050,6 +1233,21 @@
                     class="menu-link <?= strpos($uri, 'about') !== false ? 'on' : '' ?>">About</a>
                 <a href="<?= base_url('work') ?>"
                     class="menu-link <?= strpos($uri, 'work') !== false ? 'on' : '' ?>">Work</a>
+                <a href="<?= base_url('services') ?>"
+                    class="menu-link <?= strpos($uri, 'services') !== false ? 'on' : '' ?>">Services</a>
+                <?php if (!empty($nav_services)): ?>
+                    <div class="menu-svc-group">
+                        <span class="menu-svc-label">All Services</span>
+                        <div class="menu-svc-links">
+                            <?php foreach ($nav_services as $nsvc): ?>
+                                <a href="<?= base_url('services/' . $nsvc['slug']) ?>"
+                                    class="menu-svc-lnk"><?= htmlspecialchars($nsvc['title']) ?></a>
+                            <?php endforeach; ?>
+                        </div>
+                    </div>
+                <?php endif; ?>
+                <a href="<?= base_url('blog') ?>"
+                    class="menu-link <?= strpos($uri, 'blog') !== false ? 'on' : '' ?>">Blog</a>
                 <a href="<?= base_url('contact') ?>" class="menu-link accent">Contact</a>
             </nav>
             <div class="menu-meta">
@@ -1064,7 +1262,7 @@
                 <a href="#" class="menu-meta-lnk" data-no-wipe>LinkedIn</a>
                 <a href="#" class="menu-meta-lnk" data-no-wipe>X / Twitter</a>
                 <div class="menu-meta-div"></div>
-                <p class="menu-meta-tagline">Internet-native.<br>Culture-first.<br>Built for 2025.</p>
+                <p class="menu-meta-tagline">Internet-native.<br>Culture-first.<br>Built for today.</p>
             </div>
         </div>
     </div>
@@ -1083,40 +1281,32 @@
                 </div>
             </div>
         </div>
-
         <div class="foot-body">
             <div class="foot-grid">
                 <div>
-                    <div class="foot-brand-row">
-                        <span class="foot-brand-dot"></span>
-                        House<span style="color:var(--flame)">Of</span>Social
-                    </div>
+                    <div class="foot-brand-row"><span class="foot-brand-dot"></span>House<span
+                            style="color:var(--flame)">Of</span>Social</div>
                     <p class="foot-tagline">
                         <?= htmlspecialchars($s['hero_subtext'] ?? 'We help brands stop posting and start belonging. Internet-native creative agency, India.') ?>
                     </p>
                     <div class="foot-socials">
-                        <a href="#" class="foot-soc" data-no-wipe aria-label="Instagram">
-                            <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2"
-                                viewBox="0 0 24 24">
+                        <a href="#" class="foot-soc" data-no-wipe aria-label="Instagram"><svg width="13" height="13"
+                                fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
                                 <rect x="2" y="2" width="20" height="20" rx="5" />
                                 <circle cx="12" cy="12" r="5" />
                                 <circle cx="17.5" cy="6.5" r="1" fill="currentColor" stroke="none" />
-                            </svg>
-                        </a>
-                        <a href="#" class="foot-soc" data-no-wipe aria-label="LinkedIn">
-                            <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2"
-                                viewBox="0 0 24 24">
+                            </svg></a>
+                        <a href="#" class="foot-soc" data-no-wipe aria-label="LinkedIn"><svg width="13" height="13"
+                                fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
                                 <path d="M16 8a6 6 0 016 6v7h-4v-7a2 2 0 00-2-2 2 2 0 00-2 2v7h-4v-7a6 6 0 016-6z" />
                                 <rect x="2" y="9" width="4" height="12" />
                                 <circle cx="4" cy="4" r="2" />
-                            </svg>
-                        </a>
-                        <a href="#" class="foot-soc" data-no-wipe aria-label="X Twitter">
-                            <svg width="12" height="12" fill="currentColor" viewBox="0 0 24 24">
+                            </svg></a>
+                        <a href="#" class="foot-soc" data-no-wipe aria-label="X Twitter"><svg width="12" height="12"
+                                fill="currentColor" viewBox="0 0 24 24">
                                 <path
                                     d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-4.714-6.231-5.401 6.231H2.744l7.73-8.835L1.254 2.25H8.08l4.253 5.622z" />
-                            </svg>
-                        </a>
+                            </svg></a>
                     </div>
                 </div>
                 <div>
@@ -1124,15 +1314,24 @@
                     <a href="<?= base_url() ?>" class="foot-lnk">Home</a>
                     <a href="<?= base_url('about') ?>" class="foot-lnk">About</a>
                     <a href="<?= base_url('work') ?>" class="foot-lnk">Work</a>
+                    <a href="<?= base_url('services') ?>" class="foot-lnk">Services</a>
+                    <a href="<?= base_url('blog') ?>" class="foot-lnk">Blog</a>
                     <a href="<?= base_url('contact') ?>" class="foot-lnk">Contact</a>
                 </div>
                 <div>
                     <p class="foot-col-h">Services</p>
-                    <a href="<?= base_url('contact') ?>" class="foot-lnk">Influencer Marketing</a>
-                    <a href="<?= base_url('contact') ?>" class="foot-lnk">Meme Marketing</a>
-                    <a href="<?= base_url('contact') ?>" class="foot-lnk">Reddit Marketing</a>
-                    <a href="<?= base_url('contact') ?>" class="foot-lnk">UGC Content</a>
-                    <a href="<?= base_url('contact') ?>" class="foot-lnk">Brand Strategy</a>
+                    <?php if (!empty($nav_services)): ?>
+                        <?php foreach (array_slice($nav_services, 0, 6) as $fsvc): ?>
+                            <a href="<?= base_url('services/' . $fsvc['slug']) ?>"
+                                class="foot-lnk"><?= htmlspecialchars($fsvc['title']) ?></a>
+                        <?php endforeach; ?>
+                    <?php else: ?>
+                        <a href="<?= base_url('services') ?>" class="foot-lnk">Influencer Marketing</a>
+                        <a href="<?= base_url('services') ?>" class="foot-lnk">Meme Marketing</a>
+                        <a href="<?= base_url('services') ?>" class="foot-lnk">Reddit Marketing</a>
+                        <a href="<?= base_url('services') ?>" class="foot-lnk">UGC Content</a>
+                        <a href="<?= base_url('services') ?>" class="foot-lnk">Brand Strategy</a>
+                    <?php endif; ?>
                 </div>
                 <div>
                     <p class="foot-col-h">Contact</p>
@@ -1145,20 +1344,16 @@
                 </div>
             </div>
         </div>
-
         <div class="foot-bot">
-            <p class="foot-copy">&copy; <?= date('Y') ?> HouseOfSocial. All rights reserved.</p>
+            <p class="foot-copy">&copy; <?= date('Y') ?> HouseOfSocial.io. All rights reserved.</p>
             <div class="foot-live"><span class="foot-live-dot"></span> Building something right now</div>
             <p class="foot-copy">houseofsocial.io</p>
         </div>
     </footer>
 
-    <!-- ═══ GLOBAL SCRIPTS ═══════════════════════════════════════════ -->
     <script>
         (function() {
             'use strict';
-
-            /* ── CURSOR ── */
             var isCoarse = !window.matchMedia('(hover:hover) and (pointer:fine)').matches;
             if (!isCoarse) {
                 var dot = document.getElementById('g-dot'),
@@ -1193,10 +1388,8 @@
                     });
                 });
             }
-
-            /* ── NAV SCROLL ── */
-            var nav = document.getElementById('g-nav');
-            var prog = document.getElementById('g-prog');
+            var nav = document.getElementById('g-nav'),
+                prog = document.getElementById('g-prog');
 
             function onScroll() {
                 var y = window.scrollY,
@@ -1208,8 +1401,6 @@
                 passive: true
             });
             onScroll();
-
-            /* ── MENU ── */
             var menuOpen = false;
             window.hosMenu = function() {
                 menuOpen = !menuOpen;
@@ -1231,8 +1422,6 @@
             document.addEventListener('keydown', function(e) {
                 if (e.key === 'Escape' && menuOpen) hosMenu();
             });
-
-            /* ── REVEAL ── */
             if ('IntersectionObserver' in window) {
                 var io = new IntersectionObserver(function(entries) {
                     entries.forEach(function(e) {
@@ -1254,7 +1443,6 @@
                 });
             }
 
-            /* ── COUNTERS ── */
             function runCounter(el) {
                 var t = parseFloat(el.dataset.count) || 0,
                     suf = el.dataset.suffix || '',
@@ -1284,12 +1472,10 @@
             document.querySelectorAll('[data-count]').forEach(function(el) {
                 co.observe(el);
             });
-
-            /* ── PAGE WIPE ── */
             document.querySelectorAll('a[href]').forEach(function(a) {
                 var h = a.getAttribute('href');
-                if (!h || h === '#' || h[0] === '#' || h.startsWith('mailto') || h.startsWith('tel') ||
-                    h.startsWith('javascript') || a.target === '_blank' || a.hasAttribute('data-no-wipe'))
+                if (!h || h === '#' || h[0] === '#' || h.startsWith('mailto') || h.startsWith('tel') || h
+                    .startsWith('javascript') || a.target === '_blank' || a.hasAttribute('data-no-wipe'))
                     return;
                 a.addEventListener('click', function(e) {
                     if (e.metaKey || e.ctrlKey || e.shiftKey || e.altKey) return;
@@ -1311,7 +1497,6 @@
                     }
                 });
             });
-
         }());
     </script>
 </body>

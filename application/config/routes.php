@@ -1,22 +1,8 @@
 <?php
 defined('BASEPATH') or exit('No direct script access allowed');
 
-/*
-|------------------------------------------------------------
-| FilmyCurry Routes — FIXED
-|
-| FIXES APPLIED:
-| 1. contact/send was only routed as a GET path — now also
-|    handles POST (CI3 doesn't need a method distinction in
-|    routes.php but the URI must match the form action exactly)
-| 2. Added explicit routes for admin/login POST submit
-| 3. admin/posts/upload_image POST route made explicit
-| 4. Added 404 override pointing to a clean frontend 404
-|------------------------------------------------------------
-*/
-
 $route['default_controller']   = 'Frontend';
-$route['404_override']         = '';          // uses CI default
+$route['404_override']         = '';
 $route['translate_uri_dashes'] = FALSE;
 
 // ── FRONTEND ─────────────────────────────────────────────
@@ -25,11 +11,19 @@ $route['post/(:any)']       = 'Frontend/post/$1';
 $route['about']             = 'Frontend/about';
 $route['work']              = 'Frontend/work';
 $route['contact']           = 'Frontend/contact';
-$route['contact/send']      = 'Frontend/send_contact';  // POST from form
+$route['contact/send']      = 'Frontend/send_contact';
+
+// ── SERVICES ─────────────────────────────────────────────
+$route['services']          = 'Services/index';
+$route['services/(:any)']   = 'Services/detail/$1';
+
+// ── BLOG ─────────────────────────────────────────────────
+$route['blog']              = 'Blog/index';
+$route['blog/(:any)']       = 'Blog/detail/$1';
 
 // ── ADMIN AUTH ────────────────────────────────────────────
 $route['admin']             = 'admin/Auth/login';
-$route['admin/login']       = 'admin/Auth/login';       // GET & POST
+$route['admin/login']       = 'admin/Auth/login';
 $route['admin/logout']      = 'admin/Auth/logout';
 
 // ── ADMIN DASHBOARD ───────────────────────────────────────
@@ -44,6 +38,24 @@ $route['admin/posts/update/(:num)']    = 'admin/Posts/update/$1';
 $route['admin/posts/delete/(:num)']    = 'admin/Posts/delete/$1';
 $route['admin/posts/toggle/(:num)']    = 'admin/Posts/toggle/$1';
 $route['admin/posts/upload_image']     = 'admin/Posts/upload_image';
+
+// ── ADMIN SERVICES ────────────────────────────────────────
+$route['admin/services']                 = 'admin/Services/index';
+$route['admin/services/create']          = 'admin/Services/create';
+$route['admin/services/store']           = 'admin/Services/store';
+$route['admin/services/edit/(:num)']     = 'admin/Services/edit/$1';
+$route['admin/services/update/(:num)']   = 'admin/Services/update/$1';
+$route['admin/services/delete/(:num)']   = 'admin/Services/delete/$1';
+$route['admin/services/toggle/(:num)']   = 'admin/Services/toggle/$1';
+
+// ── ADMIN BLOGS ───────────────────────────────────────────
+$route['admin/blogs']                 = 'admin/Blogs/index';
+$route['admin/blogs/create']          = 'admin/Blogs/create';
+$route['admin/blogs/store']           = 'admin/Blogs/store';
+$route['admin/blogs/edit/(:num)']     = 'admin/Blogs/edit/$1';
+$route['admin/blogs/update/(:num)']   = 'admin/Blogs/update/$1';
+$route['admin/blogs/delete/(:num)']   = 'admin/Blogs/delete/$1';
+$route['admin/blogs/toggle/(:num)']   = 'admin/Blogs/toggle/$1';
 
 // ── ADMIN SETTINGS ────────────────────────────────────────
 $route['admin/settings']               = 'admin/Settings/index';
