@@ -551,8 +551,8 @@ textarea.cf-input {
                 <div class="ct-info-card rv d3">
                     <div class="ct-info-h">Follow Us</div>
                     <div class="ct-social-row">
-                        <a href="#" class="ct-soc-pill" data-no-wipe>Instagram</a>
-                        <a href="#" class="ct-soc-pill" data-no-wipe>LinkedIn</a>
+                        <a href="https://www.instagram.com/houseofsocial.hos/" target="_blank" class="ct-soc-pill" data-no-wipe>Instagram</a>
+                        <a href="https://www.linkedin.com/company/houseofsocialhos/" target="_blank" class="ct-soc-pill" data-no-wipe>LinkedIn</a>
                         <a href="#" class="ct-soc-pill" data-no-wipe>Twitter / X</a>
                     </div>
                 </div>
