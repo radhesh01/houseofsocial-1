@@ -14,8 +14,7 @@
                 j = d.createElement(s),
                 dl = l != 'dataLayer' ? '&l=' + l : '';
             j.async = true;
-            j.src =
-                'https://www.googletagmanager.com/gtm.js?id=' + i + dl;
+            j.src = 'https://www.googletagmanager.com/gtm.js?id=' + i + dl;
             f.parentNode.insertBefore(j, f);
         })(window, document, 'script', 'dataLayer', 'GTM-NNNSWTLX');
     </script>
@@ -31,7 +30,6 @@
     $pg_desc    = isset($data['meta_desc']) ? $data['meta_desc'] : $site_desc;
     $logo_url   = (!empty($s['site_logo'])) ? base_url('assets/images/uploads/' . $s['site_logo']) : '';
 
-    // Load active services for navbar dropdown
     $CI = &get_instance();
     $nav_services = [];
     if (isset($CI->Service_model)) {
@@ -50,8 +48,6 @@
     <meta name="twitter:title" content="<?= htmlspecialchars($pg_title) ?>">
     <meta name="twitter:description" content="<?= htmlspecialchars($pg_desc) ?>">
     <link rel="canonical" href="<?= base_url(uri_string()) ?>">
-
-
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -586,7 +582,7 @@
             width: 100%;
         }
 
-        /* Services dropdown */
+        /* ── SERVICES DROPDOWN ── */
         .nav-dropdown {
             position: relative;
         }
@@ -619,12 +615,44 @@
             transition: width .32s var(--ease);
         }
 
-        .nav-dropdown:hover .nav-dropdown-toggle {
+        /* Desktop: CSS hover opens dropdown */
+        @media(hover:hover) and (pointer:fine) {
+            .nav-dropdown:hover .nav-dropdown-toggle {
+                color: var(--paper);
+            }
+
+            .nav-dropdown:hover .nav-dropdown-toggle::after {
+                width: 100%;
+            }
+
+            .nav-dropdown:hover .nav-dropdown-arrow {
+                transform: rotate(180deg);
+            }
+
+            .nav-dropdown:hover>.nav-dropdown-menu {
+                max-height: 600px;
+                opacity: 1;
+                pointer-events: all;
+            }
+        }
+
+        /* JS-toggled open state (for touch/tablet) */
+        .nav-dropdown.is-open .nav-dropdown-toggle {
             color: var(--paper);
         }
 
-        .nav-dropdown:hover .nav-dropdown-toggle::after {
+        .nav-dropdown.is-open .nav-dropdown-toggle::after {
             width: 100%;
+        }
+
+        .nav-dropdown.is-open .nav-dropdown-arrow {
+            transform: rotate(180deg);
+        }
+
+        .nav-dropdown.is-open>.nav-dropdown-menu {
+            max-height: 600px;
+            opacity: 1;
+            pointer-events: all;
         }
 
         .nav-dropdown-arrow {
@@ -632,10 +660,6 @@
             transition: transform .2s;
             display: inline-block;
             opacity: .6;
-        }
-
-        .nav-dropdown:hover .nav-dropdown-arrow {
-            transform: rotate(180deg);
         }
 
         .nav-dropdown-menu {
@@ -656,10 +680,14 @@
             z-index: 700;
         }
 
-        .nav-dropdown:hover .nav-dropdown-menu {
-            max-height: 600px;
-            opacity: 1;
-            pointer-events: all;
+        /* Creates an invisible hover bridge across the 16px gap */
+        .nav-dropdown-menu::before {
+            content: '';
+            position: absolute;
+            top: -16px;
+            left: 0;
+            width: 100%;
+            height: 16px;
         }
 
         .nav-dropdown-item {
@@ -860,13 +888,34 @@
             text-transform: uppercase;
             color: var(--ghost3);
             margin-bottom: 10px;
-            display: block;
+            display: flex;
+            align-items: center;
+            background: none;
+            border: none;
+            width: 100%;
+            text-align: left;
+            cursor: pointer;
+            padding: 0;
         }
 
         .menu-svc-links {
             display: flex;
             flex-direction: column;
             gap: 2px;
+            max-height: 0;
+            overflow: hidden;
+            opacity: 0;
+            transition: max-height .4s var(--ease), opacity .3s;
+        }
+
+        .menu-svc-group.is-open .menu-svc-links {
+            max-height: 400px;
+            opacity: 1;
+            margin-bottom: 12px;
+        }
+
+        .menu-svc-group.is-open .nav-dropdown-arrow {
+            transform: rotate(180deg);
         }
 
         .menu-svc-lnk {
@@ -1156,7 +1205,6 @@
     <!-- Google Tag Manager (noscript) -->
     <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-NNNSWTLX" height="0" width="0"
             style="display:none;visibility:hidden"></iframe></noscript>
-    <!-- End Google Tag Manager (noscript) -->
 
     <div id="g-wipe" aria-hidden="true"></div>
     <div id="g-prog" aria-hidden="true"></div>
@@ -1184,14 +1232,13 @@
                 class="nav-a <?= strpos($uri, 'about') !== false ? 'on' : '' ?>">About</a>
             <a href="<?= base_url('work') ?>" class="nav-a <?= strpos($uri, 'work') !== false ? 'on' : '' ?>">Work</a>
 
-            <!-- Services dropdown -->
             <?php if (!empty($nav_services)): ?>
-                <div class="nav-dropdown">
+                <div class="nav-dropdown" id="nav-svc-dropdown">
                     <button class="nav-dropdown-toggle <?= strpos($uri, 'services') !== false ? 'on' : '' ?>"
-                        aria-haspopup="true" aria-expanded="false">
+                        id="nav-svc-btn" aria-haspopup="true" aria-expanded="false" aria-controls="nav-svc-menu">
                         Services <span class="nav-dropdown-arrow">▾</span>
                     </button>
-                    <div class="nav-dropdown-menu" role="menu">
+                    <div class="nav-dropdown-menu" id="nav-svc-menu" role="menu">
                         <?php foreach ($nav_services as $nsvc): ?>
                             <a href="<?= base_url('services/' . $nsvc['slug']) ?>"
                                 class="nav-dropdown-item <?= $uri === 'services/' . $nsvc['slug'] ? 'on' : '' ?>"
@@ -1236,9 +1283,13 @@
                     class="menu-link <?= strpos($uri, 'work') !== false ? 'on' : '' ?>">Work</a>
                 <a href="<?= base_url('services') ?>"
                     class="menu-link <?= strpos($uri, 'services') !== false ? 'on' : '' ?>">Services</a>
+
                 <?php if (!empty($nav_services)): ?>
-                    <div class="menu-svc-group">
-                        <span class="menu-svc-label">All Services</span>
+                    <div class="menu-svc-group" id="mobile-svc-group">
+                        <button class="menu-svc-label"
+                            onclick="document.getElementById('mobile-svc-group').classList.toggle('is-open')">
+                            All Services <span class="nav-dropdown-arrow" style="margin-left: 6px;">▾</span>
+                        </button>
                         <div class="menu-svc-links">
                             <?php foreach ($nav_services as $nsvc): ?>
                                 <a href="<?= base_url('services/' . $nsvc['slug']) ?>"
@@ -1247,6 +1298,7 @@
                         </div>
                     </div>
                 <?php endif; ?>
+
                 <a href="<?= base_url('blog') ?>"
                     class="menu-link <?= strpos($uri, 'blog') !== false ? 'on' : '' ?>">Blog</a>
                 <a href="<?= base_url('contact') ?>" class="menu-link accent">Contact</a>
@@ -1276,7 +1328,14 @@
         <div class="foot-ticker" aria-hidden="true">
             <div class="mq-wrap">
                 <div class="mq-track mq-l" style="--d:55s">
-                    <?php foreach (array_merge(['HOUSE OF SOCIAL', 'INTERNET NATIVE', 'MEME CULTURE', 'INFLUENCER MARKETING', 'VIRAL CAMPAIGNS', 'BRAND STRATEGY', 'CONTENT CREATION', 'CULTURE FIRST'], ['HOUSE OF SOCIAL', 'INTERNET NATIVE', 'MEME CULTURE', 'INFLUENCER MARKETING', 'VIRAL CAMPAIGNS', 'BRAND STRATEGY', 'CONTENT CREATION', 'CULTURE FIRST'], ['HOUSE OF SOCIAL', 'INTERNET NATIVE', 'MEME CULTURE', 'INFLUENCER MARKETING', 'VIRAL CAMPAIGNS', 'BRAND STRATEGY', 'CONTENT CREATION', 'CULTURE FIRST'], ['HOUSE OF SOCIAL', 'INTERNET NATIVE', 'MEME CULTURE', 'INFLUENCER MARKETING', 'VIRAL CAMPAIGNS', 'BRAND STRATEGY', 'CONTENT CREATION', 'CULTURE FIRST']) as $fw): ?>
+                    <?php foreach (
+                        array_merge(
+                            ['HOUSE OF SOCIAL', 'INTERNET NATIVE', 'MEME CULTURE', 'INFLUENCER MARKETING', 'VIRAL CAMPAIGNS', 'BRAND STRATEGY', 'CONTENT CREATION', 'CULTURE FIRST'],
+                            ['HOUSE OF SOCIAL', 'INTERNET NATIVE', 'MEME CULTURE', 'INFLUENCER MARKETING', 'VIRAL CAMPAIGNS', 'BRAND STRATEGY', 'CONTENT CREATION', 'CULTURE FIRST'],
+                            ['HOUSE OF SOCIAL', 'INTERNET NATIVE', 'MEME CULTURE', 'INFLUENCER MARKETING', 'VIRAL CAMPAIGNS', 'BRAND STRATEGY', 'CONTENT CREATION', 'CULTURE FIRST'],
+                            ['HOUSE OF SOCIAL', 'INTERNET NATIVE', 'MEME CULTURE', 'INFLUENCER MARKETING', 'VIRAL CAMPAIGNS', 'BRAND STRATEGY', 'CONTENT CREATION', 'CULTURE FIRST']
+                        ) as $fw
+                    ): ?>
                         <span class="foot-ticker-word"><?= htmlspecialchars($fw) ?></span>
                     <?php endforeach; ?>
                 </div>
@@ -1355,6 +1414,8 @@
     <script>
         (function() {
             'use strict';
+
+            // ── CURSOR ──────────────────────────────────────────────────
             var isCoarse = !window.matchMedia('(hover:hover) and (pointer:fine)').matches;
             if (!isCoarse) {
                 var dot = document.getElementById('g-dot'),
@@ -1389,6 +1450,8 @@
                     });
                 });
             }
+
+            // ── SCROLL PROGRESS ─────────────────────────────────────────
             var nav = document.getElementById('g-nav'),
                 prog = document.getElementById('g-prog');
 
@@ -1402,6 +1465,8 @@
                 passive: true
             });
             onScroll();
+
+            // ── FULLSCREEN MENU ──────────────────────────────────────────
             var menuOpen = false;
             window.hosMenu = function() {
                 menuOpen = !menuOpen;
@@ -1423,6 +1488,89 @@
             document.addEventListener('keydown', function(e) {
                 if (e.key === 'Escape' && menuOpen) hosMenu();
             });
+
+            // ── SERVICES DROPDOWN — TOUCH/CLICK TOGGLE ──────────────────
+            // Only activates on touch or non-hover devices (tablets, phones at ≥900px)
+            // Desktop pointer:fine gets CSS hover — no JS needed there.
+            var svcDropdown = document.getElementById('nav-svc-dropdown');
+            var svcBtn = document.getElementById('nav-svc-btn');
+
+            if (svcDropdown && svcBtn) {
+                // Determine if this is a touch/non-hover device
+                var isTouchDevice = !window.matchMedia('(hover:hover) and (pointer:fine)').matches;
+
+                if (isTouchDevice) {
+                    // On touch devices: toggle on button click, close on outside tap
+                    svcBtn.addEventListener('click', function(e) {
+                        e.stopPropagation();
+                        var isOpen = svcDropdown.classList.contains('is-open');
+                        // Close any other open dropdowns first
+                        document.querySelectorAll('.nav-dropdown.is-open').forEach(function(d) {
+                            d.classList.remove('is-open');
+                            var tb = d.querySelector('.nav-dropdown-toggle');
+                            if (tb) tb.setAttribute('aria-expanded', 'false');
+                        });
+                        if (!isOpen) {
+                            svcDropdown.classList.add('is-open');
+                            svcBtn.setAttribute('aria-expanded', 'true');
+                        }
+                    });
+
+                    // Close when tapping a dropdown item
+                    document.querySelectorAll('#nav-svc-menu a').forEach(function(a) {
+                        a.addEventListener('click', function() {
+                            svcDropdown.classList.remove('is-open');
+                            svcBtn.setAttribute('aria-expanded', 'false');
+                        });
+                    });
+
+                    // Close when tapping anywhere else on the page
+                    document.addEventListener('click', function() {
+                        if (svcDropdown.classList.contains('is-open')) {
+                            svcDropdown.classList.remove('is-open');
+                            svcBtn.setAttribute('aria-expanded', 'false');
+                        }
+                    });
+
+                    // Prevent dropdown menu taps from bubbling to document
+                    var svcMenu = document.getElementById('nav-svc-menu');
+                    if (svcMenu) {
+                        svcMenu.addEventListener('click', function(e) {
+                            e.stopPropagation();
+                        });
+                    }
+                }
+
+                // On pointer:fine (desktop), keep CSS hover — but also support click
+                // so keyboard users and users who prefer click also work
+                if (!isTouchDevice) {
+                    svcBtn.addEventListener('click', function(e) {
+                        e.stopPropagation();
+                        var isOpen = svcDropdown.classList.contains('is-open');
+                        svcDropdown.classList.toggle('is-open', !isOpen);
+                        svcBtn.setAttribute('aria-expanded', String(!isOpen));
+                    });
+                    document.addEventListener('click', function() {
+                        svcDropdown.classList.remove('is-open');
+                        svcBtn.setAttribute('aria-expanded', 'false');
+                    });
+                    var svcMenu2 = document.getElementById('nav-svc-menu');
+                    if (svcMenu2) {
+                        svcMenu2.addEventListener('click', function(e) {
+                            e.stopPropagation();
+                        });
+                    }
+                    // Close on Escape
+                    document.addEventListener('keydown', function(e) {
+                        if (e.key === 'Escape') {
+                            svcDropdown.classList.remove('is-open');
+                            svcBtn.setAttribute('aria-expanded', 'false');
+                        }
+                    });
+                }
+            }
+
+            // ── REVEAL ON SCROLL ─────────────────────────────────────────
             if ('IntersectionObserver' in window) {
                 var io = new IntersectionObserver(function(entries) {
                     entries.forEach(function(e) {
@@ -1444,6 +1592,7 @@
                 });
             }
 
+            // ── COUNTER ANIMATION ────────────────────────────────────────
             function runCounter(el) {
                 var t = parseFloat(el.dataset.count) || 0,
                     suf = el.dataset.suffix || '',
@@ -1473,10 +1622,12 @@
             document.querySelectorAll('[data-count]').forEach(function(el) {
                 co.observe(el);
             });
+
+            // ── PAGE TRANSITION WIPE ─────────────────────────────────────
             document.querySelectorAll('a[href]').forEach(function(a) {
                 var h = a.getAttribute('href');
-                if (!h || h === '#' || h[0] === '#' || h.startsWith('mailto') || h.startsWith('tel') || h
-                    .startsWith('javascript') || a.target === '_blank' || a.hasAttribute('data-no-wipe'))
+                if (!h || h === '#' || h[0] === '#' || h.startsWith('mailto') || h.startsWith('tel') ||
+                    h.startsWith('javascript') || a.target === '_blank' || a.hasAttribute('data-no-wipe'))
                     return;
                 a.addEventListener('click', function(e) {
                     if (e.metaKey || e.ctrlKey || e.shiftKey || e.altKey) return;
@@ -1498,6 +1649,7 @@
                     }
                 });
             });
+
         }());
     </script>
 </body>

@@ -62,6 +62,6 @@ $route['admin/settings']               = 'admin/Settings/index';
 $route['admin/settings/update']        = 'admin/Settings/update';
 
 // ── ADMIN ENQUIRIES ───────────────────────────────────────
-$route['admin/enquiries']              = 'admin/Enquiries/index';
-$route['admin/enquiries/view/(:num)']  = 'admin/Enquiries/view/$1';
+$route['admin/enquiries']               = 'admin/Enquiries/index';
+$route['admin/enquiries/view/(:num)']   = 'admin/Enquiries/view/$1';
 $route['admin/enquiries/delete/(:num)'] = 'admin/Enquiries/delete/$1';

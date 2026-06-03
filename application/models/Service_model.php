@@ -25,12 +25,12 @@ class Service_model extends CI_Model
 
     public function get_by_slug($slug)
     {
-        return $this->db->where('slug', $this->db->escape_str($slug))->where('status', 1)->get($this->table)->row_array();
+        return $this->db->where('slug', $slug)->where('status', 1)->get($this->table)->row_array();
     }
 
     public function slug_exists($slug, $exclude_id = NULL)
     {
-        $this->db->where('slug', $this->db->escape_str($slug));
+        $this->db->where('slug', $slug);
         if ($exclude_id) $this->db->where('id !=', (int)$exclude_id);
         return $this->db->get($this->table)->num_rows() > 0;
     }
@@ -99,14 +99,13 @@ class Service_model extends CI_Model
     private function _sanitize($data)
     {
         return [
-            'title'             => $this->db->escape_str(trim($data['title'] ?? '')),
-            'short_description' => $this->db->escape_str(trim($data['short_description'] ?? '')),
+            'title'             => trim($data['title'] ?? ''),
+            'short_description' => trim($data['short_description'] ?? ''),
             'full_content'      => $data['full_content'] ?? '',
-            'icon_image'        => $this->db->escape_str(trim($data['icon_image'] ?? '')),
-            'icon_emoji'        => $this->db->escape_str(trim($data['icon_emoji'] ?? '')),
-            'meta_title'        => $this->db->escape_str(trim($data['meta_title'] ?? '')),
-            'meta_description'  => $this->db->escape_str(trim($data['meta_description'] ?? '')),
-            'seo_content'       => $data['seo_content'] ?? '',
+            'icon_image'        => trim($data['icon_image'] ?? ''),
+            'icon_emoji'        => trim($data['icon_emoji'] ?? ''),
+            'meta_title'        => trim($data['meta_title'] ?? ''),
+            'meta_description'  => trim($data['meta_description'] ?? ''),
             'status'            => isset($data['status']) ? (int)$data['status'] : 1,
             'sort_order'        => (int)($data['sort_order'] ?? 0),
         ];

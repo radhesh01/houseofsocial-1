@@ -22,12 +22,12 @@ class Blog_model extends CI_Model
 
     public function get_by_slug($slug)
     {
-        return $this->db->where('slug', $this->db->escape_str($slug))->where('status', 1)->get($this->table)->row_array();
+        return $this->db->where('slug', $slug)->where('status', 1)->get($this->table)->row_array();
     }
 
     public function slug_exists($slug, $exclude_id = NULL)
     {
-        $this->db->where('slug', $this->db->escape_str($slug));
+        $this->db->where('slug', $slug);
         if ($exclude_id) $this->db->where('id !=', (int)$exclude_id);
         return $this->db->get($this->table)->num_rows() > 0;
     }
@@ -84,9 +84,9 @@ class Blog_model extends CI_Model
     private function _sanitize($data)
     {
         return [
-            'title'    => $this->db->escape_str(trim($data['title'] ?? '')),
-            'subtitle' => $this->db->escape_str(trim($data['subtitle'] ?? '')),
-            'author'   => $this->db->escape_str(trim($data['author'] ?? 'HouseOfSocial Team')),
+            'title'    => trim($data['title'] ?? ''),
+            'subtitle' => trim($data['subtitle'] ?? ''),
+            'author'   => trim($data['author'] ?? 'HouseOfSocial Team'),
             'content'  => $data['content'] ?? '',
             'status'   => isset($data['status']) ? (int)$data['status'] : 1,
         ];
