@@ -50,8 +50,12 @@ $form_action = ($action === 'create')
 <?php if (!empty($flash)): ?>
     <div class="a-flash a-flash-err"><i class="fa fa-triangle-exclamation"></i> <?= $flash ?></div>
 <?php endif; ?>
+<?php if ($this->session->flashdata('upload_error')): ?>
+    <div class="a-flash a-flash-err"><i class="fa fa-triangle-exclamation"></i> Image upload failed:
+        <?= htmlspecialchars($this->session->flashdata('upload_error')) ?></div>
+<?php endif; ?>
 
-<?php echo form_open($form_action, ['id' => 'bf-form']); ?>
+<?php echo form_open_multipart($form_action, ['id' => 'bf-form']); ?>
 
 <div class="bf-layout">
 
@@ -117,6 +121,33 @@ $form_action = ($action === 'create')
             </button>
         </div>
 
+        <!-- Featured Image -->
+        <div class="a-card a-card-pad a-space">
+            <div style="font-size:10px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--g4)">
+                Featured Image</div>
+
+            <?php if (!empty($blog['image'])): ?>
+            <div>
+                <img src="<?= base_url('assets/images/uploads/' . $blog['image']) ?>" alt="Current featured image"
+                    style="width:100%;max-height:150px;object-fit:cover;border-radius:6px">
+                <p style="font-size:11px;color:var(--g3);margin-top:6px">Upload new to replace</p>
+            </div>
+            <?php endif; ?>
+
+            <div>
+                <label class="a-label">Upload Image</label>
+                <input type="file" name="image" id="bf-img-input" class="a-input"
+                    accept="image/jpeg,image/png,image/gif,image/webp">
+                <p style="font-size:11px;color:var(--g3);margin-top:4px">JPG / PNG / WebP / GIF — max 5 MB</p>
+            </div>
+
+            <div id="bf-img-preview" style="display:none">
+                <img id="bf-preview-img" src="" alt="Preview"
+                    style="width:100%;max-height:150px;object-fit:cover;border-radius:6px">
+                <p style="font-size:11px;color:var(--g3);margin-top:5px">Preview</p>
+            </div>
+        </div>
+
         <?php if (!empty($blog['slug'])): ?>
             <div class="a-card a-card-pad">
                 <div
@@ -142,51 +173,24 @@ $form_action = ($action === 'create')
 
 <?php echo form_close(); ?>
 
-<!-- CKEditor 5 GPL -->
 <link rel="stylesheet" href="https://cdn.ckeditor.com/ckeditor5/43.3.1/ckeditor5.css">
 <script type="importmap">
     {"imports":{"ckeditor5":"https://cdn.ckeditor.com/ckeditor5/43.3.1/ckeditor5.js","ckeditor5/":"https://cdn.ckeditor.com/ckeditor5/43.3.1/"}}
 </script>
 <script type="module">
     import {
-        ClassicEditor,
-        Essentials,
-        Bold,
-        Italic,
-        Underline,
-        Strikethrough,
-        Paragraph,
-        Heading,
-        Link,
-        List,
-        BlockQuote,
-        Table,
-        TableToolbar,
-        Image,
-        ImageUpload,
-        ImageToolbar,
-        ImageCaption,
-        ImageStyle,
-        ImageResize,
-        MediaEmbed,
-        HorizontalLine,
-        Indent,
-        IndentBlock,
-        Alignment,
-        FontSize,
-        FontColor,
-        Code,
-        CodeBlock
+        ClassicEditor, Essentials, Bold, Italic, Underline, Strikethrough, Paragraph, Heading,
+        Link, List, BlockQuote, Table, TableToolbar, Image, ImageUpload, ImageToolbar, ImageCaption,
+        ImageStyle, ImageResize, MediaEmbed, HorizontalLine, Indent, IndentBlock, Alignment,
+        FontSize, FontColor, Code, CodeBlock
     } from 'ckeditor5';
 
     const UPLOAD_URL = '<?= base_url('admin/posts/upload_image') ?>';
-    const CSRF_NAME = '<?= $this->security->get_csrf_token_name() ?>';
+    const CSRF_NAME  = '<?= $this->security->get_csrf_token_name() ?>';
     const CSRF_TOKEN = '<?= $this->security->get_csrf_hash() ?>';
 
     class CiUploadAdapter {
-        constructor(loader) {
-            this.loader = loader;
-        }
+        constructor(loader) { this.loader = loader; }
         upload() {
             return this.loader.file.then(file => new Promise((resolve, reject) => {
                 const form = new FormData();
@@ -195,18 +199,11 @@ $form_action = ($action === 'create')
                 const xhr = new XMLHttpRequest();
                 xhr.open('POST', UPLOAD_URL, true);
                 xhr.onload = () => {
-                    if (xhr.status < 200 || xhr.status >= 300) {
-                        reject('HTTP ' + xhr.status);
-                        return;
-                    }
+                    if (xhr.status < 200 || xhr.status >= 300) { reject('HTTP ' + xhr.status); return; }
                     try {
                         const r = JSON.parse(xhr.responseText);
-                        r.error ? reject(r.error) : resolve({
-                            default: r.url || r.location
-                        });
-                    } catch (e) {
-                        reject('Invalid response');
-                    }
+                        r.error ? reject(r.error) : resolve({ default: r.url || r.location });
+                    } catch(e) { reject('Invalid response'); }
                 };
                 xhr.onerror = () => reject('Network error');
                 xhr.send(form);
@@ -214,7 +211,6 @@ $form_action = ($action === 'create')
         }
         abort() {}
     }
-
     function CiUploadPlugin(editor) {
         editor.plugins.get('FileRepository').createUploadAdapter = l => new CiUploadAdapter(l);
     }
@@ -224,51 +220,12 @@ $form_action = ($action === 'create')
         plugins: [Essentials, Bold, Italic, Underline, Strikethrough, Paragraph, Heading, Link, List,
             BlockQuote, Table, TableToolbar, Image, ImageUpload, ImageToolbar, ImageCaption, ImageStyle,
             ImageResize, MediaEmbed, HorizontalLine, Indent, IndentBlock, Alignment, FontSize, FontColor,
-            Code, CodeBlock, CiUploadPlugin
-        ],
-        toolbar: {
-            items: ['heading', '|', 'bold', 'italic', 'underline', 'strikethrough', '|', 'fontSize', 'fontColor',
-                '|', 'alignment', '|', 'bulletedList', 'numberedList', 'outdent', 'indent', '|', 'link',
-                'uploadImage',
-                'mediaEmbed', 'insertTable', '|', 'blockQuote', 'horizontalLine', 'code', 'codeBlock', '|',
-                'undo', 'redo'
-            ],
-            shouldNotGroupWhenFull: false
-        },
-        heading: {
-            options: [{
-                    model: 'paragraph',
-                    title: 'Paragraph',
-                    class: 'ck-heading_paragraph'
-                },
-                {
-                    model: 'heading1',
-                    view: 'h1',
-                    title: 'Heading 1',
-                    class: 'ck-heading_heading1'
-                },
-                {
-                    model: 'heading2',
-                    view: 'h2',
-                    title: 'Heading 2',
-                    class: 'ck-heading_heading2'
-                },
-                {
-                    model: 'heading3',
-                    view: 'h3',
-                    title: 'Heading 3',
-                    class: 'ck-heading_heading3'
-                },
-            ]
-        },
-        table: {
-            contentToolbar: ['tableColumn', 'tableRow', 'mergeTableCells']
-        },
-        image: {
-            toolbar: ['imageStyle:inline', 'imageStyle:block', 'imageStyle:side', '|', 'imageTextAlternative', '|',
-                'resizeImage'
-            ]
-        },
+            Code, CodeBlock, CiUploadPlugin],
+        toolbar: { items: ['heading','|','bold','italic','underline','|','alignment','|','bulletedList',
+            'numberedList','outdent','indent','|','link','uploadImage','mediaEmbed','insertTable','|',
+            'blockQuote','horizontalLine','code','codeBlock','|','undo','redo'], shouldNotGroupWhenFull: false },
+        table: { contentToolbar: ['tableColumn','tableRow','mergeTableCells'] },
+        image: { toolbar: ['imageStyle:inline','imageStyle:block','imageStyle:side','|','imageTextAlternative','|','resizeImage'] },
         initialData: document.getElementById('bf-content-field').value || '',
         placeholder: 'Start writing your blog post here...'
     }).then(editor => {
@@ -279,10 +236,18 @@ $form_action = ($action === 'create')
     }).catch(err => {
         console.error('CKEditor:', err);
         const ta = document.getElementById('bf-content-field');
-        if (ta) {
-            ta.style.display = 'block';
-            ta.style.width = '100%';
-            ta.rows = 16;
-        }
+        if (ta) { ta.style.display = 'block'; ta.style.width = '100%'; ta.rows = 16; }
     });
+</script>
+
+<script>
+document.getElementById('bf-img-input').addEventListener('change', function() {
+    if (!this.files[0]) return;
+    var r = new FileReader();
+    r.onload = function(e) {
+        document.getElementById('bf-preview-img').src = e.target.result;
+        document.getElementById('bf-img-preview').style.display = 'block';
+    };
+    r.readAsDataURL(this.files[0]);
+});
 </script>

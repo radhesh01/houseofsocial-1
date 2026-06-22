@@ -1,4 +1,4 @@
-<?php defined('BASEPATH') or exit('No direct script access allowed'); ?>
+
 <style>
 /* ================================================================
    WORK PAGE — HouseOfSocial
@@ -88,7 +88,7 @@
     max-width: var(--maxW);
     margin: 0 auto;
     display: grid;
-    grid-template-columns: repeat(4, 1fr);
+    grid-template-columns: repeat(5, 1fr);
 }
 
 .wk-stat {
@@ -219,14 +219,14 @@
 .wk-card-img img {
     width: 100%;
     height: 100%;
-    object-fit: cover;
-    filter: brightness(.44) saturate(.55);
+    object-fit: fill;
+    /*filter: brightness(.44) saturate(.55);*/
     transition: transform .8s var(--ease), filter .8s;
 }
 
 .wk-card:hover .wk-card-img img {
     transform: scale(1.06);
-    filter: brightness(.62) saturate(.9);
+    /*filter: brightness(.62) saturate(.9);*/
 }
 
 .wk-card-img::after {
@@ -443,10 +443,18 @@
 
 <div class="wk-strip">
     <div class="wk-strip-inner">
-        <?php foreach ([['300+', 'Campaigns'], ['32%', 'OTT Releases'], ['12M+', 'People Reached'], ['150+', 'Brands']] as $i => $s): ?>
+        <?php foreach (
+            [
+                ['250', '+', 'Campaigns Delivered', 'data-count="250" data-suffix="+"'],
+                ['2', 'B+', 'Impressions Generated', 'data-count="2" data-suffix="B+"'],
+                ['850', 'M+', 'Total Audience Reach', 'data-count="850" data-suffix="M+"'],
+                ['40', 'K+', 'Creator Network', 'data-count="40" data-suffix="K+"'],
+                ['150', '+', 'Brands Worked With', 'data-count="150" data-suffix="+"'],
+            ] as $i => $s
+        ): ?>
         <div class="wk-stat rv d<?= $i + 1 ?>">
-            <span class="wk-stat-n"><?= htmlspecialchars($s[0]) ?></span>
-            <span class="wk-stat-l"><?= htmlspecialchars($s[1]) ?></span>
+            <span class="wk-stat-n" <?= $s[3] ?>><?= htmlspecialchars($s[0] . $s[1]) ?></span>
+            <span class="wk-stat-l"><?= htmlspecialchars($s[2]) ?></span>
         </div>
         <?php endforeach; ?>
     </div>

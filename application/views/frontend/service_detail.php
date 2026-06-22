@@ -1,4 +1,4 @@
-<?php defined('BASEPATH') or exit('No direct script access allowed'); ?>
+
 <style>
     .sd-hero {
         background: var(--s0);
@@ -78,7 +78,7 @@
 
     .sd-short {
         font-size: clamp(15px, 1.6vw, 19px);
-        color: var(--ghost4);
+        color: white;
         line-height: 1.78;
         max-width: 680px;
         border-left: 3px solid var(--flame);
@@ -98,7 +98,7 @@
 
     .sd-content {
         font-size: clamp(15px, 1.45vw, 17px);
-        color: var(--ghost4);
+        color: white;
         line-height: 1.95;
     }
 
@@ -335,9 +335,9 @@
     </div>
 </article>
 
-<div class="sd-foot">
-    <div class="sd-foot-inner">
-        <a href="<?= base_url('services') ?>" class="btn-outline">← All Services</a>
-        <a href="<?= base_url('contact') ?>" class="btn-primary">Start a Campaign →</a>
-    </div>
-</div>
+<!--<div class="sd-foot">-->
+<!--    <div class="sd-foot-inner">-->
+<!--        <a href="<?= base_url('services') ?>" class="btn-outline">← All Services</a>-->
+<!--        <a href="<?= base_url('contact') ?>" class="btn-primary">Start a Campaign →</a>-->
+<!--    </div>-->
+<!--</div>-->

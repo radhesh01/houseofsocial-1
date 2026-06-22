@@ -1,4 +1,4 @@
-<?php defined('BASEPATH') or exit('No direct script access allowed'); ?>
+
 <style>
 /* ================================================================
    ABOUT PAGE — HouseOfSocial
@@ -297,6 +297,7 @@
 }
 
 .ab-shift {
+    text-align: center;
     background: var(--s2);
     padding: 20px 22px;
     border: 1px solid var(--b1);
@@ -309,7 +310,7 @@
 }
 
 .ab-shift-from {
-    font-size: 12px;
+    font-size: 14px;
     color: var(--ghost3);
     margin-bottom: 4px;
     text-decoration: line-through;
@@ -323,7 +324,7 @@
 }
 
 .ab-shift-to {
-    font-size: 13px;
+    font-size: 15px;
     font-weight: 600;
     color: var(--paper);
 }
@@ -493,7 +494,7 @@
     max-width: var(--maxW);
     margin: 0 auto;
     display: grid;
-    grid-template-columns: repeat(4, 1fr);
+    grid-template-columns: repeat(5, 1fr);
     gap: 2px;
 }
 
@@ -829,10 +830,10 @@
                     like it's 2016. We don't.</p>
             </div>
             <div class="ab-open-br">
-                <p class="ab-open-desc">House Of Social was built by people who grew up online. We understand how
-                    attention actually works in 2025, and we know the difference between a brand that's <em
-                        style="color:var(--paper)">on</em> social media and a brand that <em
-                        style="color:var(--flame)">is</em> social media.</p>
+                <p class="ab-open-desc"><em
+                        style="color:var(--paper)">House Of Social was built by people who grew up</em> <em 
+                        style="color:var(--flame) ; font-weight:bold;">online.</em> We understand how
+                    attention actually works in 2025, and we know the difference between a brand that's on social media and a brand that is social media.</p>
                 <a href="<?= base_url('contact') ?>" class="btn-primary" style="align-self:flex-start">Let's build
                     together &rarr;</a>
             </div>
@@ -910,25 +911,25 @@
         <div class="ab-caps-grid rv sc">
             <?php foreach (
                 [
-                    ['01', 'Influencer Marketing',  'Precision-matched campaigns from nano to celebrity tier. Every creator chosen for fit, not just follower count.'],
-                    ['02', 'Meme Marketing',        'Native viral content that spreads because it belongs on the internet — not because money was spent placing it.'],
-                    ['03', 'Reddit Marketing',      'Community-first presence in the spaces where real opinions and genuine brand trust are actually built.'],
-                    ['04', 'LinkedIn Marketing',    'Platform-native authority and thought leadership for brand voices that industry professionals actually respect.'],
-                    ['05', 'Twitter/X Trending',    'Engineered cultural moments and real-time reactive content that puts your brand at the centre of conversation.'],
-                    ['06', 'UGC Content',           'Authentic creator-generated assets that convert because they feel earned — not bought.'],
-                    ['07', 'Viral Marketing',       'Campaigns built on the psychology of sharing: emotion, identity, novelty, and social currency.'],
-                    ['08', 'Performance Marketing', 'Paid media that amplifies organic wins and turns hard-earned attention into measurable revenue.'],
-                    ['09', 'Content Production',    'OTT-grade creative output: brand films, reels, web series — from brief to final delivery.'],
-                    ['10', 'Brand Strategy',        'Deep positioning work anchored in one question: what do you want people to think of you when you\'re not in the room?'],
-                    ['11', 'Creative Campaigns',    'Fully integrated multi-channel campaigns designed to create cultural moments that outlast the media spend.'],
-                    ['12', 'On-Ground Promotions',  'Physical brand activations built to generate the online conversation. The event becomes the content.'],
+                    ['01', 'Influencer Marketing',  'Precision-matched campaigns from nano to celebrity tier. Every creator chosen for fit, not just follower count.', 'https://houseofsocial.io/services/influencer-marketing'],
+                    ['02', 'Meme Marketing',        'Native viral content that spreads because it belongs on the internet — not because money was spent placing it.', 'https://houseofsocial.io/services/meme-marketing'],
+                    ['03', 'Reddit Marketing',      'Community-first presence in the spaces where real opinions and genuine brand trust are actually built.', 'https://houseofsocial.io/services/reddit-marketing'],
+                    ['04', 'LinkedIn Marketing',    'Platform-native authority and thought leadership for brand voices that industry professionals actually respect.', 'https://houseofsocial.io/services/linkedin-marketing'],
+                    ['05', 'Twitter/X Trending',    'Engineered cultural moments and real-time reactive content that puts your brand at the centre of conversation.', 'https://houseofsocial.io/services/twitterx-marketing'],
+                    ['06', 'UGC Marketing',         'Authentic creator-generated assets that convert because they feel earned — not bought.', 'https://houseofsocial.io/services/ugc-marketing'],
+                    ['07', 'Viral Marketing',       'Campaigns built on the psychology of sharing: emotion, identity, novelty, and social currency.', 'https://houseofsocial.io/services/viral-marketing'],
+                    ['08', 'Performance Marketing', 'Paid media that amplifies organic wins and turns hard-earned attention into measurable revenue.', 'https://houseofsocial.io/services/performance-marketing'],
+                    ['09', 'Content Production',    'OTT-grade creative output: brand films, reels, web series — from brief to final delivery.', 'https://houseofsocial.io/services/content-production'],
+                    ['10', 'Brand Strategy',        'Deep positioning work anchored in one question: what do you want people to think of you when you\'re not in the room?', 'https://houseofsocial.io/services/brand-strategy'],
+                    ['11', 'Creative Campaigns',    'Fully integrated multi-channel campaigns designed to create cultural moments that outlast the media spend.', '#'],
+                    ['12', 'On-Ground Promotions',  'Physical brand activations built to generate the online conversation. The event becomes the content.', 'https://houseofsocial.io/services/on-ground-promotion'],
                 ] as $i => $c
             ): ?>
-            <div class="ab-cap rv d<?= ($i % 3) + 1 ?>">
+            <a href="<?= $c[3] ?>" class="ab-cap rv d<?= ($i % 3) + 1 ?>" style="text-decoration: none; color: inherit; display: block;">
                 <div class="ab-cap-idx"><?= $c[0] ?></div>
                 <h3 class="ab-cap-title"><?= htmlspecialchars($c[1]) ?></h3>
                 <p class="ab-cap-desc"><?= htmlspecialchars($c[2]) ?></p>
-            </div>
+            </a>
             <?php endforeach; ?>
         </div>
     </div>
@@ -940,14 +941,15 @@
     <div class="ab-numbers-grid rv">
         <?php foreach (
             [
-                [$settings['stat_campaigns'] ?? '300', '+', 'Campaigns'],
-                ['12', 'M+', 'People Reached'],
-                ['10', 'K+', 'Creator Network'],
-                ['150', '+', 'Brands Worked With'],
+                ['250', '+', 'Campaigns Delivered', 'data-count="250" data-suffix="+"'],
+                ['2', 'B+', 'Impressions Generated', 'data-count="2" data-suffix="B+"'],
+                ['850', 'M+', 'Total Audience Reach', 'data-count="850" data-suffix="M+"'],
+                ['40', 'K+', 'Creator Network', 'data-count="40" data-suffix="K+"'],
+                ['150', '+', 'Brands Worked With', 'data-count="150" data-suffix="+"'],
             ] as $i => $n
         ): ?>
         <div class="ab-num-cell rv d<?= $i + 1 ?>">
-            <span class="ab-num-n" data-count="<?= $n[0] ?>" data-suffix="<?= $n[1] ?>"><?= $n[0] . $n[1] ?></span>
+            <span class="ab-num-n" <?= $n[3] ?>><?= $n[0] . $n[1] ?></span>
             <span class="ab-num-l"><?= htmlspecialchars($n[2]) ?></span>
         </div>
         <?php endforeach; ?>

@@ -1,4 +1,4 @@
-<?php defined('BASEPATH') or exit('No direct script access allowed'); ?>
+
 <style>
 /* ================================================================
    POST DETAIL PAGE — Fully aligned to global dark theme system
@@ -128,7 +128,7 @@
 
 .pd-desc {
     font-size: clamp(15px, 1.8vw, 19px);
-    color: var(--ghost4);
+    color: white;
     line-height: 1.78;
     max-width: 680px;
     border-left: 3px solid var(--flame);
@@ -470,9 +470,9 @@
     </div>
 </article>
 
-<div class="pd-foot">
-    <div class="pd-foot-inner">
-        <a href="<?= base_url('work') ?>" class="btn-outline">← Back to All Work</a>
-        <a href="<?= base_url('contact') ?>" class="btn-primary">Start a Campaign</a>
-    </div>
-</div>
+<!--<div class="pd-foot">-->
+<!--    <div class="pd-foot-inner">-->
+<!--        <a href="<?= base_url('work') ?>" class="btn-outline">← Back to All Work</a>-->
+<!--        <a href="<?= base_url('contact') ?>" class="btn-primary">Start a Campaign</a>-->
+<!--    </div>-->
+<!--</div>-->

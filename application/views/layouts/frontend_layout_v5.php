@@ -552,8 +552,8 @@
         }
 
         .nav-a {
-            font-size: 13.5px;
-            font-weight: 500;
+            font-size: 14.5px;
+            font-weight: 800;
             letter-spacing: .02em;
             color: var(--ghost4);
             position: relative;
@@ -588,8 +588,8 @@
         }
 
         .nav-dropdown-toggle {
-            font-size: 13.5px;
-            font-weight: 500;
+            font-size: 14.5px;
+            font-weight: 800;
             letter-spacing: .02em;
             color: var(--ghost4);
             position: relative;
@@ -1216,7 +1216,7 @@
         <a href="<?= base_url() ?>" class="nav-logo" aria-label="<?= htmlspecialchars($site_title) ?> home">
             <?php if ($logo_url): ?>
                 <img src="<?= $logo_url ?>" alt="<?= htmlspecialchars($site_title) ?>"
-                    style="height:30px;width:auto;flex-shrink:0;">
+                    style="height:80px;width:auto;flex-shrink:0;">
             <?php else: ?>
                 <div class="nav-logo-mark" aria-hidden="true">H</div>
                 <div class="nav-logo-text">
@@ -1311,9 +1311,9 @@
                     class="menu-meta-lnk"><?= htmlspecialchars($s['site_phone'] ?? '+91 9990802115') ?></a>
                 <div class="menu-meta-div"></div>
                 <p class="menu-meta-h">Follow</p>
-                <a href="#" class="menu-meta-lnk" data-no-wipe>Instagram</a>
-                <a href="#" class="menu-meta-lnk" data-no-wipe>LinkedIn</a>
-                <a href="#" class="menu-meta-lnk" data-no-wipe>X / Twitter</a>
+                <a href="https://www.instagram.com/houseofsocial.hos/" target="_blank" class="menu-meta-lnk" data-no-wipe>Instagram</a>
+                <a href="https://www.linkedin.com/company/houseofsocialhos/" target="_blank" class="menu-meta-lnk" data-no-wipe>LinkedIn</a>
+                <!--<a href="#" class="menu-meta-lnk" data-no-wipe>X / Twitter</a>-->
                 <div class="menu-meta-div"></div>
                 <p class="menu-meta-tagline">Internet-native.<br>Culture-first.<br>Built for today.</p>
             </div>
@@ -1344,29 +1344,29 @@
         <div class="foot-body">
             <div class="foot-grid">
                 <div>
-                    <div class="foot-brand-row"><span class="foot-brand-dot"></span>House<span
-                            style="color:var(--flame)">Of</span>Social</div>
+                    <div class="foot-brand-row"><span class="foot-brand-dot"></span>House <span>of</span><span
+                            style="color:var(--flame)">Social</span></div>
                     <p class="foot-tagline">
                         <?= htmlspecialchars($s['hero_subtext'] ?? 'We help brands stop posting and start belonging. Internet-native creative agency, India.') ?>
                     </p>
                     <div class="foot-socials">
-                        <a href="#" class="foot-soc" data-no-wipe aria-label="Instagram"><svg width="13" height="13"
+                        <a href="https://www.instagram.com/houseofsocial.hos/" target="_blank" class="foot-soc" data-no-wipe aria-label="Instagram"><svg width="13" height="13"
                                 fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
                                 <rect x="2" y="2" width="20" height="20" rx="5" />
                                 <circle cx="12" cy="12" r="5" />
                                 <circle cx="17.5" cy="6.5" r="1" fill="currentColor" stroke="none" />
                             </svg></a>
-                        <a href="#" class="foot-soc" data-no-wipe aria-label="LinkedIn"><svg width="13" height="13"
+                        <a href="https://www.linkedin.com/company/houseofsocialhos/" target="_blank" class="foot-soc" data-no-wipe aria-label="LinkedIn"><svg width="13" height="13"
                                 fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
                                 <path d="M16 8a6 6 0 016 6v7h-4v-7a2 2 0 00-2-2 2 2 0 00-2 2v7h-4v-7a6 6 0 016-6z" />
                                 <rect x="2" y="9" width="4" height="12" />
                                 <circle cx="4" cy="4" r="2" />
                             </svg></a>
-                        <a href="#" class="foot-soc" data-no-wipe aria-label="X Twitter"><svg width="12" height="12"
-                                fill="currentColor" viewBox="0 0 24 24">
-                                <path
-                                    d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-4.714-6.231-5.401 6.231H2.744l7.73-8.835L1.254 2.25H8.08l4.253 5.622z" />
-                            </svg></a>
+                        <!--<a href="#" class="foot-soc" data-no-wipe aria-label="X Twitter"><svg width="12" height="12"-->
+                        <!--        fill="currentColor" viewBox="0 0 24 24">-->
+                        <!--        <path-->
+                        <!--            d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-4.714-6.231-5.401 6.231H2.744l7.73-8.835L1.254 2.25H8.08l4.253 5.622z" />-->
+                        <!--    </svg></a>-->
                     </div>
                 </div>
                 <div>

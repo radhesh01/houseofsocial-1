@@ -1,7 +1,7 @@
 <?php defined('BASEPATH') or exit('No direct script access allowed');
 
 // ── Change base_url to match your server ─────────────────
-$config['base_url'] = 'http://localhost/houseofsocial/';
+$config['base_url'] = 'http://houseofsocial.io/';
 // https: //houseofsocial.io/
 
 $config['index_page'] = '';

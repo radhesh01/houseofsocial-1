@@ -15,6 +15,11 @@ class Blog_model extends CI_Model
         return $this->db->where('status', 1)->order_by('created_at', 'DESC')->get($this->table)->result_array();
     }
 
+    public function get_active_limit($limit = 3)
+    {
+        return $this->db->where('status', 1)->order_by('created_at', 'DESC')->limit($limit)->get($this->table)->result_array();
+    }
+
     public function get_by_id($id)
     {
         return $this->db->where('id', (int)$id)->get($this->table)->row_array();
@@ -63,6 +68,11 @@ class Blog_model extends CI_Model
 
     public function delete($id)
     {
+        $row = $this->get_by_id($id);
+        if ($row && !empty($row['image'])) {
+            $path = FCPATH . 'assets/images/uploads/' . $row['image'];
+            if (file_exists($path)) @unlink($path);
+        }
         return $this->db->where('id', (int)$id)->delete($this->table);
     }
 
@@ -88,6 +98,7 @@ class Blog_model extends CI_Model
             'subtitle' => trim($data['subtitle'] ?? ''),
             'author'   => trim($data['author'] ?? 'HouseOfSocial Team'),
             'content'  => $data['content'] ?? '',
+            'image'    => trim($data['image'] ?? ''),
             'status'   => isset($data['status']) ? (int)$data['status'] : 1,
         ];
     }
