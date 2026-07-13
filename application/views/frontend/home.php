@@ -1,4 +1,3 @@
-
 <style>
     /* ================================================================
        HOME PAGE — HouseOfSocial
@@ -15,6 +14,7 @@
         align-items: center;
         gap: 60px;
         padding: calc(var(--navH) + 60px) var(--px) var(--sec);
+        max-width: 100vw;
     }
 
     .h-hero-bg {
@@ -44,6 +44,7 @@
         position: relative;
         z-index: 3;
         max-width: 720px;
+        min-width: 0;
     }
 
     .h-eyebrow {
@@ -79,13 +80,15 @@
         opacity: 0;
         animation: heroUp 1.1s var(--ease) .22s forwards;
         text-transform: uppercase;
+        max-width: 100%;
+        word-break: break-word;
     }
 
     .h-headline em {
         font-style: normal;
         color: var(--flame);
     }
-    
+
     .h-rotator {
         display: inline-block;
         color: var(--flame);
@@ -124,6 +127,7 @@
         justify-content: center;
         opacity: 0;
         animation: heroUp 1.2s var(--ease) .4s forwards;
+        min-width: 0;
     }
 
     .h-visual-wrap {
@@ -143,17 +147,31 @@
         width: 100%;
         height: auto;
         object-fit: contain;
-        filter: drop-shadow(0 20px 40px rgba(0,0,0,0.5));
+        filter: drop-shadow(0 20px 40px rgba(0, 0, 0, 0.5));
     }
 
     @keyframes floatVisual {
-        0%, 100% { transform: translateY(0) rotate(0deg); }
-        50% { transform: translateY(-20px) rotate(2deg); }
+
+        0%,
+        100% {
+            transform: translateY(0) rotate(0deg);
+        }
+
+        50% {
+            transform: translateY(-20px) rotate(2deg);
+        }
     }
-    
+
     @keyframes heroUp {
-        from { opacity: 0; transform: translateY(26px); }
-        to { opacity: 1; transform: none; }
+        from {
+            opacity: 0;
+            transform: translateY(26px);
+        }
+
+        to {
+            opacity: 1;
+            transform: none;
+        }
     }
 
     @media(max-width: 992px) {
@@ -162,18 +180,22 @@
             text-align: center;
             padding-top: calc(var(--navH) + 40px);
         }
+
         .h-hero-left {
             margin: 0 auto;
             display: flex;
             flex-direction: column;
             align-items: center;
         }
+
         .h-sub {
             text-align: center;
         }
+
         .h-btns {
             justify-content: center;
         }
+
         .h-hero-right {
             grid-row: 2;
         }
@@ -185,10 +207,13 @@
             width: 100%;
             max-width: 320px;
         }
-        .h-btns .btn-primary, .h-btns .btn-outline {
+
+        .h-btns .btn-primary,
+        .h-btns .btn-outline {
             width: 100%;
             justify-content: center;
         }
+
         .h-visual-wrap {
             max-width: 320px;
         }
@@ -201,8 +226,9 @@
         background: var(--s0);
         padding: 60px 0;
         z-index: 5;
+        max-width: 100vw;
     }
-    
+
     .h-cross-ticker-wrap::before,
     .h-cross-ticker-wrap::after {
         content: '';
@@ -213,12 +239,12 @@
         z-index: 10;
         pointer-events: none;
     }
-    
+
     .h-cross-ticker-wrap::before {
         left: 0;
         background: linear-gradient(90deg, var(--s0) 0%, transparent 100%);
     }
-    
+
     .h-cross-ticker-wrap::after {
         right: 0;
         background: linear-gradient(-90deg, var(--s0) 0%, transparent 100%);
@@ -229,15 +255,15 @@
         width: 110%;
         left: -5%;
         padding: 18px 0;
-        box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
     }
 
     .h-strip-1 {
         background: var(--flame);
         transform: rotate(-3deg);
         z-index: 2;
-        border-top: 1px solid rgba(255,255,255,0.2);
-        border-bottom: 1px solid rgba(255,255,255,0.2);
+        border-top: 1px solid rgba(255, 255, 255, 0.2);
+        border-bottom: 1px solid rgba(255, 255, 255, 0.2);
     }
 
     .h-strip-2 {
@@ -245,8 +271,8 @@
         transform: rotate(2deg);
         z-index: 1;
         margin-top: -34px;
-        border-top: 1px solid rgba(0,0,0,0.1);
-        border-bottom: 1px solid rgba(0,0,0,0.1);
+        border-top: 1px solid rgba(0, 0, 0, 0.1);
+        border-bottom: 1px solid rgba(0, 0, 0, 0.1);
     }
 
     .h-strip-word {
@@ -260,8 +286,13 @@
         text-transform: uppercase;
     }
 
-    .h-strip-1 .h-strip-word { color: #fff; }
-    .h-strip-2 .h-strip-word { color: var(--s0); }
+    .h-strip-1 .h-strip-word {
+        color: #fff;
+    }
+
+    .h-strip-2 .h-strip-word {
+        color: var(--s0);
+    }
 
     .h-strip-sep {
         opacity: .5;
@@ -276,6 +307,7 @@
         z-index: 1;
         background: var(--s1);
         border-top: 1px solid var(--b1);
+        max-width: 100vw;
     }
 
     .fc-brands-label {
@@ -344,14 +376,19 @@
     .brand-row.row-2 {
         animation: ticker-run-rev 50s linear infinite;
     }
-    
+
     .brand-row:hover {
         animation-play-state: paused;
     }
 
     @keyframes ticker-run-rev {
-        0% { transform: translateX(-50%); }
-        100% { transform: translateX(0); }
+        0% {
+            transform: translateX(-50%);
+        }
+
+        100% {
+            transform: translateX(0);
+        }
     }
 
     .brand-card {
@@ -376,7 +413,7 @@
         content: '';
         position: absolute;
         inset: 0;
-        background: radial-gradient(circle at 50% 120%, rgba(255,60,0,0.1) 0%, transparent 70%);
+        background: radial-gradient(circle at 50% 120%, rgba(255, 60, 0, 0.1) 0%, transparent 70%);
         opacity: 0;
         transition: opacity 0.3s;
     }
@@ -395,9 +432,9 @@
         transform: translateY(-6px);
         background: rgba(13, 13, 19, 0.8);
         border-color: rgba(255, 60, 0, 0.3);
-        box-shadow: 0 12px 24px rgba(0,0,0,0.4);
+        box-shadow: 0 12px 24px rgba(0, 0, 0, 0.4);
     }
-    
+
     .brand-card:hover::after {
         opacity: 1;
     }
@@ -563,6 +600,9 @@
         line-height: 1;
         letter-spacing: -.05em;
         transition: -webkit-text-stroke-color .4s;
+        max-width: 90%;
+        overflow: hidden;
+        white-space: nowrap;
     }
 
     .h-feat:hover .h-feat-ghost {
@@ -924,6 +964,7 @@
         border-top: 1px solid var(--b1);
         overflow: hidden;
         position: relative;
+        max-width: 100vw;
     }
 
     .h-proof-strip {
@@ -978,6 +1019,7 @@
         transition: background .2s;
         position: relative;
         overflow: initial;
+        min-width: 0;
     }
 
     .h-counter:last-child {
@@ -1007,7 +1049,7 @@
 
     .h-cnt-n {
         font-family: var(--fDisplay);
-        font-size: clamp(44px, 6vw, 80px);
+        font-size: clamp(34px, 6vw, 80px);
         font-weight: 700;
         letter-spacing: -.05em;
         color: var(--flame);
@@ -1128,6 +1170,15 @@
         .h-counters {
             grid-template-columns: 1fr;
         }
+
+        .h-counter {
+            border-right: none;
+            border-bottom: 1px solid var(--b1);
+        }
+
+        .h-counter:last-child {
+            border-bottom: none;
+        }
     }
 
     /* ── TESTIMONIALS ── */
@@ -1165,6 +1216,7 @@
         display: flex;
         flex-direction: column;
         gap: 2px;
+        min-width: 0;
     }
 
     .h-tc {
@@ -1245,6 +1297,7 @@
         color: var(--flame);
         border: 1px solid rgba(255, 60, 0, .3);
         padding: 4px 12px;
+        white-space: nowrap;
     }
 
     @media(max-width:860px) {
@@ -1258,12 +1311,19 @@
         }
     }
 
+    @media(max-width:480px) {
+        .h-tc {
+            padding: 28px 22px;
+        }
+    }
+
     /* ── BIG CTA ── */
-   .h-cta {
+    .h-cta {
         background: var(--s0);
         padding: clamp(80px, 10vw, 160px) var(--px);
         position: relative;
         overflow: hidden;
+        max-width: 100vw;
     }
 
     .h-cta-bg-glow {
@@ -1299,7 +1359,7 @@
         position: relative;
         overflow: hidden;
         border-radius: 2px;
-        box-shadow: 0 40px 100px rgba(0,0,0,0.4);
+        box-shadow: 0 40px 100px rgba(0, 0, 0, 0.4);
     }
 
     /* Accent line at the top of the box */
@@ -1333,6 +1393,7 @@
     .h-cta-left {
         flex: 1;
         max-width: 540px;
+        min-width: 0;
     }
 
     .h-cta-right {
@@ -1341,6 +1402,7 @@
         display: flex;
         flex-direction: column;
         gap: 36px;
+        min-width: 0;
     }
 
     .h-cta-title {
@@ -1396,26 +1458,274 @@
             align-items: center;
             gap: 48px;
         }
-        .h-cta-left, .h-cta-right {
+
+        .h-cta-left,
+        .h-cta-right {
             max-width: 100%;
         }
+
         .s-label {
             justify-content: center;
         }
-        .h-cta-actions, .h-cta-contact {
+
+        .h-cta-actions,
+        .h-cta-contact {
             justify-content: center;
         }
     }
-    
+
     @media(max-width: 540px) {
         .h-cta-actions {
             flex-direction: column;
             width: 100%;
         }
-        .h-cta-actions .btn-primary, 
+
+        .h-cta-actions .btn-primary,
         .h-cta-actions .btn-outline {
             width: 100%;
             justify-content: center;
+        }
+    }
+
+    /* ══════════════════════════════════════════════════════════
+       ADDITIONAL RESPONSIVE HARDENING — home.php
+       Layout / spacing / overflow fixes only. No color, type,
+       animation, copy or structural/content changes.
+    ══════════════════════════════════════════════════════════ */
+
+    @media (max-width:1024px) {
+        .h-hero-split {
+            gap: 40px;
+        }
+
+        .h-proof-top {
+            gap: 40px;
+        }
+    }
+
+    @media (max-width:820px) {
+        .h-svc-hdr {
+            padding-bottom: 40px;
+        }
+
+        .h-metrics {
+            grid-template-columns: 1fr 1fr;
+        }
+    }
+
+    @media (max-width:768px) {
+        .h-hero-split {
+            min-height: auto;
+            padding-top: calc(var(--navH) + 32px);
+        }
+
+        .h-strip-word {
+            padding: 0 20px;
+        }
+
+        .brand-card {
+            width: 180px;
+            height: 84px;
+        }
+
+        .brand-card img {
+            max-width: 110px;
+            max-height: 68px;
+        }
+
+        .h-stmt-left,
+        .h-stmt-right {
+            padding: 28px;
+        }
+
+        .h-feat {
+            min-height: 260px;
+            padding: 32px 24px;
+        }
+
+        .hbc-img,
+        .hbc-img-ph {
+            height: 180px;
+        }
+    }
+
+    @media (max-width:576px) {
+        .h-hero-split {
+            padding-top: calc(var(--navH) + 24px);
+            padding-bottom: 56px;
+            gap: 32px;
+        }
+
+        .h-eyebrow {
+            margin-bottom: 20px;
+            font-size: 10px;
+        }
+
+        .h-sub {
+            margin-top: 18px;
+        }
+
+        .h-btns {
+            margin-top: 26px;
+        }
+
+        .h-cross-ticker-wrap {
+            padding: 36px 0;
+        }
+
+        .h-strip {
+            padding: 12px 0;
+        }
+
+        .h-strip-2 {
+            margin-top: -22px;
+        }
+
+        .h-strip-word {
+            font-size: 16px;
+            padding: 0 16px;
+        }
+
+        .fc-brands-sec {
+            padding: 48px 0;
+        }
+
+        .fc-brands-label {
+            margin-bottom: 28px;
+            font-size: 9px;
+        }
+
+        .brand-card {
+            width: 150px;
+            height: 72px;
+        }
+
+        .brand-card img {
+            max-width: 92px;
+            max-height: 54px;
+        }
+
+        .brand-card-text {
+            font-size: 14px;
+        }
+
+        .h-svc-hdr {
+            padding-top: 48px;
+            padding-bottom: 32px;
+        }
+
+        .h-feat-ghost {
+            display: none;
+        }
+
+        .h-blogs {
+            padding: 56px var(--px);
+        }
+
+        .h-blogs-top {
+            margin-bottom: 32px;
+        }
+
+        .h-proof-top {
+            padding-top: 48px;
+            padding-bottom: 32px;
+        }
+
+        .h-counter {
+            padding: 24px 20px;
+        }
+
+        .h-metrics {
+            grid-template-columns: 1fr;
+        }
+
+        .h-metric {
+            padding: 24px 22px;
+        }
+
+        .h-testi {
+            padding: 56px var(--px);
+            gap: 32px;
+        }
+
+        .h-tc {
+            padding: 24px 20px;
+        }
+
+        .h-tc-q {
+            font-size: 36px;
+        }
+
+        .h-cta {
+            padding: 56px var(--px);
+        }
+
+        .h-cta-box {
+            padding: 36px 22px;
+            gap: 32px;
+        }
+
+        .h-cta-right {
+            gap: 24px;
+        }
+    }
+
+    @media (max-width:480px) {
+        .h-headline {
+            font-size: clamp(38px, 11vw, 54px);
+        }
+
+        .h-visual-wrap {
+            max-width: 260px;
+        }
+
+        .h-stmt-headline {
+            margin-top: 12px;
+        }
+
+        .h-feat-title {
+            font-size: clamp(24px, 7vw, 32px);
+        }
+
+        .hbc-body {
+            padding: 16px 18px 22px;
+        }
+
+        .h-cnt-n {
+            font-size: clamp(30px, 11vw, 44px);
+        }
+
+        .h-tc-foot {
+            flex-direction: column;
+            align-items: flex-start;
+            gap: 10px;
+        }
+    }
+
+    @media (max-width:375px) {
+        .brand-card {
+            width: 130px;
+            height: 64px;
+        }
+
+        .brand-card img {
+            max-width: 78px;
+            max-height: 46px;
+        }
+
+        .h-strip-word {
+            font-size: 14px;
+            padding: 0 12px;
+        }
+    }
+
+    @media (max-width:320px) {
+        .h-headline {
+            font-size: 32px;
+        }
+
+        .h-visual-wrap {
+            max-width: 220px;
         }
     }
 </style>
@@ -1423,7 +1733,7 @@
 <section class="h-hero-split" aria-labelledby="h-headline">
     <div class="h-hero-bg" aria-hidden="true"></div>
     <div class="h-hero-grid" aria-hidden="true"></div>
-    
+
     <div class="h-hero-left">
         <div class="h-eyebrow">
             <span class="h-eyebrow-dot"></span>
@@ -1431,8 +1741,8 @@
         </div>
         <h1 class="h-headline" id="h-headline">
             We <br>
-           Make <br> Brands
-             <span class="h-rotator"><em id="rotator-text">Belong</em></span>
+            Make <br> Brands
+            <span class="h-rotator"><em id="rotator-text">Belong</em></span>
         </h1>
         <p class="h-sub">
             <?= htmlspecialchars($settings['hero_subtext'] ?? 'Whether you\'re launching a brand, scaling a campaign, or trying to own a conversation — we help you stop posting and start belonging.') ?>
@@ -1452,7 +1762,7 @@
 
 <div class="h-cross-ticker-wrap" aria-hidden="true">
     <?php $tickerWords = ['INFLUENCER MARKETING', 'MEME CULTURE', 'BRAND STRATEGY', 'VIRAL CAMPAIGNS', 'CONTENT CREATION', 'REDDIT MARKETING', 'UGC CONTENT', 'LINKEDIN GROWTH', 'TWITTER TRENDING', 'PERFORMANCE MARKETING']; ?>
-    
+
     <div class="h-strip h-strip-1">
         <div class="mq-wrap">
             <div class="mq-track mq-l" style="--d:32s">
@@ -1462,12 +1772,13 @@
             </div>
         </div>
     </div>
-    
+
     <div class="h-strip h-strip-2">
         <div class="mq-wrap">
             <div class="mq-track mq-r" style="--d:38s">
                 <?php foreach (array_merge($tickerWords, $tickerWords) as $w): ?>
-                    <span class="h-strip-word"><?= htmlspecialchars($w) ?></span><span class="h-strip-sep" style="color:#FF3C00">✦</span>
+                    <span class="h-strip-word"><?= htmlspecialchars($w) ?></span><span class="h-strip-sep"
+                        style="color:#FF3C00">✦</span>
                 <?php endforeach; ?>
             </div>
         </div>
@@ -1499,7 +1810,8 @@
     </div>
 
     <div class="h-feat-row rv sc">
-        <a href="https://houseofsocial.io/services/influencer-marketing" class="h-feat" style="text-decoration: none; color: inherit;">
+        <a href="https://houseofsocial.io/services/influencer-marketing" class="h-feat"
+            style="text-decoration: none; color: inherit;">
             <div class="h-feat-ghost">INFLUENCE</div>
             <div class="h-feat-num">01</div>
             <h3 class="h-feat-title">Influencer<br>Marketing</h3>
@@ -1507,8 +1819,9 @@
                 authentic reach. Not spray and pray. Real people, real communities, real results.</p>
             <div class="h-feat-arr">↗</div>
         </a>
-        
-        <a href="https://houseofsocial.io/services/meme-marketing" class="h-feat" style="text-decoration: none; color: inherit;">
+
+        <a href="https://houseofsocial.io/services/meme-marketing" class="h-feat"
+            style="text-decoration: none; color: inherit;">
             <div class="h-feat-ghost">MEME</div>
             <div class="h-feat-num">02</div>
             <h3 class="h-feat-title">Meme<br>Marketing</h3>
@@ -1538,7 +1851,7 @@
             </a>
         <?php endforeach; ?>
     </div>
-    
+
     <div class="h-svc-cta rv">
         <a href="<?= base_url('services') ?>" class="btn-outline">View all services &rarr;</a>
     </div>
@@ -1622,12 +1935,12 @@ $row2_items = array_merge($part2, $part2, $part2, $part2);
 ?>
 <section class="fc-brands-sec" aria-label="Brand partners">
     <div class="fc-brands-label">Trusted By India's Biggest Names</div>
-    
+
     <div class="brand-track-wrap">
         <div class="brand-row row-1">
             <?php foreach ($row1_items as $item): ?>
                 <div class="brand-card">
-                    <?php if($is_img): ?>
+                    <?php if ($is_img): ?>
                         <img src="<?= htmlspecialchars($item) ?>" alt="Brand partner" loading="lazy">
                     <?php else: ?>
                         <span class="brand-card-text"><?= htmlspecialchars($item) ?></span>
@@ -1636,12 +1949,12 @@ $row2_items = array_merge($part2, $part2, $part2, $part2);
             <?php endforeach; ?>
         </div>
     </div>
-    
+
     <div class="brand-track-wrap">
         <div class="brand-row row-2">
             <?php foreach ($row2_items as $item): ?>
                 <div class="brand-card">
-                    <?php if($is_img): ?>
+                    <?php if ($is_img): ?>
                         <img src="<?= htmlspecialchars($item) ?>" alt="Brand partner" loading="lazy">
                     <?php else: ?>
                         <span class="brand-card-text"><?= htmlspecialchars($item) ?></span>
@@ -1664,11 +1977,13 @@ $row2_items = array_merge($part2, $part2, $part2, $part2);
             cultural moments we built together with brands across India.</p>
     </div>
     <div class="h-counters rv">
-<?php foreach (
+        <?php foreach (
             [
-                
-                
-                ['250', '+', 'Campaigns Delivered', 'Tracked, optimized, reported, and culture-first.', 'data-count="250" data-suffix="+"'],['2', 'B+', 'Impressions Generated', 'Massive brand visibility engineered across platforms.', 'data-count="2" data-suffix="B+"'],['850', 'M+', 'Total Audience Reach', 'Targeted across influencer, meme, and paid channels.', 'data-count="850" data-suffix="M+"'],
+
+
+                ['250', '+', 'Campaigns Delivered', 'Tracked, optimized, reported, and culture-first.', 'data-count="250" data-suffix="+"'],
+                ['2', 'B+', 'Impressions Generated', 'Massive brand visibility engineered across platforms.', 'data-count="2" data-suffix="B+"'],
+                ['850', 'M+', 'Total Audience Reach', 'Targeted across influencer, meme, and paid channels.', 'data-count="850" data-suffix="M+"'],
                 ['40', 'K+', 'Creator Network', 'Spanning micro to macro tiers across every niche.', 'data-count="40" data-suffix="K+"'],
                 ['24', '-48h', 'Response Time', 'Because campaigns don\'t wait. Neither do we.', 'data-count="24" data-suffix="-48h"'],
             ] as $c
@@ -1706,12 +2021,12 @@ $row2_items = array_merge($part2, $part2, $part2, $part2);
     <div class="h-testi-cards">
         <?php foreach (
             [
-    ['"They didn’t just create a campaign — they created conversations. The buzz around our launch was impossible to ignore."', 'Aarav M.', 'Marketing Lead, Entertainment Brand', 'Influencer Marketing'],
+                ['"They didn’t just create a campaign — they created conversations. The buzz around our launch was impossible to ignore."', 'Aarav M.', 'Marketing Lead, Entertainment Brand', 'Influencer Marketing'],
 
-    ['"The content felt authentic, timely, and perfectly aligned with internet culture. Our audience loved every piece of it."', 'Neha R.', 'Brand Manager, D2C Brand', 'Meme Campaign'],
+                ['"The content felt authentic, timely, and perfectly aligned with internet culture. Our audience loved every piece of it."', 'Neha R.', 'Brand Manager, D2C Brand', 'Meme Campaign'],
 
-    ['"From strategy to execution, the team delivered with remarkable precision. Engagement, reach, and brand recall all exceeded expectations."', 'Vikram S.', 'Head of Marketing, Consumer Brand', 'Integrated Campaign'],
-] as $i => $t
+                ['"From strategy to execution, the team delivered with remarkable precision. Engagement, reach, and brand recall all exceeded expectations."', 'Vikram S.', 'Head of Marketing, Consumer Brand', 'Integrated Campaign'],
+            ] as $i => $t
         ): ?>
             <div class="h-tc rv d<?= $i + 1 ?>">
                 <div class="h-tc-q">"</div>
@@ -1736,14 +2051,16 @@ $row2_items = array_merge($part2, $part2, $part2, $part2);
                 <span class="s-label rv d1">Ready to start?</span>
                 <h2 class="h-cta-title rv d2">Build Something<br><em>Legendary</em></h2>
             </div>
-            
+
             <div class="h-cta-right">
                 <p class="h-cta-desc rv d3">
-                    Stop competing for attention and start owning the conversation. Let’s create a campaign that your audience actually wants to share.
+                    Stop competing for attention and start owning the conversation. Let’s create a campaign that your
+                    audience actually wants to share.
                 </p>
                 <div class="h-cta-actions rv d4">
                     <a href="<?= base_url('contact') ?>" class="btn-primary lg">Start a campaign</a>
-                    <a href="mailto:<?= htmlspecialchars($settings['site_email'] ?? 'hello@houseofsocial.io') ?>" class="btn-outline" data-no-wipe>Email us directly</a>
+                    <a href="mailto:<?= htmlspecialchars($settings['site_email'] ?? 'hello@houseofsocial.io') ?>"
+                        class="btn-outline" data-no-wipe>Email us directly</a>
                 </div>
                 <div class="h-cta-contact rv d5">
                     <span><?= htmlspecialchars($settings['site_phone'] ?? '+91 9990802115') ?></span>
@@ -1761,20 +2078,20 @@ $row2_items = array_merge($part2, $part2, $part2, $part2);
         const words = ['BELONG', 'VIRAL', 'TREND', 'CONVERT', 'GROW', 'MATTER', 'CONNECT', 'WIN'];
         let wordIndex = 0;
         const rotatorText = document.getElementById('rotator-text');
-        
+
         if (rotatorText) {
             setInterval(() => {
                 // Fade out and translate up
                 rotatorText.style.opacity = '0';
                 rotatorText.style.transform = 'translateY(-15px)';
-                
+
                 setTimeout(() => {
                     wordIndex = (wordIndex + 1) % words.length;
                     rotatorText.textContent = words[wordIndex];
-                    
+
                     // Reset transform to bottom, then fade in and slide up to center
                     rotatorText.style.transform = 'translateY(15px)';
-                    
+
                     // Small delay to allow transform to apply without animation jump
                     requestAnimationFrame(() => {
                         requestAnimationFrame(() => {

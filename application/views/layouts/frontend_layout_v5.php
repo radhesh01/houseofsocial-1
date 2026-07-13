@@ -105,6 +105,8 @@
             font-size: 16px;
             -webkit-font-smoothing: antialiased;
             scroll-behavior: smooth;
+            overflow-x: hidden;
+            max-width: 100%;
         }
 
         body {
@@ -113,6 +115,8 @@
             font-family: var(--fBody);
             line-height: 1.6;
             overflow-x: hidden;
+            max-width: 100%;
+            position: relative;
         }
 
         img,
@@ -310,6 +314,7 @@
         .mq-wrap {
             overflow: hidden;
             width: 100%;
+            max-width: 100%;
         }
 
         .mq-track {
@@ -346,6 +351,7 @@
             clip-path: polygon(0 0, 94% 0, 100% 20%, 100% 100%, 6% 100%, 0 80%);
             transition: background .22s, transform .18s, box-shadow .22s;
             white-space: nowrap;
+            max-width: 100%;
         }
 
         .btn-primary:hover {
@@ -376,6 +382,7 @@
             border-radius: 2px;
             transition: border-color .2s, color .2s, background .2s;
             white-space: nowrap;
+            max-width: 100%;
         }
 
         .btn-outline:hover {
@@ -489,6 +496,7 @@
             gap: 24px;
             padding: 0 var(--px);
             transition: background .4s, border-color .4s;
+            max-width: 100vw;
         }
 
         #g-nav.stuck {
@@ -508,6 +516,8 @@
             letter-spacing: -.02em;
             white-space: nowrap;
             transition: opacity .2s;
+            min-width: 0;
+            overflow: hidden;
         }
 
         .nav-logo:hover {
@@ -532,6 +542,7 @@
             display: flex;
             flex-direction: column;
             line-height: 1.1;
+            min-width: 0;
         }
 
         .nav-logo-text small {
@@ -549,6 +560,7 @@
             align-items: center;
             justify-content: center;
             gap: 36px;
+            min-width: 0;
         }
 
         .nav-a {
@@ -672,6 +684,7 @@
             backdrop-filter: blur(24px);
             -webkit-backdrop-filter: blur(24px);
             min-width: 220px;
+            max-width: min(320px, 90vw);
             max-height: 0;
             overflow: hidden;
             opacity: 0;
@@ -734,6 +747,7 @@
             display: flex;
             align-items: center;
             gap: 12px;
+            flex-shrink: 0;
         }
 
         .nav-pill {
@@ -765,6 +779,7 @@
             gap: 5px;
             padding: 10px;
             transition: border-color .2s;
+            flex-shrink: 0;
         }
 
         .nav-ham:hover {
@@ -847,6 +862,7 @@
             padding: var(--sec) var(--px);
             border-right: 1px solid var(--b1);
             overflow-y: auto;
+            max-height: 100vh;
         }
 
         .menu-link {
@@ -912,6 +928,7 @@
             max-height: 400px;
             opacity: 1;
             margin-bottom: 12px;
+            overflow-y: auto;
         }
 
         .menu-svc-group.is-open .nav-dropdown-arrow {
@@ -935,6 +952,7 @@
             flex-direction: column;
             justify-content: center;
             padding: 0 50px;
+            min-width: 0;
         }
 
         .menu-meta-h {
@@ -952,6 +970,7 @@
             color: var(--ghost4);
             margin-bottom: 9px;
             transition: color .2s;
+            word-break: break-word;
         }
 
         .menu-meta-lnk:hover {
@@ -977,6 +996,7 @@
             border-top: 1px solid var(--b1);
             position: relative;
             overflow: hidden;
+            max-width: 100vw;
         }
 
         #g-foot::before {
@@ -1030,6 +1050,7 @@
             font-size: 19px;
             font-weight: 700;
             margin-bottom: 14px;
+            flex-wrap: wrap;
         }
 
         .foot-brand-dot {
@@ -1089,6 +1110,7 @@
             color: var(--ghost4);
             margin-bottom: 10px;
             transition: color .2s, padding-left .22s var(--ease);
+            word-break: break-word;
         }
 
         .foot-lnk:hover {
@@ -1197,6 +1219,167 @@
                 grid-column: 1;
             }
         }
+
+        /* ══════════════════════════════════════════════════════════
+           ADDITIONAL RESPONSIVE HARDENING
+           (production breakpoints: 320 / 360 / 375 / 390 / 414 / 480
+            / 576 / 768 / 820 / 992 / 1024 / 1200+)
+           No color / type / animation / content changes below —
+           layout, spacing and overflow fixes only.
+        ══════════════════════════════════════════════════════════ */
+
+        @media (max-width:1200px) {
+            :root {
+                --maxW: 96vw;
+            }
+        }
+
+        @media (max-width:1024px) {
+            .nav-logo {
+                font-size: 16px;
+            }
+        }
+
+        @media (max-width:992px) {
+            .btn-primary.lg {
+                font-size: 15px;
+                padding: 15px 30px;
+            }
+        }
+
+        @media (max-width:820px) {
+            #g-nav {
+                gap: 14px;
+            }
+
+            .foot-body {
+                padding-top: 44px;
+            }
+        }
+
+        @media (max-width:768px) {
+
+            .btn-primary,
+            .btn-outline,
+            .btn-lime {
+                font-size: 13.5px;
+                padding: 12px 22px;
+            }
+
+            .btn-primary.lg {
+                font-size: 15px;
+                padding: 15px 28px;
+            }
+
+            .s-label {
+                font-size: 10px;
+                letter-spacing: .18em;
+            }
+        }
+
+        @media (max-width:576px) {
+            :root {
+                --sec: clamp(48px, 12vw, 88px);
+            }
+
+            .nav-logo img {
+                height: 44px !important;
+            }
+
+            .nav-logo-text {
+                font-size: 15px;
+            }
+
+            .foot-socials {
+                justify-content: flex-start;
+            }
+
+            .foot-bot {
+                justify-content: center;
+                text-align: center;
+                padding: 18px var(--px) 24px;
+            }
+
+            .foot-copy,
+            .foot-live {
+                width: 100%;
+                justify-content: center;
+                text-align: center;
+            }
+
+            .menu-link {
+                font-size: clamp(34px, 12vw, 54px);
+            }
+
+            .menu-nav {
+                padding: 48px 16px 28px;
+            }
+        }
+
+        @media (max-width:480px) {
+            .btn-primary.lg {
+                width: 100%;
+                justify-content: center;
+            }
+
+            .foot-tagline {
+                max-width: 100%;
+            }
+        }
+
+        @media (max-width:414px) {
+
+            .btn-primary,
+            .btn-outline {
+                padding: 11px 18px;
+                font-size: 13px;
+            }
+        }
+
+        @media (max-width:375px) {
+            :root {
+                --px: 14px;
+            }
+
+            .nav-logo-mark {
+                width: 28px;
+                height: 28px;
+                font-size: 12px;
+            }
+        }
+
+        @media (max-width:360px) {
+            .menu-link {
+                font-size: clamp(30px, 13vw, 44px);
+            }
+        }
+
+        @media (max-width:320px) {
+            :root {
+                --px: 12px;
+            }
+
+            .nav-logo-text small {
+                display: none;
+            }
+        }
+
+        /* generic overflow safety nets used across every page */
+        table {
+            max-width: 100%;
+        }
+
+        .rv,
+        .rv.sl,
+        .rv.sr,
+        .rv.sc {
+            max-width: 100%;
+        }
+
+        section {
+            max-width: 100vw;
+            overflow-x: clip;
+        }
     </style>
 </head>
 
@@ -1216,7 +1399,7 @@
         <a href="<?= base_url() ?>" class="nav-logo" aria-label="<?= htmlspecialchars($site_title) ?> home">
             <?php if ($logo_url): ?>
                 <img src="<?= $logo_url ?>" alt="<?= htmlspecialchars($site_title) ?>"
-                    style="height:80px;width:auto;flex-shrink:0;">
+                    style="height:80px;width:auto;flex-shrink:0;max-height:64px;">
             <?php else: ?>
                 <div class="nav-logo-mark" aria-hidden="true">H</div>
                 <div class="nav-logo-text">
@@ -1311,8 +1494,10 @@
                     class="menu-meta-lnk"><?= htmlspecialchars($s['site_phone'] ?? '+91 9990802115') ?></a>
                 <div class="menu-meta-div"></div>
                 <p class="menu-meta-h">Follow</p>
-                <a href="https://www.instagram.com/houseofsocial.hos/" target="_blank" class="menu-meta-lnk" data-no-wipe>Instagram</a>
-                <a href="https://www.linkedin.com/company/houseofsocialhos/" target="_blank" class="menu-meta-lnk" data-no-wipe>LinkedIn</a>
+                <a href="https://www.instagram.com/houseofsocial.hos/" target="_blank" class="menu-meta-lnk"
+                    data-no-wipe>Instagram</a>
+                <a href="https://www.linkedin.com/company/houseofsocialhos/" target="_blank" class="menu-meta-lnk"
+                    data-no-wipe>LinkedIn</a>
                 <!--<a href="#" class="menu-meta-lnk" data-no-wipe>X / Twitter</a>-->
                 <div class="menu-meta-div"></div>
                 <p class="menu-meta-tagline">Internet-native.<br>Culture-first.<br>Built for today.</p>
@@ -1350,14 +1535,16 @@
                         <?= htmlspecialchars($s['hero_subtext'] ?? 'We help brands stop posting and start belonging. Internet-native creative agency, India.') ?>
                     </p>
                     <div class="foot-socials">
-                        <a href="https://www.instagram.com/houseofsocial.hos/" target="_blank" class="foot-soc" data-no-wipe aria-label="Instagram"><svg width="13" height="13"
-                                fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                        <a href="https://www.instagram.com/houseofsocial.hos/" target="_blank" class="foot-soc"
+                            data-no-wipe aria-label="Instagram"><svg width="13" height="13" fill="none"
+                                stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
                                 <rect x="2" y="2" width="20" height="20" rx="5" />
                                 <circle cx="12" cy="12" r="5" />
                                 <circle cx="17.5" cy="6.5" r="1" fill="currentColor" stroke="none" />
                             </svg></a>
-                        <a href="https://www.linkedin.com/company/houseofsocialhos/" target="_blank" class="foot-soc" data-no-wipe aria-label="LinkedIn"><svg width="13" height="13"
-                                fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                        <a href="https://www.linkedin.com/company/houseofsocialhos/" target="_blank" class="foot-soc"
+                            data-no-wipe aria-label="LinkedIn"><svg width="13" height="13" fill="none"
+                                stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
                                 <path d="M16 8a6 6 0 016 6v7h-4v-7a2 2 0 00-2-2 2 2 0 00-2 2v7h-4v-7a6 6 0 016-6z" />
                                 <rect x="2" y="9" width="4" height="12" />
                                 <circle cx="4" cy="4" r="2" />
