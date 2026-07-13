@@ -1,4 +1,3 @@
-
 <style>
 .bl-hero {
     background: var(--s0);
@@ -68,18 +67,18 @@
 .bl-grid {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
-    gap: 2px;
-    background: var(--b1);
-    border: 1px solid var(--b1);
-    overflow: hidden;
+    gap: 16px; 
 }
 .bl-card {
     background: var(--s1);
-    display: block;
+    display: flex;
+    flex-direction: column;
     position: relative;
     overflow: hidden;
     transition: background .3s;
     text-decoration: none;
+    border: 1px solid var(--b1); 
+    height: 100%;
 }
 .bl-card::after {
     content: '';
@@ -97,8 +96,10 @@
 
 .bl-card-img {
     height: 200px;
+    flex-shrink: 0;
     overflow: hidden;
     position: relative;
+    border-bottom: 1px solid var(--b1);
 }
 .bl-card-img img {
     width: 100%;
@@ -119,10 +120,12 @@
 }
 .bl-card-img-ph {
     height: 200px;
+    flex-shrink: 0;
     background: var(--s2);
     display: flex;
     align-items: center;
     justify-content: center;
+    border-bottom: 1px solid var(--b1);
 }
 .bl-card-img-ph span {
     font-family: var(--fDisplay);
@@ -132,6 +135,18 @@
 }
 .bl-card-body {
     padding: 28px 28px 36px;
+    display: flex;
+    flex-direction: column;
+    flex-grow: 1;
+}
+.bl-card-feat-num {
+    font-family: var(--fDisplay);
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: .2em;
+    color: var(--flame);
+    opacity: .7;
+    margin-bottom: 12px;
 }
 .bl-card-meta {
     display: flex;
@@ -171,7 +186,7 @@
     -webkit-line-clamp: 2;
     -webkit-box-orient: vertical;
     overflow: hidden;
-    margin-bottom: 18px;
+    margin-bottom: 24px;
 }
 .bl-card-cta {
     display: inline-flex;
@@ -183,62 +198,16 @@
     text-transform: uppercase;
     color: rgba(244,241,236,0.45);
     transition: color .2s, gap .2s;
+    margin-top: auto; 
 }
 .bl-card:hover .bl-card-cta { color: var(--flame); gap: 12px; }
-
-/* Featured first card */
-.bl-card-featured {
-    grid-column: 1 / 3;
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 0;
-}
-.bl-card-featured .bl-card-img {
-    height: 100%;
-    min-height: 320px;
-    overflow: hidden;
-    position: relative;
-}
-.bl-card-featured .bl-card-img img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    filter: brightness(.45) saturate(.55);
-    transition: transform .8s var(--ease), filter .8s;
-}
-.bl-card-featured:hover .bl-card-img img {
-    transform: scale(1.04);
-    filter: brightness(.62) saturate(.9);
-}
-.bl-card-featured .bl-card-img::after {
-    background: linear-gradient(to right, rgba(8,8,12,.9) 0%, transparent 70%);
-}
-.bl-card-featured .bl-card-img-ph {
-    height: 100%;
-    min-height: 320px;
-}
-.bl-card-featured .bl-card-body {
-    padding: 40px 36px;
-    display: flex;
-    flex-direction: column;
-    justify-content: flex-end;
-}
-.bl-card-feat-num {
-    font-family: var(--fDisplay);
-    font-size: 11px;
-    font-weight: 700;
-    letter-spacing: .2em;
-    color: var(--flame);
-    opacity: .7;
-    margin-bottom: 12px;
-}
-.bl-card-featured .bl-card-title { font-size: clamp(24px, 2.8vw, 34px); }
 
 .bl-empty {
     grid-column: 1 / -1;
     padding: 80px 24px;
     text-align: center;
     background: var(--s1);
+    border: 1px solid var(--b1);
 }
 .bl-empty-h {
     font-family: var(--fDisplay);
@@ -267,13 +236,9 @@
 
 @media(max-width:960px) {
     .bl-grid { grid-template-columns: 1fr 1fr; }
-    .bl-card-featured { grid-column: 1 / -1; grid-template-columns: 1fr; }
-    .bl-card-featured .bl-card-img { min-height: 220px; }
-    .bl-card-featured .bl-card-img::after { background: linear-gradient(to top, rgba(8,8,12,.95) 0%, transparent 60%); }
 }
 @media(max-width:640px) {
     .bl-grid { grid-template-columns: 1fr; }
-    .bl-card-featured { grid-template-columns: 1fr; }
 }
 </style>
 
@@ -299,51 +264,30 @@
                 foreach ($blogs as $i => $b):
                     $is_featured = ($i === 0 && count($blogs) > 1);
             ?>
-                <?php if ($is_featured): ?>
-                    <a href="<?= base_url('blog/' . $b['slug']) ?>" class="bl-card bl-card-featured">
-                        <?php if (!empty($b['image'])): ?>
-                        <div class="bl-card-img">
-                            <img src="<?= base_url('assets/images/uploads/' . $b['image']) ?>" alt="<?= htmlspecialchars($b['title']) ?>" loading="lazy">
-                        </div>
-                        <?php else: ?>
-                        <div class="bl-card-img-ph"><span>HOS</span></div>
-                        <?php endif; ?>
-                        <div class="bl-card-body">
+                <a href="<?= base_url('blog/' . $b['slug']) ?>" class="bl-card">
+                    <?php if (!empty($b['image'])): ?>
+                    <div class="bl-card-img">
+                        <img src="<?= base_url('assets/images/uploads/' . $b['image']) ?>" alt="<?= htmlspecialchars($b['title']) ?>" loading="lazy">
+                    </div>
+                    <?php else: ?>
+                    <div class="bl-card-img-ph"><span>HOS</span></div>
+                    <?php endif; ?>
+                    <div class="bl-card-body">
+                        <?php if ($is_featured): ?>
                             <div class="bl-card-feat-num">FEATURED</div>
-                            <div class="bl-card-meta">
-                                <span class="bl-card-author"><?= htmlspecialchars($b['author']) ?></span>
-                                <span class="bl-card-date"><?= date('d M Y', strtotime($b['created_at'])) ?></span>
-                            </div>
-                            <h2 class="bl-card-title"><?= htmlspecialchars($b['title']) ?></h2>
-                            <?php if (!empty($b['subtitle'])): ?>
-                                <p class="bl-card-subtitle"><?= htmlspecialchars($b['subtitle']) ?></p>
-                            <?php endif; ?>
-                            <span class="bl-card-cta">Read Article →</span>
-                        </div>
-                    </a>
-                <?php else: ?>
-                    <a href="<?= base_url('blog/' . $b['slug']) ?>" class="bl-card">
-                        <?php if (!empty($b['image'])): ?>
-                        <div class="bl-card-img">
-                            <img src="<?= base_url('assets/images/uploads/' . $b['image']) ?>" alt="<?= htmlspecialchars($b['title']) ?>" loading="lazy">
-                        </div>
-                        <?php else: ?>
-                        <div class="bl-card-img-ph"><span>HOS</span></div>
                         <?php endif; ?>
-                        <div class="bl-card-body">
-                            <div class="bl-card-meta">
-                                <span class="bl-card-author"><?= htmlspecialchars($b['author']) ?></span>
-                                <span class="bl-card-date"><?= date('d M Y', strtotime($b['created_at'])) ?></span>
-                            </div>
-                            <h2 class="bl-card-title"><?= htmlspecialchars($b['title']) ?></h2>
-                            <?php if (!empty($b['subtitle'])): ?>
-                                <p class="bl-card-subtitle"><?= htmlspecialchars($b['subtitle']) ?></p>
-                            <?php endif; ?>
-                            <span class="bl-card-cta">Read Article →</span>
+                        <div class="bl-card-meta">
+                            <span class="bl-card-author"><?= htmlspecialchars($b['author']) ?></span>
+                            <span class="bl-card-date"><?= date('d M Y', strtotime($b['created_at'])) ?></span>
                         </div>
-                    </a>
-                <?php endif; ?>
-            <?php endforeach;
+                        <h2 class="bl-card-title"><?= htmlspecialchars($b['title']) ?></h2>
+                        <?php if (!empty($b['subtitle'])): ?>
+                            <p class="bl-card-subtitle"><?= htmlspecialchars($b['subtitle']) ?></p>
+                        <?php endif; ?>
+                        <span class="bl-card-cta">Read Article →</span>
+                    </div>
+                </a>
+            <?php endforeach; 
             endif; ?>
         </div>
     </div>

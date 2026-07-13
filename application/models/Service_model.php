@@ -48,7 +48,7 @@ class Service_model extends CI_Model
 
     public function create($data)
     {
-        $insert = $this->_sanitize($data);
+        $insert               = $this->_sanitize($data);
         $insert['slug']       = $this->make_slug($data['title']);
         $insert['created_at'] = date('Y-m-d H:i:s');
         $insert['updated_at'] = date('Y-m-d H:i:s');
@@ -59,7 +59,7 @@ class Service_model extends CI_Model
 
     public function update($id, $data)
     {
-        $update = $this->_sanitize($data);
+        $update               = $this->_sanitize($data);
         $update['slug']       = $this->make_slug($data['title'], $id);
         $update['updated_at'] = date('Y-m-d H:i:s');
         $this->db->where('id', (int)$id)->update($this->table, $update);
@@ -71,7 +71,7 @@ class Service_model extends CI_Model
     {
         $row = $this->get_by_id($id);
         if ($row && !empty($row['icon_image'])) {
-            $path = FCPATH . 'assets/images/uploads/services/' . $row['icon_image'];
+            $path = FCPATH . 'assets/images/uploads/' . $row['icon_image'];
             if (file_exists($path)) @unlink($path);
         }
         $this->db->where('id', (int)$id)->delete($this->table);
@@ -102,6 +102,7 @@ class Service_model extends CI_Model
             'title'             => trim($data['title'] ?? ''),
             'short_description' => trim($data['short_description'] ?? ''),
             'full_content'      => $data['full_content'] ?? '',
+            'seo_content'       => $data['seo_content'] ?? '',
             'icon_image'        => trim($data['icon_image'] ?? ''),
             'icon_emoji'        => trim($data['icon_emoji'] ?? ''),
             'meta_title'        => trim($data['meta_title'] ?? ''),

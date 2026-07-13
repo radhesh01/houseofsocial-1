@@ -50,6 +50,10 @@ $form_action = ($action === 'create')
 <?php if (!empty($flash)): ?>
     <div class="a-flash a-flash-err"><i class="fa fa-triangle-exclamation"></i> <?= $flash ?></div>
 <?php endif; ?>
+<?php if ($this->session->flashdata('upload_error')): ?>
+    <div class="a-flash a-flash-err"><i class="fa fa-triangle-exclamation"></i> Icon upload failed:
+        <?= htmlspecialchars($this->session->flashdata('upload_error')) ?></div>
+<?php endif; ?>
 
 <?php echo form_open_multipart($form_action, ['id' => 'sf-form']); ?>
 
@@ -159,7 +163,7 @@ $form_action = ($action === 'create')
 
             <?php if (!empty($service['icon_image'])): ?>
                 <div>
-                    <img src="<?= base_url('assets/images/uploads/services/' . $service['icon_image']) ?>" alt="Icon"
+                    <img src="<?= base_url('assets/images/uploads/' . $service['icon_image']) ?>" alt="Current Icon"
                         style="width:60px;height:60px;object-fit:contain;background:var(--s2);padding:8px;border-radius:6px">
                     <p style="font-size:11px;color:var(--g3);margin-top:5px">Upload new to replace</p>
                 </div>
@@ -169,7 +173,14 @@ $form_action = ($action === 'create')
                 <label class="a-label">Upload Icon Image <span
                         style="font-size:10px;color:var(--g3);text-transform:none;letter-spacing:0">(optional —
                         SVG/PNG/WebP)</span></label>
-                <input type="file" name="icon_image" class="a-input" accept="image/*">
+                <input type="file" name="icon_image" id="sf-img-input" class="a-input" accept="image/*"
+                    onchange="sfPreview(this)">
+            </div>
+
+            <div id="sf-img-preview" style="display:none">
+                <img id="sf-preview-img" src="" alt="Preview"
+                    style="width:100%;max-height:120px;object-fit:contain;border-radius:6px;background:var(--s2);padding:6px">
+                <p style="font-size:11px;color:var(--g3);margin-top:5px">Preview</p>
             </div>
         </div>
 
@@ -216,13 +227,11 @@ $form_action = ($action === 'create')
     } from 'ckeditor5';
 
     const UPLOAD_URL = '<?= base_url('admin/posts/upload_image') ?>';
-    const CSRF_NAME = '<?= $this->security->get_csrf_token_name() ?>';
+    const CSRF_NAME  = '<?= $this->security->get_csrf_token_name() ?>';
     const CSRF_TOKEN = '<?= $this->security->get_csrf_hash() ?>';
 
     class CiUploadAdapter {
-        constructor(loader) {
-            this.loader = loader;
-        }
+        constructor(loader) { this.loader = loader; }
         upload() {
             return this.loader.file.then(file => new Promise((resolve, reject) => {
                 const form = new FormData();
@@ -231,18 +240,11 @@ $form_action = ($action === 'create')
                 const xhr = new XMLHttpRequest();
                 xhr.open('POST', UPLOAD_URL, true);
                 xhr.onload = () => {
-                    if (xhr.status < 200 || xhr.status >= 300) {
-                        reject('HTTP ' + xhr.status);
-                        return;
-                    }
+                    if (xhr.status < 200 || xhr.status >= 300) { reject('HTTP ' + xhr.status); return; }
                     try {
                         const r = JSON.parse(xhr.responseText);
-                        r.error ? reject(r.error) : resolve({
-                            default: r.url || r.location
-                        });
-                    } catch (e) {
-                        reject('Invalid response');
-                    }
+                        r.error ? reject(r.error) : resolve({ default: r.url || r.location });
+                    } catch(e) { reject('Invalid response'); }
                 };
                 xhr.onerror = () => reject('Network error');
                 xhr.send(form);
@@ -250,7 +252,6 @@ $form_action = ($action === 'create')
         }
         abort() {}
     }
-
     function CiUploadPlugin(editor) {
         editor.plugins.get('FileRepository').createUploadAdapter = l => new CiUploadAdapter(l);
     }
@@ -261,28 +262,21 @@ $form_action = ($action === 'create')
         ImageStyle, ImageResize, MediaEmbed, HorizontalLine, Indent, IndentBlock,
         Alignment, FontSize, FontColor, Code, CodeBlock, CiUploadPlugin
     ];
-    const commonConfig = {
-        licenseKey: 'GPL',
-        toolbar: {
-            items: ['heading', '|', 'bold', 'italic', 'underline', '|', 'alignment', '|',
-                'bulletedList', 'numberedList', 'outdent', 'indent', '|', 'link', 'uploadImage', 'insertTable', '|',
-                'blockQuote', 'horizontalLine', 'code', 'codeBlock', '|', 'undo', 'redo'
-            ],
-            shouldNotGroupWhenFull: false
-        },
-        table: {
-            contentToolbar: ['tableColumn', 'tableRow', 'mergeTableCells']
-        },
-        image: {
-            toolbar: ['imageStyle:inline', 'imageStyle:block', 'imageStyle:side', '|', 'imageTextAlternative', '|',
-                'resizeImage'
-            ]
-        },
+    const commonToolbar = {
+        items: ['heading','|','bold','italic','underline','|','alignment','|',
+            'bulletedList','numberedList','outdent','indent','|','link','uploadImage','insertTable','|',
+            'blockQuote','horizontalLine','code','codeBlock','|','undo','redo'],
+        shouldNotGroupWhenFull: false
     };
+    const commonTable   = { contentToolbar: ['tableColumn','tableRow','mergeTableCells'] };
+    const commonImage   = { toolbar: ['imageStyle:inline','imageStyle:block','imageStyle:side','|','imageTextAlternative','|','resizeImage'] };
 
     ClassicEditor.create(document.getElementById('sf-ck-editor'), {
-        ...commonConfig,
+        licenseKey: 'GPL',
         plugins: commonPlugins,
+        toolbar: commonToolbar,
+        table: commonTable,
+        image: commonImage,
         initialData: document.getElementById('sf-content-field').value || '',
         placeholder: 'Write the full service description here...'
     }).then(editor => {
@@ -293,8 +287,11 @@ $form_action = ($action === 'create')
     }).catch(console.error);
 
     ClassicEditor.create(document.getElementById('sf-seo-editor'), {
-        ...commonConfig,
+        licenseKey: 'GPL',
         plugins: commonPlugins,
+        toolbar: commonToolbar,
+        table: commonTable,
+        image: commonImage,
         initialData: document.getElementById('sf-seo-field').value || '',
         placeholder: 'Optional SEO-rich supplementary content...'
     }).then(editor => {
@@ -303,4 +300,16 @@ $form_action = ($action === 'create')
             document.getElementById('sf-seo-field').value = editor.getData();
         });
     }).catch(console.error);
+</script>
+
+<script>
+function sfPreview(input) {
+    if (!input.files || !input.files[0]) return;
+    var r = new FileReader();
+    r.onload = function(e) {
+        document.getElementById('sf-preview-img').src = e.target.result;
+        document.getElementById('sf-img-preview').style.display = 'block';
+    };
+    r.readAsDataURL(input.files[0]);
+}
 </script>

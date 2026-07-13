@@ -1,4 +1,3 @@
-
 <style>
     .sd-hero {
         background: var(--s0);
@@ -112,21 +111,11 @@
         line-height: .9;
     }
 
-    .sd-content h1 {
-        font-size: clamp(32px, 4.5vw, 54px);
-    }
+    .sd-content h1 { font-size: clamp(32px, 4.5vw, 54px); }
+    .sd-content h2 { font-size: clamp(26px, 3.5vw, 42px); }
+    .sd-content h3 { font-size: clamp(20px, 2.6vw, 32px); }
 
-    .sd-content h2 {
-        font-size: clamp(26px, 3.5vw, 42px);
-    }
-
-    .sd-content h3 {
-        font-size: clamp(20px, 2.6vw, 32px);
-    }
-
-    .sd-content p {
-        margin-bottom: 22px;
-    }
+    .sd-content p { margin-bottom: 22px; }
 
     .sd-content ul,
     .sd-content ol {
@@ -134,13 +123,8 @@
         margin-bottom: 22px;
     }
 
-    .sd-content li {
-        margin-bottom: 8px;
-    }
-
-    .sd-content li::marker {
-        color: var(--flame);
-    }
+    .sd-content li { margin-bottom: 8px; }
+    .sd-content li::marker { color: var(--flame); }
 
     .sd-content a {
         color: var(--flame);
@@ -204,9 +188,7 @@
         transition: border-color .3s;
     }
 
-    .sd-sidebar-card:hover {
-        border-color: rgba(255, 60, 0, .2);
-    }
+    .sd-sidebar-card:hover { border-color: rgba(255, 60, 0, .2); }
 
     .sd-sidebar-h {
         font-size: 10px;
@@ -228,34 +210,14 @@
         transition: color .2s, padding-left .2s;
     }
 
-    .sd-other-svc:last-child {
-        border-bottom: none;
-    }
+    .sd-other-svc:last-child { border-bottom: none; }
 
     .sd-other-svc:hover {
         color: var(--flame);
         padding-left: 6px;
     }
 
-    .sd-other-svc.on {
-        color: var(--flame);
-    }
-
-    .sd-foot {
-        background: var(--s0);
-        border-top: 1px solid var(--b1);
-        padding: clamp(28px, 3.5vw, 48px) var(--px);
-    }
-
-    .sd-foot-inner {
-        max-width: var(--maxW);
-        margin: 0 auto;
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        gap: 16px;
-        flex-wrap: wrap;
-    }
+    .sd-other-svc.on { color: var(--flame); }
 
     @media(max-width:960px) {
         .sd-layout {
@@ -274,7 +236,7 @@
         <div class="sd-hero-content">
             <a href="<?= base_url('services') ?>" class="sd-back">← All Services</a>
             <?php if (!empty($service['icon_image'])): ?>
-                <img src="<?= base_url('assets/images/uploads/services/' . $service['icon_image']) ?>" alt=""
+                <img src="<?= base_url('assets/images/uploads/' . $service['icon_image']) ?>" alt=""
                     class="sd-icon-img">
             <?php elseif (!empty($service['icon_emoji'])): ?>
                 <span class="sd-emoji"><?= htmlspecialchars($service['icon_emoji']) ?></span>
@@ -334,10 +296,3 @@
         </aside>
     </div>
 </article>
-
-<!--<div class="sd-foot">-->
-<!--    <div class="sd-foot-inner">-->
-<!--        <a href="<?= base_url('services') ?>" class="btn-outline">← All Services</a>-->
-<!--        <a href="<?= base_url('contact') ?>" class="btn-primary">Start a Campaign →</a>-->
-<!--    </div>-->
-<!--</div>-->

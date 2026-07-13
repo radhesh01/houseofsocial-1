@@ -1,4 +1,3 @@
-
 <style>
 .svc-hero {
     background: var(--s0);
@@ -239,7 +238,7 @@
             <a href="<?= base_url('services/' . $svc['slug']) ?>" class="svc-card">
                 <div class="svc-card-num"><?= str_pad($i + 1, 2, '0', STR_PAD_LEFT) ?></div>
                 <?php if (!empty($svc['icon_image'])): ?>
-                <img src="<?= base_url('assets/images/uploads/services/' . $svc['icon_image']) ?>" alt=""
+                <img src="<?= base_url('assets/images/uploads/' . $svc['icon_image']) ?>" alt=""
                     class="svc-card-icon-img">
                 <?php elseif (!empty($svc['icon_emoji'])): ?>
                 <span class="svc-card-emoji"><?= htmlspecialchars($svc['icon_emoji']) ?></span>
@@ -248,8 +247,7 @@
                 <p class="svc-card-desc"><?= htmlspecialchars(mb_substr($svc['short_description'], 0, 120)) ?>…</p>
                 <span class="svc-card-cta">Learn More →</span>
             </a>
-            <?php endforeach;
-            endif; ?>
+            <?php endforeach; endif; ?>
         </div>
     </div>
 </section>
